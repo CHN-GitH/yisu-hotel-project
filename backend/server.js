@@ -156,7 +156,58 @@ app.listen(PORT, () => {
   console.log(`📡 地址：http://localhost:${PORT}`);
   console.log('');
   console.log('可用接口：');
-  console.log('  POST http://localhost:3001/api/auth/login');
-  console.log('  GET  http://localhost:3001/api/hotels');
-  console.log('  GET  http://localhost:3001/api/hotels/:id');
+  console.log('  POST http://localhost:3000/api/auth/login');
+  console.log('  GET  http://localhost:3000/api/hotels');
+  console.log('  GET  http://localhost:3000/api/hotels/:id');
+});
+
+// 商户创建酒店 POST /api/hotels
+app.post('/api/hotels', (req, res) => {
+  const { name, address, starLevel, facilities } = req.body;
+
+  // 模拟保存
+  const newHotel = {
+    id: mockHotels.length + 1,
+    name,
+    address,
+    starLevel,
+    facilities,
+    status: "draft", // 默认草稿状态
+    merchantId: 101, // 模拟当前登录商户
+    openDate: "2024-01-01"
+  };
+
+  mockHotels.push(newHotel);
+
+  res.json({
+    code: 200,
+    message: "创建成功",
+    data: newHotel
+  });
+});
+
+// 管理员审核酒店 PATCH /api/hotels/:id/status
+app.patch('/api/hotels/:id/status', (req, res) => {
+  const id = parseInt(req.params.id);
+  const { status, reason } = req.body; // status: "passed" | "rejected"
+
+  const hotelIndex = mockHotels.findIndex(h => h.id === id);
+
+  if (hotelIndex !== -1) {
+    mockHotels[hotelIndex].status = status;
+    if (status === "rejected") {
+      mockHotels[hotelIndex].rejectReason = reason;
+    }
+
+    res.json({
+      code: 200,
+      message: "审核操作成功",
+      data: mockHotels[hotelIndex]
+    });
+  } else {
+    res.status(404).json({
+      code: 404,
+      message: "酒店不存在"
+    });
+  }
 });
