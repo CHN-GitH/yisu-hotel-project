@@ -4,7 +4,7 @@ import { Button, ConfigProvider, TextArea, Dialog } from '@nutui/nutui-react-tar
 import enUS from '@nutui/nutui-react-taro/dist/locales/en-US'
 import zhCN from '@nutui/nutui-react-taro/dist/locales/zh-CN'
 import './index.scss'
-function Index() {
+function searchHotelIndex() {
   const [locale, setLocale] = useState(zhCN)
   const localeKey = locale === zhCN ? 'zhCN' : 'enUS'
   const [visible, setVisible] = useState(false)
@@ -47,4 +47,4 @@ function Index() {
   )
 }
 
-export default Index
+export default searchHotelIndex

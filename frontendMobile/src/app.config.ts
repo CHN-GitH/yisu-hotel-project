@@ -1,11 +1,13 @@
 export default defineAppConfig({
   pages: [
-    'pages/index/index'
+    'pages/searchHotel/index',
+    'pages/listHotel/index',
+    'pages/detailHotel/index',
   ],
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#fff',
-    navigationBarTitleText: 'WeChat',
+    navigationBarTitleText: '易宿酒店',
     navigationBarTextStyle: 'black'
   }
 })
