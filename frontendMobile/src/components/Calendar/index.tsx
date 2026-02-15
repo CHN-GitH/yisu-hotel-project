@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
 import { View, Text, ScrollView } from '@tarojs/components'
 import dayjs from 'dayjs'
-import './index.scss'
+import '../../styles/index.scss'
 
 interface Props {
   visible: boolean
