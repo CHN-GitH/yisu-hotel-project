@@ -43,10 +43,9 @@ export default function SearchCardTabbar() {
         {renderTabList.map((tab) => (
           <View
             key={tab.key}
-            className={`tab-item ${
-              // 处理合并 Tab 的选中状态：如果 activeTab 是 tab1/tab2，合并 Tab 也要高亮
+            className={`search-card-tab-item ${
               (tab.key === 'tab1-tab2' && ['tab1', 'tab2'].includes(activeTab)) || 
-              (tab.key === activeTab) ? 'active' : ''
+              (tab.key === activeTab) ? 'search-card-tab-item-active' : ''
             }`}
             onClick={() => handleTabClick(tab.key)}
           >
@@ -54,6 +53,7 @@ export default function SearchCardTabbar() {
           </View>
         ))}
       </View>
+      {activeTab === 'tab1' && <View>国内内容</View>}
     </View>
   );
 };
