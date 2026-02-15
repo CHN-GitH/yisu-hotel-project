@@ -37,18 +37,20 @@ export default function SearchCardChineseCity() {
   return (
     <>
       <View className='search-row'>
-        <Text className='search-city' onClick={handleCityClick}>
-          {city}
-          <TriangleDown size={15} style={{ marginLeft: '0.25rem' }} />
-        </Text>
-        <Input
-          className='search-city-input'
-          placeholder=' 位置/品牌/酒店'
-          onClick={handleCityClick}
-          // value={keyword}
-          // onInput={(e) => setLocalKeyword(e.detail.value)}
-        />
-        <Location className='search-city-location' onClick={(e) => { e.stopPropagation(); handleLocate() }} />
+        <View className='search-city'>
+          <Text className='search-city-chinese' onClick={handleCityClick}>
+            {city}
+            <TriangleDown size={15} style={{ marginLeft: '0.25rem' }} />
+          </Text>
+          <Input
+            className='search-city-input'
+            placeholder=' 位置/品牌/酒店'
+            onClick={handleCityClick}
+            // value={keyword}
+            // onInput={(e) => setLocalKeyword(e.detail.value)}
+          />
+          <Location className='search-city-location' onClick={(e) => { e.stopPropagation(); handleLocate() }} />
+        </View>
       </View>
     </>
   )

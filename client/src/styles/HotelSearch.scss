@@ -79,32 +79,61 @@
   }
   .search-row {
     @include flex(row, space-between, center);
-    padding: 2rem 0;
+    padding: 1.5rem 0;
     @include hairline(bottom);
     &:last-of-type {
       &::after { display: none; }
     }
     .search-city {
-      position: absolute;
-      left: 2rem;
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #000;
+      &-chinese {
+        position: absolute;
+        left: 1.5rem;
+        font-size: 1.35rem;
+        font-weight: 600;
+        color: #000;
+      }
+      &-input {
+        height: 65%;
+        width: 55%;
+        position: absolute;
+        left: 7rem;
+        text-align: left;
+        font-size: 1.25rem;
+        border-left: #ccc 0.06rem solid;
+      }
+      &-location {
+        position: absolute;
+        top: 2rem;
+        right: 1.75rem;
+        font-size: 1rem;
+        color: $primary-color;
+      }
     }
-    .search-city-input {
-      height: 60%;
-      width: 54%;
-      position: absolute;
-      left: 7rem;
-      text-align: left;
-      font-size: 1.25rem;
-      border-left: #ccc 0.06rem solid;
-    }
-    .search-city-location {
-      position: absolute;
-      right: 2rem;
-      font-size: 1.25rem;
-      color: $primary-color;
+    .search-time {
+      @include flex(row, flex-end, center);
+      font-size: 1.1rem;
+      padding: 1.5rem 1.35rem;
+      &-date {
+        font-weight: 600;
+        color: #000;
+      }
+      &-week {
+        margin-left: 0.25rem;
+        font-weight: 540;
+        color: #222;
+      }
+      &-separator {
+        margin: 0 0.5rem;
+        color: #999;
+      }
+      &-nights {
+        margin-left: 1.25rem;
+        color: $primary-color;
+        background: rgba(25,137,250,0.1);
+        padding: 0.25rem 0.75rem;
+        border-radius: 0.75rem;
+        font-size: 0.75rem;
+      }
     }
   }
     
