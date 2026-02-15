@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components';
+import SearchCardChineseCity from './SearchCardChineseCity';
 import '../../styles/HotelSearch.scss';
 
 // 原始Tab
@@ -53,7 +54,9 @@ export default function SearchCardTabbar() {
           </View>
         ))}
       </View>
-      {activeTab === 'tab1' && <View>国内内容</View>}
+      {activeTab === 'tab1' && <>
+        <SearchCardChineseCity />
+      </>}
     </View>
   );
 };

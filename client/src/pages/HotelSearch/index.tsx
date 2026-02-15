@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
-import SearchBanner from '../../components/SearchBanner'
+import SearchBanner from '../../components/HotelSearch/SearchBanner'
 import SearchCard from '../../components/SearchCard'
-import SearchCardTabbar from '../../components/SearchCardTabbar'
+import SearchCardTabbar from '../../components/HotelSearch/SearchCardTabbar'
 import '../../styles/HotelSearch.scss'
 
 export default function HotelSearch() {
