@@ -1,50 +1,25 @@
 import React, { useState } from 'react'
-import { View } from '@tarojs/components'
-import { Button, ConfigProvider, TextArea, Dialog } from '@nutui/nutui-react-taro'
-import enUS from '@nutui/nutui-react-taro/dist/locales/en-US'
-import zhCN from '@nutui/nutui-react-taro/dist/locales/zh-CN'
+import Taro from '@tarojs/taro'
+import { View, Text, Image, Input, ScrollView } from '@tarojs/components'
+import SearchHotelCalendar from '../../components/searchHotel'
+import dayjs from 'dayjs'
 import './index.scss'
-function searchHotelIndex() {
-  const [locale, setLocale] = useState(zhCN)
-  const localeKey = locale === zhCN ? 'zhCN' : 'enUS'
-  const [visible, setVisible] = useState(false)
-  const [translated] = useState({
-    zhCN: {
-      welcome: '欢迎使用 NutUI React 开发 Taro 多端项目。',
-      button: '使用英文',
-      open: '点击打开',
-    },
-    enUS: {
-      welcome: 'Welcome to use NutUI React to develop Taro multi-terminal projects.',
-      button: 'Use Chinese',
-      open: 'Click Me',
-    },
-  })
-  const handleSwitchLocale = () => {
-    setLocale(locale === zhCN ? enUS : zhCN)
-  }
+
+// 热门标签
+const HOT_TAGS = ['免费停车场', '上海浦东国际机场', '上海虹桥国际机场']
+
+// 获取星期
+function getWeekDay(date: string) {
+  const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+  return days[dayjs(date).day()]
+}
+
+function Index() {
   return (
-    <ConfigProvider locale={locale}>
-      <View className='nutui-react-demo'>
-        <View>{translated[localeKey].welcome}</View>
-        <View>
-          <Button type='primary' onClick={handleSwitchLocale}>
-            {translated[localeKey].button}
-          </Button>
-          <Button type='success' onClick={() => setVisible(true)}>
-            {translated[localeKey].open}
-          </Button>
-          <Dialog
-            visible={visible}
-            onConfirm={() => setVisible(false)}
-            onCancel={() => setVisible(false)}>
-            {translated[localeKey].welcome}
-          </Dialog>
-          <TextArea disabled showCount maxLength={20} />
-        </View>
-      </View>
-    </ConfigProvider>
+    <View className='index-page'>
+      <SearchHotelCalendar />
+    </View>
   )
 }
 
-export default searchHotelIndex
+export default Index
