@@ -3,6 +3,7 @@ import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import SearchBanner from '../../components/SearchBanner'
 import SearchCard from '../../components/SearchCard'
+import SearchCardTabbar from '../../components/SearchCardTabbar'
 import '../../styles/HotelSearch.scss'
 
 export default function HotelSearch() {
@@ -11,7 +12,8 @@ export default function HotelSearch() {
       {/* Banner */}
       <SearchBanner />
       {/* 搜索卡片 */}
-      <SearchCard />
+      <SearchCardTabbar />
+      {/* <SearchCard /> */}
     </View>
   )
 }
