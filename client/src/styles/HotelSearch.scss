@@ -389,3 +389,33 @@
     }
   }
 }
+
+// 覆盖NutUI日历确认按钮样式
+.nut-calendar {
+  &-day {
+    &:not(.nut-calendar-day-active):nth-child(7n),
+    &:not(.nut-calendar-day-active):nth-child(7n+1) {
+      color: $primary-color !important;
+    }
+    &.nut-calendar-day-active.active-start:nth-child(7n),
+    &.nut-calendar-day-active.active-start:nth-child(7n+1) {
+      color: #fff !important;
+    }
+    &.nut-calendar-day-disabled:nth-child(7n),
+    &.nut-calendar-day-disabled:nth-child(7n+1) {
+      color: #bfbfbf !important;
+    }
+  }
+  &-day-active {
+    background: $primary-color !important;
+  }
+  &-day-choose {
+    background-color: $primary-light !important;
+    color: $primary-color !important;
+  }
+  &-footer {
+    .calendar-confirm-btn {
+      background: $primary-color !important;
+    }
+  }
+}
