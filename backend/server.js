@@ -86,8 +86,8 @@ app.post('/api/auth/login', (req, res) => {
 
   if (user) {
     res.json({
-      code: 200,
-      message: "登录成功",
+      code: 0,
+      msg: "登录成功",
       data: {
         id: user.id,
         username: user.username,
@@ -100,54 +100,110 @@ app.post('/api/auth/login', (req, res) => {
     // 401状态码：未授权
     res.status(401).json({
       code: 401,
-      message: "用户名或密码错误"
+      msg: "用户名或密码错误"
     });
   }
 });
 
-// 获取酒店列表 GET /api/hotels
-app.get('/api/hotels', (req, res) => {
+// 获取酒店列表 GET /api/hotel/list
+app.get('/api/hotel/list', (req, res) => {
   console.log('[获取酒店列表]', req.query);  // 打印查询参数
 
-  // 从URL获取查询参数：?starLevel=5&status=published
-  const { starLevel, status } = req.query;
+  // 从URL获取查询参数：?star=5&status=online
+  const { star, status } = req.query;
+
+  // 转换数据字段名
+  const transformHotel = (hotel) => ({
+    ...hotel,
+    nameCn: hotel.name,
+    star: hotel.starLevel,
+    minPrice: hotel.price,
+    status: hotel.status === 'published' ? 'online' :
+      hotel.status === 'under_review' ? 'pending' : hotel.status
+  });
 
   let filteredHotels = mockHotels;
 
   // 按星级筛选
-  if (starLevel) {
-    filteredHotels = filteredHotels.filter(h => h.starLevel === parseInt(starLevel));
+  if (star) {
+    filteredHotels = filteredHotels.filter(h => h.starLevel === parseInt(star));
   }
 
   // 按状态筛选
   if (status) {
-    filteredHotels = filteredHotels.filter(h => h.status === status);
+    const backendStatus = status === 'online' ? 'published' :
+      status === 'pending' ? 'under_review' : status;
+    filteredHotels = filteredHotels.filter(h => h.status === backendStatus);
   }
 
   res.json({
-    code: 200,
-    message: "获取成功",
-    data: filteredHotels
+    code: 0,
+    msg: "获取成功",
+    data: filteredHotels.map(transformHotel)
   });
 });
 
-// 获取单个酒店详情 GET /api/hotels/:id
-app.get('/api/hotels/:id', (req, res) => {
-  const id = parseInt(req.params.id);  // 从URL /hotels/1 获取ID
+// 获取单个酒店详情 GET /api/hotel/detail/:id
+app.get('/api/hotel/detail/:id', (req, res) => {
+  const id = parseInt(req.params.id);
   const hotel = mockHotels.find(h => h.id === id);
 
   if (hotel) {
+    // 转换数据字段名
+    const transformHotel = (hotel) => ({
+      ...hotel,
+      nameCn: hotel.name,
+      star: hotel.starLevel,
+      minPrice: hotel.price,
+      status: hotel.status === 'published' ? 'online' :
+        hotel.status === 'under_review' ? 'pending' : hotel.status
+    });
+
     res.json({
-      code: 200,
-      message: "获取成功",
-      data: hotel
+      code: 0,
+      msg: "获取成功",
+      data: transformHotel(hotel)
     });
   } else {
     res.status(404).json({
       code: 404,
-      message: "酒店不存在"
+      msg: "酒店不存在"
     });
   }
+});
+
+// 注册接口 POST /api/auth/register
+app.post('/api/auth/register', (req, res) => {
+  console.log('[注册请求]', req.body);
+
+  const { username, password, role } = req.body;
+
+  // 检查用户名是否已存在
+  const existingUser = mockUsers.find(u => u.username === username);
+  if (existingUser) {
+    res.json({
+      code: 1,
+      msg: "用户名已存在"
+    });
+    return;
+  }
+
+  // 创建新用户
+  const newUser = {
+    id: mockUsers.length + 1,
+    username,
+    password,
+    role,
+    name: username
+  };
+
+  mockUsers.push(newUser);
+
+  res.json({
+    code: 0,
+    msg: "注册成功",
+    data: null
+  });
 });
 
 // 启动服务器
@@ -157,57 +213,189 @@ app.listen(PORT, () => {
   console.log('');
   console.log('可用接口：');
   console.log('  POST http://localhost:3000/api/auth/login');
-  console.log('  GET  http://localhost:3000/api/hotels');
-  console.log('  GET  http://localhost:3000/api/hotels/:id');
+  console.log('  POST http://localhost:3000/api/auth/register');
+  console.log('  GET  http://localhost:3000/api/hotel/list');
+  console.log('  GET  http://localhost:3000/api/hotel/detail/:id');
+  console.log('  POST http://localhost:3000/api/hotel/create');
+  console.log('  PUT  http://localhost:3000/api/hotel/update/:id');
+  console.log('  POST http://localhost:3000/api/hotel/publish/:id/publish');
+  console.log('  POST http://localhost:3000/api/hotel/publish/:id/offline');
+  console.log('  DELETE http://localhost:3000/api/hotel/delete/:id');
 });
 
-// 商户创建酒店 POST /api/hotels
-app.post('/api/hotels', (req, res) => {
-  const { name, address, starLevel, facilities } = req.body;
+// 商户创建酒店 POST /api/hotel/create
+app.post('/api/hotel/create', (req, res) => {
+  console.log('[创建酒店请求]', req.body);
+
+  const { nameCn, nameEn, address, star, minPrice, openDate, facilities, discountInfo } = req.body;
 
   // 模拟保存
   const newHotel = {
     id: mockHotels.length + 1,
-    name,
+    name: nameCn,
+    nameEn: nameEn || '',
     address,
-    starLevel,
-    facilities,
+    starLevel: star,
+    price: minPrice,
+    openDate: openDate || '2024-01-01',
+    facilities: facilities || [],
+    discountsInfo: discountInfo || '',
     status: "draft", // 默认草稿状态
     merchantId: 101, // 模拟当前登录商户
-    openDate: "2024-01-01"
+    image: "https://via.placeholder.com/750x400/1890ff/ffffff?text=新酒店"
   };
 
   mockHotels.push(newHotel);
 
   res.json({
-    code: 200,
-    message: "创建成功",
-    data: newHotel
+    code: 0,
+    msg: "创建成功",
+    data: {
+      ...newHotel,
+      nameCn: newHotel.name,
+      star: newHotel.starLevel,
+      minPrice: newHotel.price
+    }
   });
+});
+
+// 更新酒店 PUT /api/hotel/update/:id
+app.put('/api/hotel/update/:id', (req, res) => {
+  console.log('[更新酒店请求]', req.params.id, req.body);
+
+  const id = parseInt(req.params.id);
+  const { nameCn, nameEn, address, star, minPrice, openDate, facilities, discountInfo } = req.body;
+
+  const hotelIndex = mockHotels.findIndex(h => h.id === id);
+
+  if (hotelIndex !== -1) {
+    mockHotels[hotelIndex] = {
+      ...mockHotels[hotelIndex],
+      name: nameCn || mockHotels[hotelIndex].name,
+      nameEn: nameEn !== undefined ? nameEn : mockHotels[hotelIndex].nameEn,
+      address: address || mockHotels[hotelIndex].address,
+      starLevel: star || mockHotels[hotelIndex].starLevel,
+      price: minPrice || mockHotels[hotelIndex].price,
+      openDate: openDate || mockHotels[hotelIndex].openDate,
+      facilities: facilities !== undefined ? facilities : mockHotels[hotelIndex].facilities,
+      discountsInfo: discountInfo !== undefined ? discountInfo : mockHotels[hotelIndex].discountsInfo
+    };
+
+    res.json({
+      code: 0,
+      msg: "更新成功",
+      data: {
+        ...mockHotels[hotelIndex],
+        nameCn: mockHotels[hotelIndex].name,
+        star: mockHotels[hotelIndex].starLevel,
+        minPrice: mockHotels[hotelIndex].price
+      }
+    });
+  } else {
+    res.status(404).json({
+      code: 404,
+      msg: "酒店不存在"
+    });
+  }
+});
+
+// 发布酒店 POST /api/hotel/publish/:id/publish
+app.post('/api/hotel/publish/:id/publish', (req, res) => {
+  console.log('[发布酒店请求]', req.params.id);
+
+  const id = parseInt(req.params.id);
+  const hotelIndex = mockHotels.findIndex(h => h.id === id);
+
+  if (hotelIndex !== -1) {
+    mockHotels[hotelIndex].status = "published";
+
+    res.json({
+      code: 0,
+      msg: "发布成功",
+      data: null
+    });
+  } else {
+    res.status(404).json({
+      code: 404,
+      msg: "酒店不存在"
+    });
+  }
+});
+
+// 下线酒店 POST /api/hotel/publish/:id/offline
+app.post('/api/hotel/publish/:id/offline', (req, res) => {
+  console.log('[下线酒店请求]', req.params.id);
+
+  const id = parseInt(req.params.id);
+  const hotelIndex = mockHotels.findIndex(h => h.id === id);
+
+  if (hotelIndex !== -1) {
+    mockHotels[hotelIndex].status = "offline";
+
+    res.json({
+      code: 0,
+      msg: "下线成功",
+      data: null
+    });
+  } else {
+    res.status(404).json({
+      code: 404,
+      msg: "酒店不存在"
+    });
+  }
+});
+
+// 删除酒店 DELETE /api/hotel/delete/:id
+app.delete('/api/hotel/delete/:id', (req, res) => {
+  console.log('[删除酒店请求]', req.params.id);
+
+  const id = parseInt(req.params.id);
+  const hotelIndex = mockHotels.findIndex(h => h.id === id);
+
+  if (hotelIndex !== -1) {
+    mockHotels.splice(hotelIndex, 1);
+
+    res.json({
+      code: 0,
+      msg: "删除成功",
+      data: null
+    });
+  } else {
+    res.status(404).json({
+      code: 404,
+      msg: "酒店不存在"
+    });
+  }
 });
 
 // 管理员审核酒店 PATCH /api/hotels/:id/status
 app.patch('/api/hotels/:id/status', (req, res) => {
   const id = parseInt(req.params.id);
-  const { status, reason } = req.body; // status: "passed" | "rejected"
+  const { status, reason } = req.body;
 
   const hotelIndex = mockHotels.findIndex(h => h.id === id);
 
   if (hotelIndex !== -1) {
-    mockHotels[hotelIndex].status = status;
-    if (status === "rejected") {
+    // 将前端状态转换为后端状态
+    let backendStatus = status;
+    if (status === 'online') backendStatus = 'published';
+    if (status === 'approved') backendStatus = 'published';
+    if (status === 'pending') backendStatus = 'under_review';
+
+    mockHotels[hotelIndex].status = backendStatus;
+    if (status === 'rejected') {
       mockHotels[hotelIndex].rejectReason = reason;
     }
 
     res.json({
-      code: 200,
-      message: "审核操作成功",
-      data: mockHotels[hotelIndex]
+      code: 0,
+      msg: "审核操作成功",
+      data: null
     });
   } else {
     res.status(404).json({
       code: 404,
-      message: "酒店不存在"
+      msg: "酒店不存在"
     });
   }
 });
