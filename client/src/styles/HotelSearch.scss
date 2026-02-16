@@ -61,11 +61,11 @@
       display: flex;
       background-color: #fff;
       border-bottom: 0.06rem solid #eee;
-      border-radius: 1rem;
+      border-radius: 1rem 1rem 0 0;
       &-item {
         flex: 1;
         text-align: center;
-        padding: 1rem 0;
+        padding: 0.5rem 0;
         font-size: 1.25rem;
         color: #666;
         transition: all 0.2s;
@@ -112,7 +112,7 @@
     .search-time {
       @include flex(row, flex-end, center);
       font-size: 1.1rem;
-      padding: 1.5rem 1.35rem;
+      padding: 1.5rem 1.35rem 0;
       &-date {
         font-weight: 600;
         color: #000;
@@ -136,67 +136,6 @@
       }
     }
   }
-    
-  .row-left {
-    @include flex(row, flex-start, center);
-    flex-shrink: 0;
-    .icon {
-      font-size: 2rem;
-      margin-right: 1rem;
-    }
-    .label {
-      font-size: 1.75rem;
-      color: #666;
-    }
-  }
-  .row-right {
-    flex: 1;
-    @include flex(row, flex-end, center);
-    .value {
-      font-size: 2rem;
-      font-weight: 500;
-      color: #333;
-    }
-    .action {
-      margin-left: 1.25rem;
-      font-size: 1.5rem;
-      color: $primary-color;
-      background: rgba(25,137,250,0.1);
-      padding: 0.5rem 1rem;
-      border-radius: 1.25rem;
-    }
-    .date-range {
-      @include flex(row, flex-end, center);
-      font-size: 2rem;
-      .date {
-        font-weight: 500;
-        color: #333;
-      }
-      .week {
-        margin-left: 0.5rem;
-        font-size: 1.5rem;
-        color: #999;
-      }
-      .separator {
-        margin: 0 1.25rem;
-        color: #ccc;
-      }
-      .nights {
-        margin-left: 1.25rem;
-        color: $primary-color;
-        background: rgba(25,137,250,0.1);
-        padding: 0.25rem 0.75rem;
-        border-radius: 0.75rem;
-        font-size: 1.5rem;
-      }
-    }
-  }
-  .keyword-input {
-    flex: 1;
-    margin-left: 1.25rem;
-    text-align: right;
-    font-size: 1.75rem;
-  }
 }
 .search-btn {
   margin-top: 30px;
@@ -211,182 +150,6 @@
   &:active {
     opacity: 0.9;
     transform: scale(0.98);
-  }
-}
-
-.quick-tags {
-  padding: 0 1.25rem;
-  .section-title {
-    display: block;
-    font-size: 2rem;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 1.25rem;
-  }
-  .tags-scroll {
-    white-space: nowrap;
-    .tag {
-      display: inline-block;
-      padding: 1rem 2rem;
-      background: #fff;
-      border-radius: 2rem;
-      font-size: 2rem;
-      color: #666;
-      margin-right: 1.25rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      border: 1px solid #f0f0f0;
-      &:active {
-        background: $primary-color;
-        color: #fff;
-      }
-    }
-  }
-}
-
-// 日期范围选择弹窗
-.calendar-popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1000;
-  .mask {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-  }
-  .content {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: $bg-white;
-    border-radius: $radius-lg $radius-lg 0 0;
-    max-height: 80vh;
-    @include flex(column, flex-start, stretch);
-    .header {
-      padding: $spacing-md;
-      @include hairline(bottom);
-      .title {
-        display: block;
-        text-align: center;
-        font-size: $font-md;
-        font-weight: 600;
-        margin-bottom: $spacing-md;
-      }
-      .selected {
-        @include flex(row, space-around, center);
-        .date-box {
-          @include flex(column, center, center);
-          .label {
-            font-size: $font-xs;
-            color: $text-secondary;
-            margin-bottom: $spacing-xs;
-          }
-          .date {
-            font-size: $font-lg;
-            color: $text-primary;
-            font-weight: 500;
-            &.active {
-              color: $primary-color;
-            }
-          }
-        }
-        .nights {
-          background: $primary-light;
-          color: $primary-color;
-          font-size: $font-xs;
-          padding: $spacing-xs $spacing-sm;
-          border-radius: $radius-sm;
-        }
-      }
-    }
-    .body {
-      flex: 1;
-      padding: $spacing-md;
-      .month {
-        margin-bottom: $spacing-lg;
-        .month-title {
-          display: block;
-          text-align: center;
-          font-size: $font-md;
-          font-weight: 600;
-          margin-bottom: $spacing-md;
-        }
-        .weekdays {
-          @include flex(row, space-around, center);
-          margin-bottom: $spacing-sm;
-          .weekday {
-            font-size: $font-sm;
-            color: $text-secondary;
-            width: 80px;
-            text-align: center;
-          }
-        }
-        .days {
-          @include flex(row, flex-start, center);
-          flex-wrap: wrap;
-          .day {
-            width: calc(100% / 7);
-            height: 80px;
-            @include flex(column, center, center);
-            position: relative;
-            .num {
-              font-size: $font-base;
-              color: $text-primary;
-            }
-            .tag {
-              font-size: 20px;
-              color: $primary-color;
-              margin-top: 4px;
-            }
-            &.today .num {
-              color: $primary-color;
-              font-weight: bold;
-            }
-            &.disabled {
-              opacity: 0.3;
-            }
-            &.start, &.end {
-              background: $primary-color;
-              .num, .tag {
-                color: $bg-white;
-              }
-            }
-            &.between {
-              background: $primary-light;
-            }
-            &:active:not(.disabled) {
-              background: $bg-gray;
-            }
-          }
-        }
-      }
-    }
-    .footer {
-      @include flex(row, space-between, center);
-      padding: $spacing-md;
-      @include hairline(top);
-      .btn-clear {
-        padding: $spacing-sm $spacing-lg;
-        font-size: $font-base;
-        color: $text-regular;
-      }
-      .btn-confirm {
-        flex: 1;
-        margin-left: $spacing-md;
-        background: $primary-color;
-        color: $bg-white;
-        text-align: center;
-        padding: $spacing-sm 0;
-        border-radius: $radius-md;
-        font-size: $font-base;
-      }
-    }
   }
 }
 

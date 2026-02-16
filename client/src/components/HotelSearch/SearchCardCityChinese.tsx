@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { setCity } from '../../store/slices/searchSlice'
 import '../../styles/HotelSearch.scss'
 
-export default function SearchCardChineseCity() {
+export default function SearchCardCityChinese() {
   const dispatch = useAppDispatch()
   const { city } = useAppSelector(state => state.search)
   // const [keyword, setLocalKeyword] = useState('')
