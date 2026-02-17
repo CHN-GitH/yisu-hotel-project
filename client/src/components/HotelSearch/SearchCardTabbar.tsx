@@ -4,6 +4,7 @@ import { View, Text } from '@tarojs/components';
 import SearchCardCityChinese from './SearchCardCityChinese';
 import SearchCardTimeRange from './SearchCardTimeRange';
 import SearchCardPriceAndStar from './SearchCardPriceAndStar';
+import SearchCardSearchButton from './SearchCardSearchButton';
 import '../../styles/HotelSearch.scss';
 
 // 原始Tab
@@ -60,6 +61,7 @@ export default function SearchCardTabbar() {
         <SearchCardCityChinese />
         <SearchCardTimeRange />
         <SearchCardPriceAndStar />
+        <SearchCardSearchButton />
       </>}
     </View>
   );
