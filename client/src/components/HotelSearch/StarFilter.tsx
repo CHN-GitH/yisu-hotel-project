@@ -3,36 +3,49 @@ import { View } from '@tarojs/components';
 import { StarOption, FilterResult } from './types';
 import './style.scss';
 
-// 预设星级选项（value对应starLevels的数值）
+// 预设星级选项
 const STAR_OPTIONS: StarOption[] = [
   { id: '2', label: '2钻/星及以下', desc: '经济', value: 2 },
   { id: '3', label: '3钻/星', desc: '舒适', value: 3 },
   { id: '4', label: '4钻/星', desc: '高档', value: 4 },
   { id: '5', label: '5钻/星', desc: '豪华', value: 5 },
-  { id: 'gold', label: '金钻酒店', desc: '奢华体验', value: 6 }, // 自定义数值区分特殊星级
+  { id: 'gold', label: '金钻酒店', desc: '奢华体验', value: 6 },
   { id: 'platinum', label: '铂钻酒店', desc: '超奢品质', value: 7 },
 ];
 
 interface StarFilterProps {
-  initialValue?: FilterResult['star'];
-  onStarChange: (star: StarOption | undefined) => void;
+  initialValue?: FilterResult['stars'];
+  onStarChange: (stars: StarOption[]) => void;
 }
 
-const StarFilter: React.FC<StarFilterProps> = ({ initialValue, onStarChange }) => {
-  // 选中的星级选项状态
-  const [selectedStar, setSelectedStar] = useState<StarOption | undefined>(undefined);
+export default function StarFilter({ initialValue, onStarChange }: StarFilterProps) {
+  // 选中的星级选项状态（多选）
+  const [selectedStars, setSelectedStars] = useState<StarOption[]>([]);
 
   // 初始化值
   useEffect(() => {
     if (initialValue) {
-      setSelectedStar(initialValue);
+      setSelectedStars(initialValue);
+    } else {
+      setSelectedStars([]);
     }
   }, [initialValue]);
 
   // 星级选项点击处理
   const handleStarClick = (option: StarOption) => {
-    setSelectedStar(option);
-    onStarChange(option);
+    const isSelected = selectedStars.some(item => item.id === option.id);
+    let newSelectedStars: StarOption[] = [];
+    
+    if (isSelected) {
+      // 取消选中
+      newSelectedStars = selectedStars.filter(item => item.id !== option.id);
+    } else {
+      // 新增选中
+      newSelectedStars = [...selectedStars, option];
+    }
+    
+    setSelectedStars(newSelectedStars);
+    onStarChange(newSelectedStars);
   };
 
   return (
@@ -51,7 +64,7 @@ const StarFilter: React.FC<StarFilterProps> = ({ initialValue, onStarChange }) =
         {STAR_OPTIONS.map((option) => (
           <View key={option.id} className="star-option-item">
             <View
-              className={`option-btn ${selectedStar?.id === option.id ? 'active' : ''}`}
+              className={`option-btn ${selectedStars.some(item => item.id === option.id) ? 'active' : ''}`}
               onClick={() => handleStarClick(option)}
             >
               <View className="option-label">{option.label}</View>
@@ -68,5 +81,3 @@ const StarFilter: React.FC<StarFilterProps> = ({ initialValue, onStarChange }) =
     </View>
   );
 };
-
-export default StarFilter;

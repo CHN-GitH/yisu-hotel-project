@@ -3,7 +3,7 @@ import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components';
 import SearchCardCityChinese from './SearchCardCityChinese';
 import SearchCardTimeRange from './SearchCardTimeRange';
-import SearchCardPriceAndRate from './SearchCardPriceAndRate';
+import SearchCardPriceAndStar from './SearchCardPriceAndStar';
 import '../../styles/HotelSearch.scss';
 
 // 原始Tab
@@ -59,7 +59,7 @@ export default function SearchCardTabbar() {
       {activeTab === 'tab1' && <>
         <SearchCardCityChinese />
         <SearchCardTimeRange />
-        <SearchCardPriceAndRate />
+        <SearchCardPriceAndStar />
       </>}
     </View>
   );

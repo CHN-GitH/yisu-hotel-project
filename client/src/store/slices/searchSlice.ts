@@ -6,27 +6,20 @@ interface SearchState {
   checkIn: string
   checkOut: string
   nights: number
-  keyword: string
   filters: {
-    starLevels: number[]
     priceRange: [number, number] | null
-    tags: string[]
+    starLevels: number[]
   }
 }
 
-const today = dayjs().format('YYYY-MM-DD')
-const tomorrow = dayjs().add(1, 'day').format('YYYY-MM-DD')
-
 const initialState: SearchState = {
   city: '上海',
-  checkIn: today,
-  checkOut: tomorrow,
+  checkIn: dayjs().format('YYYY-MM-DD'),
+  checkOut: dayjs().add(1, 'day').format('YYYY-MM-DD'),
   nights: 1,
-  keyword: '',
   filters: {
-    starLevels: [],
     priceRange: null,
-    tags: []
+    starLevels: []
   }
 }
 
@@ -43,15 +36,14 @@ const searchSlice = createSlice({
       state.checkOut = checkOut
       state.nights = dayjs(checkOut).diff(dayjs(checkIn), 'day')
     },
-    setKeyword: (state, action: PayloadAction<string>) => {
-      state.keyword = action.payload
-    },
     setFilters: (state, action: PayloadAction<Partial<SearchState['filters']>>) => {
       state.filters = { ...state.filters, ...action.payload }
     },
-    resetSearch: () => initialState
+    resetSearch: (state) => {
+      state.filters = initialState.filters
+    }
   }
 })
 
-export const { setCity, setDates, setKeyword, setFilters, resetSearch } = searchSlice.actions
+export const { setCity, setDates, setFilters, resetSearch } = searchSlice.actions
 export default searchSlice.reducer

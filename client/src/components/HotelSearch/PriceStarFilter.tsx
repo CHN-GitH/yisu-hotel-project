@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text } from '@tarojs/components';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../../store/hooks';
 import PriceFilter from './PriceFilter';
 import StarFilter from './StarFilter';
 import { FilterResult, PriceRangeOption, StarOption } from './types';
@@ -14,13 +14,8 @@ interface PriceStarFilterProps {
   onConfirm: (result: FilterResult) => void;
 }
 
-const PriceStarFilter: React.FC<PriceStarFilterProps> = ({
-  visible,
-  initialValues,
-  onCancel,
-  onConfirm,
-}) => {
-  const dispatch = useDispatch();
+export default function PriceStarFilter({ visible, initialValues, onCancel, onConfirm }: PriceStarFilterProps) {
+  const dispatch = useAppDispatch();
   // 筛选结果状态
   const [filterResult, setFilterResult] = useState<FilterResult>({});
 
@@ -39,13 +34,19 @@ const PriceStarFilter: React.FC<PriceStarFilterProps> = ({
   };
 
   // 星级变化处理
-  const handleStarChange = (star: StarOption | undefined) => {
-    setFilterResult(prev => ({ ...prev, star }));
+  const handleStarChange = (stars: StarOption[]) => {
+    setFilterResult(prev => ({ ...prev, stars }));
   };
 
   // 清空筛选条件
   const handleClear = () => {
-    setFilterResult({});
+    setFilterResult({
+      price: {
+        slidedRange: null,
+        selectedOptions: []
+      },
+      stars: []
+    });
     // 同步到redux
     dispatch(setFilters({
       priceRange: null,
@@ -58,16 +59,19 @@ const PriceStarFilter: React.FC<PriceStarFilterProps> = ({
     // 处理价格区间同步到redux
     let priceRange: [number, number] | null = null;
     if (filterResult.price) {
-      if (filterResult.price.selectedOption) {
-        const { min, max } = filterResult.price.selectedOption;
-        priceRange = [min, max === Infinity ? 9999 : max];
-      } else if (filterResult.price.customRange) {
-        priceRange = filterResult.price.customRange;
+      // 自定义区间优先级高于预设区间
+      if (filterResult.price.slidedRange) {
+        priceRange = filterResult.price.slidedRange;
+      } else if (filterResult.price.selectedOptions && filterResult.price.selectedOptions.length > 0) {
+        // 多选预设区间时，取最小min和最大max
+        const mins = filterResult.price.selectedOptions.map(item => item.minPrice);
+        const maxs = filterResult.price.selectedOptions.map(item => item.maxPrice === Infinity ? 9999 : item.maxPrice);
+        priceRange = [Math.min(...mins), Math.max(...maxs)];
       }
     }
 
     // 处理星级同步到redux
-    const starLevels = filterResult.star ? [filterResult.star.value] : [];
+    const starLevels = filterResult.stars ? filterResult.stars.map(star => star.value) : [];
 
     // 更新redux
     dispatch(setFilters({
@@ -75,9 +79,9 @@ const PriceStarFilter: React.FC<PriceStarFilterProps> = ({
       starLevels
     }));
 
-    // 回调给父组件
+    // 回调给父组件 + 关闭弹窗
     onConfirm(filterResult);
-    onCancel();
+    onCancel(); // 修复：确认后关闭弹窗
   };
 
   // 弹窗未显示时不渲染
@@ -86,32 +90,23 @@ const PriceStarFilter: React.FC<PriceStarFilterProps> = ({
   return (
     <View className="price-star-modal" onClick={onCancel}>
       <View className="modal-content" onClick={(e) => e.stopPropagation()}>
-        {/* 弹窗头部 */}
-        <View className="modal-header">
-          <Text className="modal-title">选择价格/星级</Text>
+        <View className="modal-content-header">
           <Text className="close-icon" onClick={onCancel}>✕</Text>
+          <Text className="modal-content-header-title">选择价格/星级</Text>
         </View>
-
-        {/* 价格筛选 */}
         <PriceFilter
           initialValue={filterResult.price}
           onPriceChange={handlePriceChange}
         />
-
-        {/* 星级筛选 */}
         <StarFilter
-          initialValue={filterResult.star}
+          initialValue={filterResult.stars}
           onStarChange={handleStarChange}
         />
-
-        {/* 底部按钮 */}
-        <View className="modal-footer">
-          <button className="btn-reset" onClick={handleClear}>清空</button>
-          <button className="btn-confirm" onClick={handleConfirm}>完成</button>
+        <View className="modal-content-footer">
+          <button className="modal-content-footer-reset" onClick={handleClear}>清空</button>
+          <button className="modal-content-footer-confirm" onClick={handleConfirm}>完成</button>
         </View>
       </View>
     </View>
   );
 };
-
-export default PriceStarFilter;
