@@ -16,14 +16,14 @@ export default function SearchCardPriceAndStar() {
 
   // 预设价格/星级选项
   const PRICE_OPTIONS: PriceRangeOption[] = [
-    { id: "11", label: "¥250以下", minPrice: 0, maxPrice: 250 },
-    { id: "12", label: "¥250-¥350", minPrice: 250, maxPrice: 350 },
-    { id: "13", label: "¥350-¥450", minPrice: 350, maxPrice: 450 },
-    { id: "14", label: "¥450-¥500", minPrice: 450, maxPrice: 500 },
-    { id: "15", label: "¥500-¥800", minPrice: 500, maxPrice: 800 },
-    { id: "16", label: "¥800-¥1100", minPrice: 800, maxPrice: 1100 },
-    { id: "17", label: "¥1100-¥1400", minPrice: 1100, maxPrice: 1400 },
-    { id: "18", label: "¥1400以上", minPrice: 1400, maxPrice: Infinity },
+    { id: '11', label: '¥250以下', minPrice: 0, maxPrice: 250 },
+    { id: '12', label: '¥250-¥400', minPrice: 250, maxPrice: 400 },
+    { id: '13', label: '¥400-¥500', minPrice: 400, maxPrice: 500 },
+    { id: '14', label: '¥500-¥600', minPrice: 500, maxPrice: 600 },
+    { id: '15', label: '¥600-¥1100', minPrice: 600, maxPrice: 1100 },
+    { id: '16', label: '¥1100-¥1600', minPrice: 1100, maxPrice: 1600 },
+    { id: '17', label: '¥1600-¥2100', minPrice: 1600, maxPrice: 2100 },
+    { id: '18', label: '¥2100以上', minPrice: 2100, maxPrice: Infinity },
   ];
   const STAR_OPTIONS: StarOption[] = [
     { id: "21", label: "2钻/星及以下", desc: "经济", value: 2 },
@@ -51,7 +51,7 @@ export default function SearchCardPriceAndStar() {
       const [min, max] = priceRange;
       const matchedOption = PRICE_OPTIONS.find((option) => {
         if (option.maxPrice === Infinity) {
-          return min >= 1400 && max >= 1400;
+          return min >= 2100 && max >= 2100;
         }
         return min === option.minPrice && max === option.maxPrice;
       });
@@ -68,8 +68,8 @@ export default function SearchCardPriceAndStar() {
     // 价格文本
     if (filterResult.price?.slidedRange) {
       const [min, max] = filterResult.price.slidedRange;
-      if (!(min === 0 && max > 1400)) {
-        if (max > 1400) {
+      if (!(min === 0 && max > 2100)) {
+        if (max > 2100) {
           parts.push(`¥${min}以上`);
         } else if (min === 0) {
           parts.push(`¥${max}以下`);

@@ -18,7 +18,7 @@ export default function PriceStarFilter({ visible, initialValues, onCancel, onCo
   const dispatch = useAppDispatch();
   // 筛选结果状态
   const [filterResult, setFilterResult] = useState<FilterResult>({
-    price: { slidedRange: [0, 1500], selectedOptions: [] }, // 默认最大范围
+    price: { slidedRange: [0, 2200], selectedOptions: [] }, // 默认最大范围
     stars: [],
   });
 
@@ -27,13 +27,13 @@ export default function PriceStarFilter({ visible, initialValues, onCancel, onCo
     if (initialValues && visible) {
       // 兼容初始值为空的情况，设置默认最大范围
       const initPrice = initialValues.price || {
-        slidedRange: [0, 1500],
+        slidedRange: [0, 2200],
         selectedOptions: [],
       };
       const initStars = initialValues.stars || [];
       setFilterResult({
         price: {
-          slidedRange: initPrice.slidedRange || [0, 1500], // 无值时设为最大范围
+          slidedRange: initPrice.slidedRange || [0, 2200], // 无值时设为最大范围
           selectedOptions: initPrice.selectedOptions || [],
         },
         stars: initStars,
@@ -63,7 +63,7 @@ export default function PriceStarFilter({ visible, initialValues, onCancel, onCo
     // 重置弹窗内状态
     setFilterResult({
       price: {
-        slidedRange: [0, 1500],
+        slidedRange: [0, 2200],
         selectedOptions: [],
       },
       stars: [],
@@ -85,7 +85,7 @@ export default function PriceStarFilter({ visible, initialValues, onCancel, onCo
         const targetOption = filterResult.price.selectedOptions[0];
         priceRange = [
           targetOption.minPrice,
-          targetOption.maxPrice === Infinity ? 1500 : targetOption.maxPrice,
+          targetOption.maxPrice === Infinity ? 2200 : targetOption.maxPrice,
         ];
       }
     }

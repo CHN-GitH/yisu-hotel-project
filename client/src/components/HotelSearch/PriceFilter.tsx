@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View } from "@tarojs/components";
+import { View, Text } from "@tarojs/components";
 import { Range } from "@nutui/nutui-react-taro";
 import { PriceRangeOption, FilterResult } from "../../store/slices/priceStarSlice";
 import '../../styles/HotelSearch.scss';
@@ -7,13 +7,13 @@ import '../../styles/HotelSearch.scss';
 // 预设价格区间选项
 const PRICE_OPTIONS: PriceRangeOption[] = [
   { id: '11', label: '¥250以下', minPrice: 0, maxPrice: 250 },
-  { id: '12', label: '¥250-¥350', minPrice: 250, maxPrice: 350 },
-  { id: '13', label: '¥350-¥450', minPrice: 350, maxPrice: 450 },
-  { id: '14', label: '¥450-¥500', minPrice: 450, maxPrice: 500 },
-  { id: '15', label: '¥500-¥800', minPrice: 500, maxPrice: 800 },
-  { id: '16', label: '¥800-¥1100', minPrice: 800, maxPrice: 1100 },
-  { id: '17', label: '¥1100-¥1400', minPrice: 1100, maxPrice: 1400 },
-  { id: '18', label: '¥1400以上', minPrice: 1400, maxPrice: Infinity },
+  { id: '12', label: '¥250-¥400', minPrice: 250, maxPrice: 400 },
+  { id: '13', label: '¥400-¥500', minPrice: 400, maxPrice: 500 },
+  { id: '14', label: '¥500-¥600', minPrice: 500, maxPrice: 600 },
+  { id: '15', label: '¥600-¥1100', minPrice: 600, maxPrice: 1100 },
+  { id: '16', label: '¥1100-¥1600', minPrice: 1100, maxPrice: 1600 },
+  { id: '17', label: '¥1600-¥2100', minPrice: 1600, maxPrice: 2100 },
+  { id: '18', label: '¥2100以上', minPrice: 2100, maxPrice: Infinity },
 ];
 
 interface PriceFilterProps {
@@ -23,9 +23,11 @@ interface PriceFilterProps {
 
 export default function PriceFilter({ initialValue, onPriceChange }: PriceFilterProps) {
   // 自定义价格区间状态
-  const [customRange, setCustomRange] = useState<[number, number]>([0, 1500]);
+  const [customRange, setCustomRange] = useState<[number, number]>([0, 2200]);
   // 选中的价格区间选项状态
   const [selectedOption, setSelectedOption] = useState<PriceRangeOption | null>(null);
+  // 滑块拖动状态
+  const [isSliding, setIsSliding] = useState<boolean>(false);
 
   // 初始化值
   useEffect(() => {
@@ -34,7 +36,7 @@ export default function PriceFilter({ initialValue, onPriceChange }: PriceFilter
       if (initialValue.selectedOptions?.length === 1) {
         const targetOption = initialValue.selectedOptions[0];
         setSelectedOption(targetOption);
-        const sliderMax = targetOption.maxPrice === Infinity ? 1500 : targetOption.maxPrice;
+        const sliderMax = targetOption.maxPrice === Infinity ? 2200 : targetOption.maxPrice;
         setCustomRange([targetOption.minPrice, sliderMax]);
       }
       // 其次使用滑块区间
@@ -43,14 +45,14 @@ export default function PriceFilter({ initialValue, onPriceChange }: PriceFilter
         const [min, max] = initialValue.slidedRange;
         const matchedOption = PRICE_OPTIONS.find((option) => {
           if (option.maxPrice === Infinity) {
-            return min >= 1400 && max >= 1400;
+            return min >= 2100 && max >= 2100;
           }
           return min === option.minPrice && max === option.maxPrice;
         });
         setSelectedOption(matchedOption || null);
       }
     } else {
-      setCustomRange([0, 1500]);
+      setCustomRange([0, 2200]);
       setSelectedOption(null);
     }
   }, [initialValue]);
@@ -65,7 +67,7 @@ export default function PriceFilter({ initialValue, onPriceChange }: PriceFilter
     // 自动匹配选中项
     const matchedOption = PRICE_OPTIONS.find((option) => {
       if (option.maxPrice === Infinity) {
-        return newRange[0] >= 1400 && newRange[1] >= 1400;
+        return newRange[0] >= 2100 && newRange[1] >= 2100;
       }
       return newRange[0] === option.minPrice && newRange[1] === option.maxPrice;
     });
@@ -77,6 +79,21 @@ export default function PriceFilter({ initialValue, onPriceChange }: PriceFilter
     });
   };
 
+  // 滑块开始拖动
+  const handleSliderStart = () => {
+    setIsSliding(true);
+  };
+
+  // 滑块拖动结束
+  const handleSliderEnd = (value: number[]) => {
+    setIsSliding(false);
+    const newRange = [Math.round(value[0]), Math.round(value[1])] as [ number, number ];
+    onPriceChange({
+      slidedRange: newRange,
+      selectedOptions: selectedOption ? [selectedOption] : [],
+    });
+  };
+
   // 预设价格区间点击处理
   const handleOptionClick = (option: PriceRangeOption) => {
     // 判断是否已选中当前选项
@@ -84,15 +101,15 @@ export default function PriceFilter({ initialValue, onPriceChange }: PriceFilter
     if (isSelected) {
       // 双击取消：清空选中项，滑块回归最大范围
       setSelectedOption(null);
-      setCustomRange([0, 1500]);
+      setCustomRange([0, 2200]);
       onPriceChange({
-        slidedRange: [0, 1500],
+        slidedRange: [0, 2200],
         selectedOptions: [],
       });
     } else {
       // 首次点击：选中选项，同步滑块值
       setSelectedOption(option);
-      const sliderMax = option.maxPrice === Infinity ? 1500 : option.maxPrice;
+      const sliderMax = option.maxPrice === Infinity ? 2200 : option.maxPrice;
       const newRange = [option.minPrice, sliderMax] as [number, number];
       setCustomRange(newRange);
       onPriceChange({
@@ -104,8 +121,8 @@ export default function PriceFilter({ initialValue, onPriceChange }: PriceFilter
 
   // 处理滑块数值显示文本
   const getSliderValueText = (value: number, isMax: boolean) => {
-    if (isMax && value === 1500) {
-      return "¥1400+"
+    if (isMax && value === 2200) {
+      return "¥2100+"
     }
     return `¥${value}`;
   };
@@ -115,8 +132,8 @@ export default function PriceFilter({ initialValue, onPriceChange }: PriceFilter
       <View className="price-filter-title">价格</View>
       {/* 价格滑块范围显示 */}
       <View className="price-filter-range-display">
-        <View>¥0</View>
-        <View>¥1400+</View>
+        <Text>{getSliderValueText(customRange[0], false)}</Text>
+        <Text>{getSliderValueText(customRange[1], true)}</Text>
       </View>
       {/* NutUI Range双滑块组件 */}
       <View className="price-filter-slider">
@@ -124,7 +141,7 @@ export default function PriceFilter({ initialValue, onPriceChange }: PriceFilter
           value={customRange}
           range={true}
           min={0}
-          max={1500}
+          max={2200}
           minDescription={null}
           maxDescription={null}
           step={100}
@@ -132,22 +149,25 @@ export default function PriceFilter({ initialValue, onPriceChange }: PriceFilter
             <View className="price-filter-slider-range" />
           }
           onChange={handleRangeChange}
-          onEnd={handleRangeChange}
+          onStart={handleSliderStart}
+          onEnd={handleSliderEnd}
         />
-        {/* 左侧滑块数值 */}
-        <View
-          className="price-filter-slider-left"
-          style={{ left: `${(customRange[0] / 1500) * 82 + 9}%` }}
-        >
-          {getSliderValueText(customRange[0], false)}
-        </View>
-        {/* 右侧滑块数值 */}
-        <View
-          className="price-filter-slider-right"
-          style={{ left: `${(customRange[1] / 1500) * 82 + 9}%` }}
-        >
-          {getSliderValueText(customRange[1], true)}
-        </View>
+        {isSliding && (<>
+          {/* 左侧滑块数值 */}
+          <View
+            className="price-filter-slider-left"
+            style={{ left: `${(customRange[0] / 2200) * 82 + 9}%` }}
+          >
+            {getSliderValueText(customRange[0], false)}
+          </View>
+          {/* 右侧滑块数值 */}
+          <View
+            className="price-filter-slider-right"
+            style={{ left: `${(customRange[1] / 2200) * 82 + 9}%` }}
+          >
+            {getSliderValueText(customRange[1], true)}
+          </View>
+        </>)}
       </View>
       {/* 预设价格区间选项 */}
       <View className="price-filter-options">
