@@ -167,7 +167,7 @@
   }
 }
 .search-btn {
-  margin-top: 30px;
+  margin-top: 2rem;
   @include gradient(135deg, $primary-color, $primary-dark);
   color: #fff;
   text-align: center;
@@ -278,103 +278,85 @@
 
 .price-filter {
   &-title {
-    height: 0.9rem;
+    height: 1rem;
     display: flex;
     align-items: center;
     margin: 0 0.6rem;
     color: #111;
     font-weight: 500;
-    line-height: 0.9rem;
-    font-size: 0.7rem;
+    line-height: 1rem;
+    font-size: 1rem;
   }
-  .price-filter-range-display {
+  &-range-display {
+    height: 1rem;
     margin-top: 0.4rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 0.4rem 0.6rem 0;
+    margin: 0.4rem 0.6rem 1.4rem;
     color: #888;
     font-weight: 400;
-    line-height: 0.85rem;
-    font-size: 0.65rem;
+    line-height: 1rem;
+    font-size: 1rem;
   }
-  .price-slider {
-    position: relative;
-    margin: 0.3rem 0.9rem;
-    height: 1.5rem;
-    touch-action: none;
-    .slider-track {
-      position: relative;
-      marginTop: 0.6rem;
-      marginLeft: 0.25rem;
-      marginRight: 0.25rem;
-      .track-bg {
-        height: 0.2rem;
-        background-color: #eee;
-        border-radius: 0.1rem;
-      }
-
-      .track-active {
-        position: absolute;
-        height: 0.2rem;
-        background-color: #bfd0fc;
-        border-radius: 0.1rem;
-        top: 0;
-      }
-
-      .slider-thumb {
-        position: absolute;
-        width: 1rem;
-        height: 1rem;
-        z-index: 1;
-        top: 0.3rem;
-        cursor: pointer;
-
-        .thumb-inner {
-          width: 1rem;
-          height: 1rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          .thumb-circle {
-            width: 0.8rem;
-            height: 0.8rem;
-            background-color: #bfd0fc;
-            border-radius: 50%;
-            border: 2px solid #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-          }
-        }
-
-        input {
-          position: absolute;
-          width: 150%;
-          opacity: 0;
-          cursor: pointer;
-        }
-      }
+  &-slider {
+     position: relative;
+     padding: 0 20px;
+    &-range {
+      position: absolute;
+      display: flex;
+      background-color: #fff;
+      border: 0.2rem solid $primary-dark;
+      color: #fff;
+      border-radius: 50%;
+      width: 1.5rem;
+      height: 1.5rem;
+      justify-content: center;
+      align-items: center;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+    }
+    &-left {
+      position: absolute;
+      top: -30px;
+      transform: translateX(-50%);
+      background-color: $primary-color;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      z-index: 2;
+    }
+    &-right {
+      position: absolute;
+      top: -30px;
+      transform: translateX(-50%);
+      background-color: $primary-color;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      z-index: 2;
     }
   }
-
-  .price-options {
+  &-options {
     margin-top: 1rem;
     width: 100%;
     display: flex;
     flex-wrap: wrap;
     padding: 0 0.6rem;
-
     .price-option-item {
       width: 33.3%;
       min-height: 1.6rem;
       padding: 0 0.2rem;
       margin-bottom: 0.4rem;
-
-      .option-btn {
+      &-btn {
         width: 100%;
         padding: 0.375rem 0;
         border-radius: 0.2rem;
-        background-color: #f5f7fa;
+        background-color: $bg-gray;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -384,11 +366,84 @@
         line-height: 0.85rem;
         font-size: 0.65rem;
         text-align: center;
-
         &.active {
-          background-color: #bfd0fc;
+          background-color: $primary-color;
+          color: #fff;
         }
       }
     }
+  }
+}
+
+// 星级筛选组件
+.star-filter {
+  margin-top: 1rem;
+  &-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 0.6rem;
+    &-text {
+      color: #111;
+      font-weight: 500;
+      font-size: 1rem;
+    }
+    &-desc {
+      display: flex;
+      align-items: center;
+      color: $primary-color;
+      font-size: 0.8rem;
+      margin-right: 0.8rem;
+    }
+  }
+  &-options {
+    margin-top: 0.6rem;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 0.6rem;
+    .star-options-item {
+      width: 33.3%;
+      min-height: 2.2rem;
+      padding: 0 0.2rem;
+      margin-bottom: 0.4rem;
+      &-btn {
+        width: 100%;
+        padding: 0.375rem 0;
+        border-radius: 0.2rem;
+        background-color: $bg-gray;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        .star-option-label {
+          color: #111;
+          font-weight: 400;
+          line-height: 0.85rem;
+          font-size: 0.65rem;
+          text-align: center;
+        }
+        .star-option-desc {
+          color: #888;
+          font-weight: 400;
+          line-height: 0.55rem;
+          font-size: 0.5rem;
+          margin-top: 0.1rem;
+        }
+        &.active {
+          background-color: $primary-color;
+          .star-option-label, .star-option-desc {
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+  &-desc {
+    margin: 0.6rem;
+    font-size: 0.55rem;
+    color: #888;
+    line-height: 0.8rem;
   }
 }
