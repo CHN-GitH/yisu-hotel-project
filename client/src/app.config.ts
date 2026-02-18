@@ -2,6 +2,7 @@
 export default defineAppConfig({
   pages: [
     'pages/HotelSearch/index',
+    'pages/CitySearch/index',
     'pages/HotelList/index',
     'pages/HotelDetail/index',
   ],

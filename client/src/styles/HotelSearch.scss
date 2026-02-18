@@ -308,7 +308,7 @@
   }
   &-slider {
      position: relative;
-     padding: 0 20px;
+     padding: 0 1.25rem;
     &-range {
       position: absolute;
       display: flex;
@@ -327,24 +327,24 @@
     }
     &-left {
       position: absolute;
-      top: -30px;
+      top: -2rem;
       transform: translateX(-50%);
       background-color: $primary-color;
       color: white;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 12px;
+      padding: 0.06rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
       z-index: 2;
     }
     &-right {
       position: absolute;
-      top: -30px;
+      top: -2rem;
       transform: translateX(-50%);
       background-color: $primary-color;
       color: white;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 12px;
+      padding: 0.06rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
       z-index: 2;
     }
   }

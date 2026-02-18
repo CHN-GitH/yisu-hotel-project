@@ -21,17 +21,15 @@ export default function SearchCardCityChinese() {
   const isWeapp = process.env.TARO_ENV === "weapp";
   const isH5 = process.env.TARO_ENV === "h5";
 
+  // 替换原handleCityClick：跳转到城市选择页（路径确保和实际文件一致）
   const handleCityClick = () => {
-    const cities = ["上海", "北京", "广州", "深圳", "杭州", "成都"];
-    Taro.showActionSheet({
-      itemList: cities,
-      success: (res) => {
-        dispatch(setCity(cities[res.tapIndex]));
-      },
-      fail: (err) => {
-        if (err?.errMsg && !err.errMsg.includes("cancel")) {
-          console.error("城市选择失败:", err);
-        }
+    Taro.navigateTo({
+      url: "/pages/CitySearch/index", // 确认路径和文件结构一致
+      // 监听返回结果（选择城市后更新）
+      events: {
+        selectCity: (data: { cityName: string }) => {
+          dispatch(setCity(data.cityName));
+        },
       },
     });
   };
@@ -144,6 +142,14 @@ export default function SearchCardCityChinese() {
     setIsLocating(true);
 
     try {
+      // 小程序端先申请定位权限
+      if (isWeapp) {
+        const settingRes = await Taro.getSetting();
+        if (!settingRes.authSetting['scope.userLocation']) {
+          await Taro.authorize({ scope: 'scope.userLocation' });
+        }
+      }
+
       // 1. 获取定位坐标
       let res;
       try {
