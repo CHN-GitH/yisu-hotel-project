@@ -2,7 +2,7 @@
   "miniprogramRoot": "./",
   "projectname": "client",
   "description": "yisu-mobile-taro",
-  "appid": "touristappid",
+  "appid": "wxd70e05cf3fb076e1",
   "setting": {
     "urlCheck": true,
     "es6": false,

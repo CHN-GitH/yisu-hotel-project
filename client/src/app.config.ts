@@ -1,3 +1,4 @@
+// src/app.config.ts (注意路径：src根目录下)
 export default defineAppConfig({
   pages: [
     'pages/HotelSearch/index',
@@ -11,18 +12,14 @@ export default defineAppConfig({
     navigationBarTextStyle: 'black',
     backgroundColor: '#f5f5f5'
   },
-  // tabBar: {
-  //   color: '#999',
-  //   selectedColor: '#1989fa',
-  //   backgroundColor: '#fff',
-  //   borderStyle: 'black',
-  //   list: [
-  //     {
-  //       pagePath: 'pages/index/index',
-  //       text: '首页',
-  //       iconPath: 'assets/icons/home.png',
-  //       selectedIconPath: 'assets/icons/home-active.png'
-  //     }
-  //   ]
-  // }
+  // 必须声明getLocation到requiredPrivateInfos
+  requiredPrivateInfos: ["getLocation"],
+  // 定位权限说明（微信审核要求）
+  permission: {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于定位当前所在城市，提供更精准的酒店搜索服务"
+    }
+  },
+  // 新增：启用按需加载
+  lazyCodeLoading: "requiredComponents"
 })
