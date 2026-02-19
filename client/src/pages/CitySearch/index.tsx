@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react'
 import { View, Text, ScrollView } from '@tarojs/components'
 import { Tabs, Elevator, Grid } from '@nutui/nutui-react-taro'
 import ChineseCities from '../../assets/CityChinese.json'
-import InternationalCities from '../../assets/CityInternational.json'
+import InternationalCities from '../../assets/CityInterNational.json'
 
 // 定义城市数据类型
 interface CityItem {
