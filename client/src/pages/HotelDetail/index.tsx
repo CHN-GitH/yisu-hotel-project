@@ -2,9 +2,15 @@ import React, { useEffect } from 'react';
 import Taro, { useRouter } from '@tarojs/taro';
 import { View, Text, ScrollView, Image } from '@tarojs/components';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavBar, SafeArea, Loading, Price, Swiper } from '@nutui/nutui-react-taro';
+import { NavBar, SafeArea, Loading } from '@nutui/nutui-react-taro';
 import { getDetailData } from '../../store/slices/detailSlice';
 import { RootState, AppDispatch } from '../../store';
+import DetailBanner from '../../components/HotelDetail/DetailBanner';
+import HouseInfos from '../../components/HotelDetail/HouseInfos';
+import DetailFacility from '../../components/HotelDetail/DetailFacility'
+import DetailHotExport from '../../components/HotelDetail/DetailHotExport';
+import DetailPosition from '../../components/HotelDetail/DetailPosition';
+
 import { HouseDetailData } from '../../services/modules/detail';
 
 import './index.scss';
@@ -17,7 +23,7 @@ const HotelDetail: React.FC = () => {
     (state) => state.detail
   );
 
-  const houseId = "44173741" || router.params.id as string;
+  const houseId = router.params.id as string || "44173741";
 
   const onClickLeft = () => {
     Taro.navigateBack();
@@ -34,22 +40,6 @@ const HotelDetail: React.FC = () => {
     return 'mainPart' in data && data.mainPart !== undefined;
   };
 
-  // 渲染加载状态
-  // if (loading) {
-  //   return (
-  //     <View className='detail-container'>
-  //       <SafeArea position='top' />
-  //       <NavBar left='返回' onClickLeft={onClickLeft} fixed safeAreaInsetTop>
-  //         加载中...
-  //       </NavBar>
-  //       <View className='loading-wrapper'>
-  //         <Loading type='spinner' />
-  //         <Text className='loading-text'>加载中...</Text>
-  //       </View>
-  //     </View>
-  //   );
-  // }
-
   const mainPart = hasData(detaildata) ? detaildata.mainPart : null;
   const topModule = mainPart?.topModule;
   const currentHouse = hasData(detaildata) ? detaildata.currentHouse : null;
@@ -57,17 +47,14 @@ const HotelDetail: React.FC = () => {
   return (
     <View className='detail-container'>
       <SafeArea position='top' />
-      
       <NavBar
         left='返回'
-        // onClickLeft={onClickLeft}
         fixed
         safeAreaInsetTop
         className='detail-navbar'
       >
         {topModule?.houseName?.slice(0, 10) || '房屋详情'}
       </NavBar>
-
       <ScrollView 
         className='detail-content' 
         scrollY 
@@ -77,34 +64,14 @@ const HotelDetail: React.FC = () => {
       >
         {hasData(detaildata) ? (
           <View className='detail-wrapper'>
-            {/* 轮播图区域 */}
+            {/* 轮播图区域 - 使用 DetailBanner 组件 */}
             {topModule?.housePicture?.housePics && (
-              <View className='banner-section'>
-                <Swiper
-                  className='banner-swiper'
-                  autoplay
-                  interval={3000}
-                  circular
-                  indicatorDots
-                  indicatorColor='#999'
-                  indicatorActiveColor='#fff'
-                >
-                  {topModule.housePicture.housePics.slice(0, 5).map((pic, index) => (
-                    <Swiper.Item key={index}>
-                      <Image 
-                        src={pic.url.trim()} 
-                        mode='aspectFill' 
-                        className='banner-image'
-                        lazyLoad
-                      />
-                    </Swiper.Item>
-                  ))}
-                </Swiper>
-                <View className='pic-count'>
-                  <Text className='pic-count-text'>共{topModule.housePicture.picCount}张</Text>
-                </View>
-              </View>
+              <DetailBanner bannerdata={topModule.housePicture.housePics} />
             )}
+            <HouseInfos infosdata={detaildata?.mainPart?.topModule} />
+            <DetailFacility facilitydata={detaildata?.mainPart?.dynamicModule?.facilityModule?.houseFacility} />
+            <DetailPosition positiondata={detaildata?.mainPart?.dynamicModule?.positionModule} />
+            <DetailHotExport hotexportdata={detaildata?.mainPart?.dynamicModule?.commentModule} />
 
             {/* 房屋基本信息 */}
             <View className='info-section'>
