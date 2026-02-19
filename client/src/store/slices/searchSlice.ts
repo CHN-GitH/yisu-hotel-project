@@ -6,6 +6,7 @@ interface SearchState {
   checkIn: string
   checkOut: string
   nights: number
+  keyword: string[]
   filters: {
     priceRange: [number, number] | null
     starLevels: number[]
@@ -17,6 +18,7 @@ const initialState: SearchState = {
   checkIn: dayjs().format('YYYY-MM-DD'),
   checkOut: dayjs().add(1, 'day').format('YYYY-MM-DD'),
   nights: 1,
+  keyword: [],
   filters: {
     priceRange: null,
     starLevels: []
