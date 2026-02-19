@@ -1,246 +1,311 @@
 @import '../../styles/variables.scss';
 @import '../../styles/mixins.scss';
 
-.detail-page {
+// src/pages/HotelDetail/index.scss
+.detail-container {
   min-height: 100vh;
-  background: $bg-primary;
-  padding-bottom: 120px;
-  .gallery {
-    height: 500px;
-    .img {
-      width: 100%;
+  background-color: #f5f6f7;
+  display: flex;
+  flex-direction: column;
+
+  .detail-navbar {
+    --nutui-navbar-height: 44px;
+    --nutui-navbar-title-font-weight: 600;
+    --nutui-navbar-title-color: #333;
+    --nutui-navbar-left-text-color: #666;
+    --nutui-navbar-background: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+
+  .detail-content {
+    flex: 1;
+    padding-top: 44px;
+    padding-bottom: 80px;
+  }
+
+  .loading-wrapper,
+  .error-wrapper,
+  .empty-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+  }
+
+  .loading-text,
+  .error-text,
+  .empty-text {
+    margin-top: 16px;
+    color: #999;
+    font-size: 14px;
+  }
+
+  .error-text {
+    color: #ff4d4f;
+  }
+
+  // 轮播图
+  .banner-section {
+    position: relative;
+    height: 240px;
+    background: #eee;
+
+    .banner-swiper {
       height: 100%;
-    }
-  }
-  .basic-info {
-    background: #fff;
-    padding: $spacing-md;
-    margin-bottom: $spacing-sm;
-    .name-row {
-      @include flex(row, space-between, flex-start);
-      margin-bottom: $spacing-sm;
-      .name {
-        font-size: $font-lg;
-        font-weight: 600;
-        flex: 1;
-        margin-right: $spacing-sm;
-      }
-      .stars {
-        font-size: $font-sm;
+      width: 100%;
+
+      .banner-image {
+        width: 100%;
+        height: 100%;
       }
     }
-    .rating-bar {
-      @include flex(row, flex-start, center);
-      margin-bottom: $spacing-md;
-      .score {
-        font-size: $font-xl;
-        font-weight: bold;
-        color: $warning-color;
-      }
-      .reviews {
-        font-size: $font-sm;
-        color: $text-secondary;
-        margin-left: $spacing-sm;
-        margin-right: $spacing-md;
-      }
-      .tag {
-        font-size: $font-xs;
-        color: $primary-color;
-        background: $primary-light;
-        padding: 4px 8px;
-        border-radius: $radius-sm;
-      }
-    }
-    .address-row {
-      @include flex(row, space-between, center);
-      .address {
-        font-size: $font-sm;
-        color: $text-secondary;
-        flex: 1;
-        @include ellipsis(1);
-      }
-      .action {
-        font-size: $font-sm;
-        color: $primary-color;
-        margin-left: $spacing-sm;
+
+    .pic-count {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      background: rgba(0,0,0,0.6);
+      padding: 4px 12px;
+      border-radius: 12px;
+
+      .pic-count-text {
+        color: #fff;
+        font-size: 12px;
       }
     }
   }
-  .section {
+
+  // 信息区域
+  .info-section {
     background: #fff;
-    padding: $spacing-md;
-    margin-bottom: $spacing-sm;
-    .section-title {
-      display: block;
-      font-size: $font-md;
+    padding: 16px;
+    margin-bottom: 12px;
+
+    .house-name {
+      font-size: 18px;
       font-weight: 600;
-      margin-bottom: $spacing-md;
+      color: #333;
+      line-height: 1.4;
+      margin-bottom: 12px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
-  }
-  .facilities {
-    .facility-list {
-      @include flex(row, flex-start, center);
+
+    .comment-brief {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+
+      .score {
+        color: #ff9645;
+        font-size: 20px;
+        font-weight: 700;
+        margin-right: 4px;
+      }
+
+      .score-title {
+        color: #ff9645;
+        font-size: 14px;
+        margin-right: 12px;
+      }
+
+      .comment-count {
+        color: #999;
+        font-size: 13px;
+      }
+    }
+
+    .location-info {
+      margin-bottom: 12px;
+
+      .location-text {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 4px;
+        display: block;
+      }
+
+      .address {
+        font-size: 13px;
+        color: #999;
+      }
+    }
+
+    .tags-wrapper {
+      display: flex;
       flex-wrap: wrap;
-      .facility-item {
-        width: 25%;
-        @include flex(column, center, center);
-        margin-bottom: $spacing-md;
-        .icon {
-          width: 48px;
-          height: 48px;
-          background: $primary-light;
-          color: $primary-color;
-          border-radius: 50%;
-          @include flex(row, center, center);
-          font-size: $font-sm;
-          margin-bottom: $spacing-xs;
-        }
-        text {
-          font-size: $font-xs;
-          color: $text-regular;
-        }
+      gap: 8px;
+
+      .tag-item {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
       }
     }
   }
-  .rooms-section {
-    .date-bar {
-      @include flex(row, space-between, center);
-      background: $bg-gray;
-      padding: $spacing-sm $spacing-md;
-      border-radius: $radius-md;
-      margin-bottom: $spacing-md;
-      .date-item {
-        @include flex(column, center, flex-start);
-        .label {
-          font-size: $font-xs;
-          color: $text-secondary;
-          margin-bottom: 4px;
-        }
-        .date {
-          font-size: $font-base;
-          color: $text-primary;
-          font-weight: 500;
-        }
+
+  // 房东区域
+  .landlord-section {
+    background: #fff;
+    padding: 16px;
+    margin-bottom: 12px;
+
+    .landlord-header {
+      display: flex;
+      align-items: center;
+
+      .landlord-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        margin-right: 12px;
       }
-      .nights {
-        background: $primary-light;
-        color: $primary-color;
-        font-size: $font-xs;
-        padding: $spacing-xs $spacing-sm;
-        border-radius: $radius-sm;
-      }
-    }
-    .room-list {
-      .room-item {
-        @include flex(row, flex-start, flex-start);
-        padding: $spacing-md 0;
-        @include hairline(bottom);
-        &:last-child::after {
-          display: none;
-        }
-        .room-img {
-          width: 200px;
-          height: 150px;
-          border-radius: $radius-md;
-          margin-right: $spacing-md;
-        }
-        .room-info {
-          flex: 1;
-          min-width: 0;
-          .name {
-            display: block;
-            font-size: $font-md;
-            font-weight: 500;
-            margin-bottom: $spacing-xs;
-          }
-          .desc {
-            display: block;
-            font-size: $font-sm;
-            color: $text-secondary;
-            margin-bottom: $spacing-sm;
-          }
-          .tags {
-            @include flex(row, flex-start, center);
-            margin-bottom: $spacing-sm;
-            .tag {
-              font-size: $font-xs;
-              color: $success-color;
-              background: rgba(7,193,96,0.1);
-              padding: 4px 8px;
-              border-radius: $radius-sm;
-              margin-right: $spacing-xs;
-            }
-          }
-          .price-row {
-            @include flex(row, space-between, center);
-            .book-btn {
-              background: $primary-color;
-              color: #fff;
-              padding: $spacing-xs $spacing-md;
-              border-radius: $radius-md;
-              font-size: $font-sm;
-            }
-          }
-        }
-      }
-    }
-  }
-  .nearby {
-    .attraction-item {
-      @include flex(row, flex-start, center);
-      padding: $spacing-sm 0;
-      .type-icon {
-        font-size: $font-md;
-        margin-right: $spacing-sm;
-      }
-      .name {
+
+      .landlord-info {
         flex: 1;
-        font-size: $font-base;
-        color: $text-regular;
-      }
-      .distance {
-        font-size: $font-sm;
-        color: $text-secondary;
+
+        .landlord-name {
+          font-size: 16px;
+          font-weight: 600;
+          color: #333;
+          margin-bottom: 6px;
+          display: block;
+        }
+
+        .landlord-tags {
+          display: flex;
+          gap: 8px;
+
+          .landlord-tag {
+            font-size: 12px;
+            color: #999;
+          }
+        }
       }
     }
   }
-  .bottom-bar {
+
+  // 通用区块
+  .facility-section,
+  .position-section,
+  .intro-section {
+    background: #fff;
+    padding: 16px;
+    margin-bottom: 12px;
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 12px;
+      display: block;
+    }
+  }
+
+  // 设施网格
+  .facility-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+
+    .facility-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .facility-icon {
+        width: 24px;
+        height: 24px;
+        margin-bottom: 6px;
+      }
+
+      .facility-name {
+        font-size: 12px;
+        color: #666;
+      }
+    }
+  }
+
+  // 位置
+  .position-address {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .map-image {
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  // 价格说明
+  .intro-text {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+
+  // 底部预订栏
+  .booking-bar {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     background: #fff;
-    @include flex(row, space-between, center);
-    padding: $spacing-md;
+    padding: 12px 16px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-    .contact {
-      @include flex(column, center, center);
-      padding: 0 $spacing-md;
-      .icon {
-        font-size: $font-lg;
-        margin-bottom: 4px;
-      }
-      text {
-        font-size: $font-xs;
-        color: $text-secondary;
-      }
-    }
+    z-index: 100;
+
     .price-info {
-      flex: 1;
-      @include flex(row, flex-start, center);
-      .label {
-        font-size: $font-sm;
-        color: $text-secondary;
-        margin-right: $spacing-sm;
+      display: flex;
+      align-items: baseline;
+
+      .price-symbol {
+        color: #ff4d4f;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .price-num {
+        color: #ff4d4f;
+        font-size: 24px;
+        font-weight: 700;
+        margin: 0 2px;
+      }
+
+      .price-original {
+        color: #999;
+        font-size: 13px;
+        text-decoration: line-through;
+        margin-right: 4px;
+      }
+
+      .price-unit {
+        color: #999;
+        font-size: 12px;
       }
     }
+
     .book-btn {
-      background: $primary-color;
+      background: linear-gradient(135deg, #ff9645 0%, #ff4d4f 100%);
       color: #fff;
-      padding: $spacing-sm $spacing-xl;
-      border-radius: $radius-md;
-      font-size: $font-base;
-      font-weight: 500;
+      padding: 10px 24px;
+      border-radius: 20px;
+      font-size: 15px;
+      font-weight: 600;
+
+      &.disabled {
+        background: #ccc;
+      }
     }
   }
 }

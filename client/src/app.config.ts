@@ -1,10 +1,10 @@
-// src/app.config.ts (注意路径：src根目录下)
 export default defineAppConfig({
   pages: [
+    'pages/HotelDetail/index',
     'pages/HotelSearch/index',
     'pages/CitySearch/index',
     'pages/HotelList/index',
-    'pages/HotelDetail/index',
+    // 'pages/HotelDetail/index',
   ],
   window: {
     backgroundTextStyle: 'light',

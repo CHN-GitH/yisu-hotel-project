@@ -1,148 +1,254 @@
-import { useEffect } from 'react'
-import { View, Text, Image, Swiper, SwiperItem, ScrollView } from '@tarojs/components'
-import Taro, { useRouter } from '@tarojs/taro'
-import { useAppDispatch, useAppSelector } from '../../store/hooks'
-import { fetchHotelDetail } from '../../store/slices/hotelSlice'
-import PriceTag from '../../components/PriceTag'
-import dayjs from 'dayjs'
-import './index.scss'
+import React, { useEffect } from 'react';
+import Taro, { useRouter } from '@tarojs/taro';
+import { View, Text, ScrollView, Image } from '@tarojs/components';
+import { useDispatch, useSelector } from 'react-redux';
+import { NavBar, SafeArea, Loading, Price, Swiper } from '@nutui/nutui-react-taro';
+import { getDetailData } from '../../store/slices/detailSlice';
+import { RootState, AppDispatch } from '../../store';
+import { HouseDetailData } from '../../services/modules/detail';
 
-export default function HotelDetail() {
-  const router = useRouter()
-  const dispatch = useAppDispatch()
-  const { currentHotel, loading } = useAppSelector(state => state.hotel)
-  const { checkIn, checkOut, nights } = useAppSelector(state => state.search)
-  const { id } = router.params
+import './index.scss';
+
+const HotelDetail: React.FC = () => {
+  const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+  
+  const { detaildata, loading, error } = useSelector<RootState, RootState['detail']>(
+    (state) => state.detail
+  );
+
+  const houseId = "44173741" || router.params.id as string;
+
+  const onClickLeft = () => {
+    Taro.navigateBack();
+  };
 
   useEffect(() => {
-    if (id) {
-      dispatch(fetchHotelDetail(id))
+    if (houseId) {
+      dispatch(getDetailData(houseId));
     }
-  }, [id])
+  }, [dispatch, houseId]);
 
-  if (loading || !currentHotel) {
-    return <View className='loading'>加载中...</View>
-  }
+  // 类型守卫
+  const hasData = (data: HouseDetailData | Record<string, never>): data is HouseDetailData => {
+    return 'mainPart' in data && data.mainPart !== undefined;
+  };
+
+  // 渲染加载状态
+  // if (loading) {
+  //   return (
+  //     <View className='detail-container'>
+  //       <SafeArea position='top' />
+  //       <NavBar left='返回' onClickLeft={onClickLeft} fixed safeAreaInsetTop>
+  //         加载中...
+  //       </NavBar>
+  //       <View className='loading-wrapper'>
+  //         <Loading type='spinner' />
+  //         <Text className='loading-text'>加载中...</Text>
+  //       </View>
+  //     </View>
+  //   );
+  // }
+
+  const mainPart = hasData(detaildata) ? detaildata.mainPart : null;
+  const topModule = mainPart?.topModule;
+  const currentHouse = hasData(detaildata) ? detaildata.currentHouse : null;
 
   return (
-    <View className='detail-page'>
-      {/* 图片轮播 */}
-      <Swiper className='gallery' indicatorDots circular>
-        {(currentHotel.images.length > 0 ? currentHotel.images : ['https://picsum.photos/750/500']).map((img, idx) => (
-          <SwiperItem key={idx}>
-            <Image src={img} mode='aspectFill' className='img' />
-          </SwiperItem>
-        ))}
-      </Swiper>
+    <View className='detail-container'>
+      <SafeArea position='top' />
+      
+      <NavBar
+        left='返回'
+        // onClickLeft={onClickLeft}
+        fixed
+        safeAreaInsetTop
+        className='detail-navbar'
+      >
+        {topModule?.houseName?.slice(0, 10) || '房屋详情'}
+      </NavBar>
 
-      {/* 基础信息 */}
-      <View className='basic-info'>
-        <View className='name-row'>
-          <Text className='name'>{currentHotel.name}</Text>
-          <View className='stars'>{'⭐'.repeat(currentHotel.starLevel)}</View>
-        </View>
-        
-        <View className='rating-bar'>
-          <Text className='score'>{currentHotel.rating}分</Text>
-          <Text className='reviews'>{currentHotel.reviewCount}条评价</Text>
-          <Text className='tag'>区域热销榜第3名</Text>
-        </View>
-
-        <View className='address-row' onClick={() => {
-          Taro.openLocation({
-            latitude: 31.2304,
-            longitude: 121.4737,
-            name: currentHotel.name,
-            address: currentHotel.address
-          })
-        }}>
-          <Text className='address'>{currentHotel.address}</Text>
-          <Text className='action'>地图</Text>
-        </View>
-      </View>
-
-      {/* 设施 */}
-      <View className='section facilities'>
-        <Text className='section-title'>酒店设施</Text>
-        <View className='facility-list'>
-          {currentHotel.facilities.map(f => (
-            <View key={f} className='facility-item'>
-              <Text className='icon'>✓</Text>
-              <Text>{f}</Text>
-            </View>
-          ))}
-        </View>
-      </View>
-
-      {/* 房型 */}
-      <View className='section rooms-section'>
-        <View className='date-bar'>
-          <View className='date-item'>
-            <Text className='label'>入住</Text>
-            <Text className='date'>{dayjs(checkIn).format('M月D日')}</Text>
-          </View>
-          <View className='nights'>
-            <Text>{nights}晚</Text>
-          </View>
-          <View className='date-item'>
-            <Text className='label'>离店</Text>
-            <Text className='date'>{dayjs(checkOut).format('M月D日')}</Text>
-          </View>
-        </View>
-
-        <View className='room-list'>
-          {currentHotel.rooms.map(room => (
-            <View key={room.id} className='room-item'>
-              <Image src={room.image || 'https://picsum.photos/200/150'} mode='aspectFill' className='room-img' />
-              <View className='room-info'>
-                <Text className='name'>{room.name}</Text>
-                <Text className='desc'>{room.bedType} | {room.area}㎡ | 可住{room.capacity}人</Text>
-                <View className='tags'>
-                  {room.breakfast && <Text className='tag'>含早餐</Text>}
-                  <Text className='tag'>{room.cancelPolicy}</Text>
+      <ScrollView 
+        className='detail-content' 
+        scrollY 
+        enableBackToTop
+        enhanced
+        showScrollbar={false}
+      >
+        {hasData(detaildata) ? (
+          <View className='detail-wrapper'>
+            {/* 轮播图区域 */}
+            {topModule?.housePicture?.housePics && (
+              <View className='banner-section'>
+                <Swiper
+                  className='banner-swiper'
+                  autoplay
+                  interval={3000}
+                  circular
+                  indicatorDots
+                  indicatorColor='#999'
+                  indicatorActiveColor='#fff'
+                >
+                  {topModule.housePicture.housePics.slice(0, 5).map((pic, index) => (
+                    <Swiper.Item key={index}>
+                      <Image 
+                        src={pic.url.trim()} 
+                        mode='aspectFill' 
+                        className='banner-image'
+                        lazyLoad
+                      />
+                    </Swiper.Item>
+                  ))}
+                </Swiper>
+                <View className='pic-count'>
+                  <Text className='pic-count-text'>共{topModule.housePicture.picCount}张</Text>
                 </View>
-                <View className='price-row'>
-                  <PriceTag price={room.price} size='medium' />
-                  <View className='book-btn'>
-                    <Text>预订</Text>
+              </View>
+            )}
+
+            {/* 房屋基本信息 */}
+            <View className='info-section'>
+              <Text className='house-name'>{topModule?.houseName}</Text>
+              
+              {/* 评分和评论 */}
+              {topModule?.commentBrief && (
+                <View className='comment-brief'>
+                  <Text className='score'>{topModule.commentBrief.overall}分</Text>
+                  <Text className='score-title'>{topModule.commentBrief.scoreTitle}</Text>
+                  <Text className='comment-count'>{topModule.commentBrief.totalCountStr}条评论</Text>
+                </View>
+              )}
+
+              {/* 位置信息 */}
+              <View className='location-info'>
+                <Text className='location-text'>
+                  {topModule?.nearByPosition?.areaName} · {topModule?.nearByPosition?.tradeArea}
+                </Text>
+                <Text className='address'>{topModule?.nearByPosition?.address}</Text>
+              </View>
+
+              {/* 标签 */}
+              <View className='tags-wrapper'>
+                {topModule?.houseTags?.slice(0, 4).map((tag, index) => (
+                  tag.tagText && (
+                    <View 
+                      key={index} 
+                      className='tag-item'
+                      style={{ 
+                        backgroundColor: tag.tagText.background?.color || '#f5f5f5',
+                        color: tag.tagText.color || '#666'
+                      }}
+                    >
+                      {tag.tagText.text}
+                    </View>
+                  )
+                ))}
+              </View>
+            </View>
+
+            {/* 房东信息 */}
+            {mainPart?.dynamicModule?.landlordModule && (
+              <View className='landlord-section'>
+                <View className='landlord-header'>
+                  <Image 
+                    src={mainPart.dynamicModule.landlordModule.hotelLogo} 
+                    className='landlord-avatar'
+                    mode='aspectFill'
+                  />
+                  <View className='landlord-info'>
+                    <Text className='landlord-name'>
+                      {mainPart.dynamicModule.landlordModule.hotelName}
+                    </Text>
+                    <View className='landlord-tags'>
+                      {mainPart.dynamicModule.landlordModule.hotelTags?.map((tag, idx) => (
+                        tag.tagText && (
+                          <Text key={idx} className='landlord-tag'>
+                            {tag.tagText.text}
+                          </Text>
+                        )
+                      ))}
+                    </View>
                   </View>
                 </View>
               </View>
-            </View>
-          ))}
-        </View>
-      </View>
+            )}
 
-      {/* 周边 */}
-      {currentHotel.nearbyAttractions.length > 0 && (
-        <View className='section nearby'>
-          <Text className='section-title'>周边信息</Text>
-          {currentHotel.nearbyAttractions.map(item => (
-            <View key={item.name} className='attraction-item'>
-              <Text className={`type-icon ${item.type}`}>
-                {item.type === 'sight' ? '🏞️' : item.type === 'transport' ? '🚇' : '🛍️'}
-              </Text>
-              <Text className='name'>{item.name}</Text>
-              <Text className='distance'>{item.distance}</Text>
-            </View>
-          ))}
-        </View>
-      )}
+            {/* 房屋设施 */}
+            {mainPart?.dynamicModule?.facilityModule?.houseFacility && (
+              <View className='facility-section'>
+                <Text className='section-title'>房屋设施</Text>
+                <View className='facility-grid'>
+                  {mainPart.dynamicModule.facilityModule.houseFacility.specialFacilitys
+                    ?.filter(f => !f.deleted)
+                    .slice(0, 6)
+                    .map((facility, idx) => (
+                      <View key={idx} className='facility-item'>
+                        <Image src={facility.icon} className='facility-icon' mode='aspectFit' />
+                        <Text className='facility-name'>{facility.name}</Text>
+                      </View>
+                    ))}
+                </View>
+              </View>
+            )}
 
-      {/* 底部栏 */}
-      <View className='bottom-bar safe-area-bottom'>
-        <View className='contact'>
-          <Text className='icon'>📞</Text>
-          <Text>咨询</Text>
-        </View>
-        <View className='price-info'>
-          <Text className='label'>最低</Text>
-          <PriceTag price={currentHotel.minPrice} size='large' />
-        </View>
-        <View className='book-btn'>
-          <Text>立即预订</Text>
-        </View>
-      </View>
+            {/* 位置周边 */}
+            {mainPart?.dynamicModule?.positionModule && (
+              <View className='position-section'>
+                <Text className='section-title'>位置周边</Text>
+                <Text className='position-address'>
+                  {mainPart.dynamicModule.positionModule.address}
+                </Text>
+                {mainPart.dynamicModule.positionModule.mapUrl && (
+                  <Image 
+                    src={mainPart.dynamicModule.positionModule.mapUrl} 
+                    className='map-image'
+                    mode='widthFix'
+                    lazyLoad
+                  />
+                )}
+              </View>
+            )}
+
+            {/* 价格说明 */}
+            {mainPart?.introductionModule && (
+              <View className='intro-section'>
+                <Text className='section-title'>{mainPart.introductionModule.title}</Text>
+                <Text className='intro-text'>{mainPart.introductionModule.introduction}</Text>
+              </View>
+            )}
+
+            {/* 底部预订栏 */}
+            {currentHouse && (
+              <View className='booking-bar'>
+                <View className='price-info'>
+                  <Text className='price-symbol'>¥</Text>
+                  <Text className='price-num'>{currentHouse.finalPrice}</Text>
+                  <Text className='price-original'>¥{currentHouse.productPrice}</Text>
+                  <Text className='price-unit'>{currentHouse.priceMark}</Text>
+                </View>
+                <View 
+                  className={`book-btn ${!currentHouse.allowBooking ? 'disabled' : ''}`}
+                  onClick={() => {
+                    if (currentHouse.allowBooking) {
+                      Taro.showToast({ title: '预订功能开发中', icon: 'none' });
+                    }
+                  }}
+                >
+                  {currentHouse.allowBooking ? '立即预订' : '已满房'}
+                </View>
+              </View>
+            )}
+          </View>
+        ) : (
+          <View className='empty-wrapper'>
+            <Text className='empty-text'>暂无数据</Text>
+          </View>
+        )}
+        
+        <SafeArea position='bottom' />
+      </ScrollView>
     </View>
-  )
-}
+  );
+};
+
+export default HotelDetail;
