@@ -7,20 +7,19 @@ import { getDetailData } from '../../store/slices/detailSlice';
 import { RootState, AppDispatch } from '../../store';
 import DetailBanner from '../../components/HotelDetail/DetailBanner';
 import HouseInfos from '../../components/HotelDetail/HouseInfos';
-import DetailFacility from '../../components/HotelDetail/DetailFacility'
+import DetailFacility from '../../components/HotelDetail/DetailFacility';
 import DetailHotExport from '../../components/HotelDetail/DetailHotExport';
 import DetailPosition from '../../components/HotelDetail/DetailPosition';
+import BookingStickyBar from '../../components/HotelDetail/DetailCalendarNumber';
 import { HouseDetailData } from '../../services/modules/detail';
 import '../../styles/HotelDetail.scss';
 
 export default function HotelDetail() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-  
   const { detaildata, loading, error } = useSelector<RootState, RootState['detail']>(
     (state) => state.detail
   );
-
   const houseId = router.params.id as string || "44173741";
 
   const onClickLeft = () => {
@@ -33,7 +32,6 @@ export default function HotelDetail() {
     }
   }, [dispatch, houseId]);
 
-  // 类型守卫
   const hasData = (data: HouseDetailData | Record<string, never>): data is HouseDetailData => {
     return 'mainPart' in data && data.mainPart !== undefined;
   };
@@ -47,6 +45,7 @@ export default function HotelDetail() {
       <SafeArea position='top' />
       <NavBar
         left='返回'
+        onBackClick={onClickLeft}
         fixed
         safeAreaInsetTop
         className='detail-navbar'
@@ -62,15 +61,14 @@ export default function HotelDetail() {
       >
         {hasData(detaildata) ? (
           <View className='detail-wrapper'>
-            {/* 轮播图区域 */}
             {topModule?.housePicture?.housePics && (
               <DetailBanner bannerdata={topModule.housePicture.housePics} />
             )}
             <HouseInfos infosdata={detaildata?.mainPart?.topModule} />
+            <BookingStickyBar />
             <DetailFacility facilitydata={detaildata?.mainPart?.dynamicModule?.facilityModule?.houseFacility} />
             <DetailPosition positiondata={detaildata?.mainPart?.dynamicModule?.positionModule} />
             <DetailHotExport hotexportdata={detaildata?.mainPart?.dynamicModule?.commentModule} />
-            {/* 底部预订栏 */}
             {currentHouse && (
               <View className='booking-bar'>
                 <View className='price-info'>
@@ -97,7 +95,6 @@ export default function HotelDetail() {
             <Text className='empty-text'>暂无数据</Text>
           </View>
         )}
-        
         <SafeArea position='bottom' />
       </ScrollView>
     </View>

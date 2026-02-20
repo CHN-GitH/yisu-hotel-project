@@ -221,6 +221,132 @@
   }
 }
 
+.booking-sticky-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  .sticky-content {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px 6px;
+    height: 88px;
+    box-sizing: border-box;
+    .divider {
+      width: 1px;
+      height: 40px;
+      background: #e8e8e8;
+      margin: 0 12px;
+    }
+    .date-selector-left {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      .date-item {
+        margin-top: -1.25rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .date-text {
+          font-size: 16px;
+          font-weight: 600;
+          color: #333;
+        }
+        .week-text {
+          font-size: 12px;
+          color: #666;
+          background: #f5f5f5;
+          padding: 4px 10px;
+          border-radius: 8px;
+        }
+        .date-separator {
+          font-size: 24px;
+          color: #999;
+          margin: 0 4px;
+        }
+      }
+      .nights-badge {
+        font-size: 10px;
+        color: #ff6b6b;
+        background: rgba(255, 107, 107, 0.1);
+        padding: 4px 6px;
+        border-radius: 12px;
+        margin-top: 4px;
+        margin-left: 12px;
+        font-weight: 500;
+      }
+    }
+    .guest-selector-right {
+      max-width: 8rem;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      .guest-text {
+        font-size: 12px;
+        font-weight: 600;
+        color: #333;
+      }
+      .guest-separator {
+        font-size: 12px;
+        color: #ccc;
+      }
+    }
+    .guest-popup {
+      .guest-popup-content {
+        padding: 4px 32px 50px;
+        background: #fff;
+      }
+      .guest-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      .guest-label {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        .label-title {
+          font-size: 24px;
+          font-weight: 600;
+          color: #333;
+        }
+        .label-desc {
+          font-size: 12px;
+          margin-left: 4px;
+          margin-top: -8px;
+          color: #999;
+        }
+      }
+      .guest-confirm-btn {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+        border-radius: 44px;
+        height: 88px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+        .confirm-text {
+          color: #fff;
+          font-size: 32px;
+          font-weight: 600;
+        }
+        &:active {
+          opacity: 0.9;
+          transform: scale(0.98);
+        }
+      }
+    }
+  }
+}
+
 .section-container {
   padding: 0 16px;
   margin-top: 12px;
