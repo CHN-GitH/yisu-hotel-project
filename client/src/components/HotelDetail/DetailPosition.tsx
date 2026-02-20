@@ -1,4 +1,3 @@
-// src/components/HotelDetail/DetailPosition.tsx
 import React, { useState, useCallback } from 'react';
 import { View, Text, Map, CoverView, CoverImage, Button } from '@tarojs/components';
 import Taro from '@tarojs/taro';
@@ -77,16 +76,6 @@ export default function DetailPosition({ positiondata = {} }: DetailPositionProp
       width: 40,
       height: 40,
       anchor: { x: 0.5, y: 1 }, // 锚点设置在底部中心
-      callout: {
-        content: houseName || '房屋位置',
-        color: '#333',
-        fontSize: 14,
-        borderRadius: 4,
-        bgColor: '#fff',
-        padding: 8,
-        display: 'ALWAYS',
-        textAlign: 'center'
-      }
     }
   ];
 

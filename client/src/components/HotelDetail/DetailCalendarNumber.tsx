@@ -7,12 +7,23 @@ import type { CSSProperties } from 'react';
 import type { PageScrollObject } from '@tarojs/taro/types';
 
 // 日期选择器组件
-const DateSelector: React.FC = () => {
+interface DateSelectorProps {
+  onNightsChange?: (nights: number) => void;
+}
+
+const DateSelector: React.FC<DateSelectorProps> = ({ onNightsChange }) => {
   const [showCalendar, setShowCalendar] = useState(false);
   const [checkIn, setCheckIn] = useState(dayjs().format('YYYY-MM-DD'));
   const [checkOut, setCheckOut] = useState(dayjs().add(1, 'day').format('YYYY-MM-DD'));
   const dateRange = checkIn && checkOut ? [checkIn, checkOut] : [];
   const nights = dayjs(checkOut).diff(dayjs(checkIn), 'day');
+
+  // 当夜数变化时通知父组件
+  useEffect(() => {
+    if (onNightsChange) {
+      onNightsChange(nights);
+    }
+  }, [nights, onNightsChange]);
 
   const handleDateConfirm = (param: any) => {
     let startDate: string;
@@ -102,18 +113,43 @@ const DateSelector: React.FC = () => {
 };
 
 // 人数选择器组件
-const GuestSelector: React.FC = () => {
+interface GuestSelectorProps {
+  externalRoomCount?: number; // 外部传入的房间数
+}
+
+const GuestSelector: React.FC<GuestSelectorProps> = ({ externalRoomCount }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [roomCount, setRoomCount] = useState(1);
   const [adultCount, setAdultCount] = useState(1);
   const [childCount, setChildCount] = useState(0);
+  
+  // 当外部房间数变化时，同步更新内部状态
+  useEffect(() => {
+    if (externalRoomCount !== undefined && externalRoomCount !== roomCount) {
+      setRoomCount(externalRoomCount > 0 ? externalRoomCount : 1);
+      // 同步更新成人数，确保不少于房间数
+      if (adultCount < externalRoomCount) {
+        setAdultCount(externalRoomCount);
+      }
+    }
+  }, [externalRoomCount]);
+
+  // 当内部房间数变化时，确保成人数不少于房间数
+  useEffect(() => {
+    if (adultCount < roomCount) {
+      setAdultCount(roomCount);
+    }
+  }, [roomCount]);
+
+  // 计算显示的成人数（确保不少于房间数）
+  const displayAdultCount = adultCount > 2 * roomCount ? 2 * roomCount : adultCount >= roomCount ? adultCount : roomCount || 1;
   
   return (
     <>
       <View className='guest-selector-right' onClick={() => setShowPopup(true)}>
         <Text className='guest-text'>{roomCount}间</Text>
         <Text className='guest-separator'>·</Text>
-        <Text className='guest-text'>{adultCount >= roomCount ? adultCount : roomCount || 1}人</Text>
+        <Text className='guest-text'>{displayAdultCount}人</Text>
         <Text className='guest-separator'>·</Text>
         <Text className='guest-text'>{childCount}童</Text>
       </View>
@@ -142,7 +178,7 @@ const GuestSelector: React.FC = () => {
               <Text className='label-title'>成人数</Text>
             </View>
             <InputNumber
-              value={adultCount >= roomCount ? adultCount : roomCount || 1}
+              value={displayAdultCount}
               min={roomCount}
               max={roomCount * 2}
               onChange={(value) => setAdultCount(Number(value))}
@@ -169,8 +205,13 @@ const GuestSelector: React.FC = () => {
   );
 };
 
-// 整合的粘性栏组件（最终无 TS 错误版）
-export default function BookingStickyBar() {
+// 整合的粘性栏组件
+interface BookingStickyBarProps {
+  externalRoomCount?: number;
+  onNightsChange?: (nights: number) => void;
+}
+
+export default function BookingStickyBar({ externalRoomCount, onNightsChange }: BookingStickyBarProps) {
   const [scrollTop, setScrollTop] = useState(0);
   const STICKY_THRESHOLD = 160;
 
@@ -203,10 +244,10 @@ export default function BookingStickyBar() {
   return (
     <View className='booking-sticky-bar' style={stickyBarStyle}>
       <View className='sticky-content'>
-        <DateSelector />
+        <DateSelector onNightsChange={onNightsChange} />
         <View className='divider' />
-        <GuestSelector />
+        <GuestSelector externalRoomCount={externalRoomCount} />
       </View>
     </View>
   );
-};
+}

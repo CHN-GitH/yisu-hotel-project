@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import Taro, { useRouter } from '@tarojs/taro';
 import { View, Text, ScrollView, Image } from '@tarojs/components';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,6 +11,7 @@ import DetailFacility from '../../components/HotelDetail/DetailFacility';
 import DetailHotExport from '../../components/HotelDetail/DetailHotExport';
 import DetailPosition from '../../components/HotelDetail/DetailPosition';
 import BookingStickyBar from '../../components/HotelDetail/DetailCalendarNumber';
+import TypeChoose, { RoomStats, RoomType } from '../../components/HotelDetail/TypeChoose';
 import { HouseDetailData } from '../../services/modules/detail';
 import '../../styles/HotelDetail.scss';
 
@@ -20,7 +21,17 @@ export default function HotelDetail() {
   const { detaildata, loading, error } = useSelector<RootState, RootState['detail']>(
     (state) => state.detail
   );
-  const houseId = router.params.id as string || "44173741";
+  const houseId = router.params.id as string || "20061007";
+
+  // 房型选择统计数据
+  const [roomStats, setRoomStats] = useState<RoomStats>({
+    totalCount: 0,
+    totalPrice: 0,
+    selectedRooms: []
+  });
+
+  // 夜数状态
+  const [nights, setNights] = useState(1);
 
   const onClickLeft = () => {
     Taro.navigateBack();
@@ -40,6 +51,47 @@ export default function HotelDetail() {
   const topModule = mainPart?.topModule;
   const currentHouse = hasData(detaildata) ? detaildata.currentHouse : null;
 
+  // 处理房型统计数据变化
+  const handleRoomStatsChange = (stats: RoomStats) => {
+    setRoomStats(stats);
+  };
+
+  // 处理夜数变化
+  const handleNightsChange = (newNights: number) => {
+    setNights(newNights);
+  };
+
+  // 处理房型选择变化（详细数据）
+  const handleRoomSelectionChange = (selectedRooms: RoomType[], totalCount: number, totalPrice: number) => {
+    console.log('房型选择变化:', { selectedRooms, totalCount, totalPrice });
+  };
+
+  // 计算最终显示的总价（单日总价 * 夜数）
+  const finalTotalPrice = useMemo(() => {
+    // 如果有选择房型，使用房型总价 * 夜数
+    if (roomStats.totalCount > 0) {
+      return roomStats.totalPrice * nights;
+    }
+    // 如果没有选择房型，使用当前房屋原价 * 夜数
+    if (currentHouse?.finalPrice) {
+      const basePrice = parseInt(currentHouse.finalPrice, 10);
+      return basePrice * nights;
+    }
+    return 0;
+  }, [roomStats.totalPrice, roomStats.totalCount, nights, currentHouse?.finalPrice]);
+
+  // 计算原价（用于显示划线价）
+  const originalTotalPrice = useMemo(() => {
+    if (currentHouse?.productPrice && roomStats.totalCount === 0) {
+      const originalPrice = parseInt(currentHouse.productPrice.replace(/[^\d]/g, ''), 10);
+      return originalPrice * nights;
+    }
+    return null;
+  }, [currentHouse?.productPrice, roomStats.totalCount, nights]);
+
+  // 是否有选择房型
+  const hasSelectedRooms = roomStats.totalCount > 0;
+
   return (
     <View className='detail-container'>
       <SafeArea position='top' />
@@ -50,7 +102,7 @@ export default function HotelDetail() {
         safeAreaInsetTop
         className='detail-navbar'
       >
-        {topModule?.houseName?.slice(0, 10) || '房屋详情'}
+        <Text className='detail-navbar-text'>{topModule?.houseName || '房屋详情'}</Text>
       </NavBar>
       <ScrollView 
         className='detail-content' 
@@ -65,27 +117,56 @@ export default function HotelDetail() {
               <DetailBanner bannerdata={topModule.housePicture.housePics} />
             )}
             <HouseInfos infosdata={detaildata?.mainPart?.topModule} />
-            <BookingStickyBar />
+            {/* 传递roomCount和onNightsChange给BookingStickyBar */}
+            <BookingStickyBar 
+              externalRoomCount={roomStats.totalCount} 
+              onNightsChange={handleNightsChange}
+            />
             <DetailFacility facilitydata={detaildata?.mainPart?.dynamicModule?.facilityModule?.houseFacility} />
+            <TypeChoose 
+              detaildata={detaildata} 
+              onStatsChange={handleRoomStatsChange}
+              onSelectionChange={handleRoomSelectionChange} 
+              maxSelectLimit={10} 
+            />
             <DetailPosition positiondata={detaildata?.mainPart?.dynamicModule?.positionModule} />
             <DetailHotExport hotexportdata={detaildata?.mainPart?.dynamicModule?.commentModule} />
             {currentHouse && (
               <View className='booking-bar'>
                 <View className='price-info'>
                   <Text className='price-symbol'>¥</Text>
-                  <Text className='price-num'>{currentHouse.finalPrice}</Text>
-                  <Text className='price-original'>¥{currentHouse.productPrice}</Text>
-                  <Text className='price-unit'>{currentHouse.priceMark}</Text>
+                  <Text className='price-num'>{finalTotalPrice}</Text>
+                  {originalTotalPrice && (
+                    <Text className='price-original'>¥{originalTotalPrice}</Text>
+                  )}
+                  <Text className='price-unit'>/{nights}晚</Text>
+                  {hasSelectedRooms && (
+                    <>
+                      <Text className='price-unit'>
+                        {roomStats.totalCount}间
+                      </Text>
+                      <Text className='price-unit price-unit-pernight'>
+                        ¥{roomStats.totalPrice}/晚
+                      </Text>
+                    </>
+                  )}
                 </View>
                 <View 
                   className={`book-btn ${!currentHouse.allowBooking ? 'disabled' : ''}`}
                   onClick={() => {
                     if (currentHouse.allowBooking) {
-                      Taro.showToast({ title: '预订功能开发中', icon: 'none' });
+                      if (roomStats.totalCount === 0) {
+                        Taro.showToast({ title: '请先选择房型', icon: 'none' });
+                      } else {
+                        Taro.showToast({ 
+                          title: `预订${nights}晚，总价¥${finalTotalPrice}`, 
+                          icon: 'none' 
+                        });
+                      }
                     }
                   }}
                 >
-                  {currentHouse.allowBooking ? '立即预订' : '已满房'}
+                  {currentHouse.allowBooking ? (hasSelectedRooms ? '立即预订' : '请选择房型') : '已满房'}
                 </View>
               </View>
             )}
@@ -99,4 +180,4 @@ export default function HotelDetail() {
       </ScrollView>
     </View>
   );
-};
+}
