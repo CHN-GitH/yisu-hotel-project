@@ -31,7 +31,7 @@ interface DetailPositionProps {
   positiondata?: Partial<PositionData>;
 }
 
-// 百度坐标转腾讯/GCJ-02坐标（简化版，实际项目建议使用完整转换算法）
+// 百度坐标转腾讯/GCJ-02坐标
 const bd09ToGcj02 = (bdLon: number, bdLat: number): [number, number] => {
   const x = bdLon - 0.0065;
   const y = bdLat - 0.006;
@@ -42,7 +42,7 @@ const bd09ToGcj02 = (bdLon: number, bdLat: number): [number, number] => {
   return [gcjLon, gcjLat];
 };
 
-const DetailPosition: React.FC<DetailPositionProps> = ({ positiondata = {} }) => {
+export default function DetailPosition({ positiondata = {} }: DetailPositionProps) {
   const [scale, setScale] = useState<number>(16);
   const [showLocation, setShowLocation] = useState<boolean>(false);
 
@@ -133,7 +133,6 @@ const DetailPosition: React.FC<DetailPositionProps> = ({ positiondata = {} }) =>
               )}
             </View>
           </View>
-
           {/* 可缩放地图容器 */}
           <View className='map-container'>
             <Map
@@ -148,7 +147,6 @@ const DetailPosition: React.FC<DetailPositionProps> = ({ positiondata = {} }) =>
               enableRotate
               onMarkerTap={handleMarkerTap}
               onRegionChange={(e) => {
-                // 可以在这里监听区域变化
                 console.log('地图区域变化', e);
               }}
             />
@@ -162,7 +160,6 @@ const DetailPosition: React.FC<DetailPositionProps> = ({ positiondata = {} }) =>
               </CoverView>
             </CoverView>
           </View>
-
           {/* 操作按钮 */}
           <View className='map-actions'>
             <Button 
@@ -178,5 +175,3 @@ const DetailPosition: React.FC<DetailPositionProps> = ({ positiondata = {} }) =>
     </View>
   );
 };
-
-export default DetailPosition;

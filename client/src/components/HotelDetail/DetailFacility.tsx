@@ -71,7 +71,6 @@ export default function DetailFacility({ facilitydata }: DetailFacilityProps) {
             ))}
           </View>
         )}
-
         {/* 设施分组列表 */}
         <View className='facility-container'>
           {validFacilityGroups.map((item, index) => (

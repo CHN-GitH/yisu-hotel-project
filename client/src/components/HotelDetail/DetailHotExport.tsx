@@ -83,23 +83,10 @@ export default function DetailHotExport({ hotexportdata = {} }: DetailHotExportP
             <View className='header-left'>
               <View className='score-box'>
                 <Text className='score-text'>{hotexportdata.overall}</Text>
-                <View className='score-line'></View>
-              </View>
-              <View className='info-box'>
-                <Text className='score-title'>{hotexportdata.scoreTitle}</Text>
-                <Text className='comment-count'>{hotexportdata.totalCount}条评论</Text>
-                {hotexportdata.overall != null && (
-                  <View className='star-rating'>
-                    <Rate
-                      value={value}
-                      disabled
-                      allowHalf
-                    />
-                  </View>
-                )}
               </View>
             </View>
             <View className='header-right'>
+              <Text className='score-title'>{hotexportdata.scoreTitle}</Text>
               {hotexportdata.subScores?.map((item, index) => (
                 <Text className='sub-score-item' key={index}>{item}</Text>
               ))}

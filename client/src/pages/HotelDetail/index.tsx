@@ -11,9 +11,9 @@ import DetailFacility from '../../components/HotelDetail/DetailFacility'
 import DetailHotExport from '../../components/HotelDetail/DetailHotExport';
 import DetailPosition from '../../components/HotelDetail/DetailPosition';
 import { HouseDetailData } from '../../services/modules/detail';
-import './index.scss';
+import '../../styles/HotelDetail.scss';
 
-const HotelDetail: React.FC = () => {
+export default function HotelDetail() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   
@@ -62,7 +62,7 @@ const HotelDetail: React.FC = () => {
       >
         {hasData(detaildata) ? (
           <View className='detail-wrapper'>
-            {/* 轮播图区域 - 使用 DetailBanner 组件 */}
+            {/* 轮播图区域 */}
             {topModule?.housePicture?.housePics && (
               <DetailBanner bannerdata={topModule.housePicture.housePics} />
             )}
@@ -70,25 +70,6 @@ const HotelDetail: React.FC = () => {
             <DetailFacility facilitydata={detaildata?.mainPart?.dynamicModule?.facilityModule?.houseFacility} />
             <DetailPosition positiondata={detaildata?.mainPart?.dynamicModule?.positionModule} />
             <DetailHotExport hotexportdata={detaildata?.mainPart?.dynamicModule?.commentModule} />
-
-            {/* 房屋设施 */}
-            {mainPart?.dynamicModule?.facilityModule?.houseFacility && (
-              <View className='facility-section'>
-                <Text className='section-title'>房屋设施</Text>
-                <View className='facility-grid'>
-                  {mainPart.dynamicModule.facilityModule.houseFacility.specialFacilitys
-                    ?.filter(f => !f.deleted)
-                    .slice(0, 6)
-                    .map((facility, idx) => (
-                      <View key={idx} className='facility-item'>
-                        <Image src={facility.icon} className='facility-icon' mode='aspectFit' />
-                        <Text className='facility-name'>{facility.name}</Text>
-                      </View>
-                    ))}
-                </View>
-              </View>
-            )}
-
             {/* 底部预订栏 */}
             {currentHouse && (
               <View className='booking-bar'>
@@ -122,5 +103,3 @@ const HotelDetail: React.FC = () => {
     </View>
   );
 };
-
-export default HotelDetail;
