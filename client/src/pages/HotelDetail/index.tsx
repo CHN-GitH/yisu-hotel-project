@@ -10,9 +10,7 @@ import HouseInfos from '../../components/HotelDetail/HouseInfos';
 import DetailFacility from '../../components/HotelDetail/DetailFacility'
 import DetailHotExport from '../../components/HotelDetail/DetailHotExport';
 import DetailPosition from '../../components/HotelDetail/DetailPosition';
-
 import { HouseDetailData } from '../../services/modules/detail';
-
 import './index.scss';
 
 const HotelDetail: React.FC = () => {
@@ -73,73 +71,6 @@ const HotelDetail: React.FC = () => {
             <DetailPosition positiondata={detaildata?.mainPart?.dynamicModule?.positionModule} />
             <DetailHotExport hotexportdata={detaildata?.mainPart?.dynamicModule?.commentModule} />
 
-            {/* 房屋基本信息 */}
-            <View className='info-section'>
-              <Text className='house-name'>{topModule?.houseName}</Text>
-              
-              {/* 评分和评论 */}
-              {topModule?.commentBrief && (
-                <View className='comment-brief'>
-                  <Text className='score'>{topModule.commentBrief.overall}分</Text>
-                  <Text className='score-title'>{topModule.commentBrief.scoreTitle}</Text>
-                  <Text className='comment-count'>{topModule.commentBrief.totalCountStr}条评论</Text>
-                </View>
-              )}
-
-              {/* 位置信息 */}
-              <View className='location-info'>
-                <Text className='location-text'>
-                  {topModule?.nearByPosition?.areaName} · {topModule?.nearByPosition?.tradeArea}
-                </Text>
-                <Text className='address'>{topModule?.nearByPosition?.address}</Text>
-              </View>
-
-              {/* 标签 */}
-              <View className='tags-wrapper'>
-                {topModule?.houseTags?.slice(0, 4).map((tag, index) => (
-                  tag.tagText && (
-                    <View 
-                      key={index} 
-                      className='tag-item'
-                      style={{ 
-                        backgroundColor: tag.tagText.background?.color || '#f5f5f5',
-                        color: tag.tagText.color || '#666'
-                      }}
-                    >
-                      {tag.tagText.text}
-                    </View>
-                  )
-                ))}
-              </View>
-            </View>
-
-            {/* 房东信息 */}
-            {mainPart?.dynamicModule?.landlordModule && (
-              <View className='landlord-section'>
-                <View className='landlord-header'>
-                  <Image 
-                    src={mainPart.dynamicModule.landlordModule.hotelLogo} 
-                    className='landlord-avatar'
-                    mode='aspectFill'
-                  />
-                  <View className='landlord-info'>
-                    <Text className='landlord-name'>
-                      {mainPart.dynamicModule.landlordModule.hotelName}
-                    </Text>
-                    <View className='landlord-tags'>
-                      {mainPart.dynamicModule.landlordModule.hotelTags?.map((tag, idx) => (
-                        tag.tagText && (
-                          <Text key={idx} className='landlord-tag'>
-                            {tag.tagText.text}
-                          </Text>
-                        )
-                      ))}
-                    </View>
-                  </View>
-                </View>
-              </View>
-            )}
-
             {/* 房屋设施 */}
             {mainPart?.dynamicModule?.facilityModule?.houseFacility && (
               <View className='facility-section'>
@@ -155,32 +86,6 @@ const HotelDetail: React.FC = () => {
                       </View>
                     ))}
                 </View>
-              </View>
-            )}
-
-            {/* 位置周边 */}
-            {mainPart?.dynamicModule?.positionModule && (
-              <View className='position-section'>
-                <Text className='section-title'>位置周边</Text>
-                <Text className='position-address'>
-                  {mainPart.dynamicModule.positionModule.address}
-                </Text>
-                {mainPart.dynamicModule.positionModule.mapUrl && (
-                  <Image 
-                    src={mainPart.dynamicModule.positionModule.mapUrl} 
-                    className='map-image'
-                    mode='widthFix'
-                    lazyLoad
-                  />
-                )}
-              </View>
-            )}
-
-            {/* 价格说明 */}
-            {mainPart?.introductionModule && (
-              <View className='intro-section'>
-                <Text className='section-title'>{mainPart.introductionModule.title}</Text>
-                <Text className='intro-text'>{mainPart.introductionModule.introduction}</Text>
               </View>
             )}
 

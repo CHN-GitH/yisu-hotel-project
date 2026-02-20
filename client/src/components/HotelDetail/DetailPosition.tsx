@@ -152,6 +152,15 @@ const DetailPosition: React.FC<DetailPositionProps> = ({ positiondata = {} }) =>
                 console.log('地图区域变化', e);
               }}
             />
+            {/* 地图控制按钮 */}
+            <CoverView className='map-controls'>
+              <CoverView className='control-btn zoom-in' onClick={handleZoomIn}>
+                <Plus size={20} color='#333' />
+              </CoverView>
+              <CoverView className='control-btn zoom-out' onClick={handleZoomOut}>
+                <Minus size={20} color='#333' />
+              </CoverView>
+            </CoverView>
           </View>
 
           {/* 操作按钮 */}
@@ -161,19 +170,9 @@ const DetailPosition: React.FC<DetailPositionProps> = ({ positiondata = {} }) =>
               onClick={handleOpenMap}
             >
               <Location size={14} color='#fff' />
-              <Text className='btn-text'>竖屏地图</Text>
+              <Text className='btn-text'>全屏地图</Text>
             </Button>
           </View>
-
-          {/* 地图控制按钮 */}
-          <CoverView className='map-controls'>
-            <CoverView className='control-btn zoom-in' onClick={handleZoomIn}>
-              <Plus size={20} color='#333' />
-            </CoverView>
-            <CoverView className='control-btn zoom-out' onClick={handleZoomOut}>
-              <Minus size={20} color='#333' />
-            </CoverView>
-          </CoverView>
         </View>
       </DetailSlot>
     </View>
