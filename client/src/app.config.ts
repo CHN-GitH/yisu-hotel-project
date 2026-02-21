@@ -1,10 +1,9 @@
 export default defineAppConfig({
   pages: [
-    'pages/HotelDetail/index',
     'pages/HotelSearch/index',
     'pages/CitySearch/index',
     'pages/HotelList/index',
-    // 'pages/HotelDetail/index',
+    'pages/HotelDetail/index',
   ],
   window: {
     backgroundTextStyle: 'light',

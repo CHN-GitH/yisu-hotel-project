@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import { View, Text, ScrollView } from '@tarojs/components'
-import { Tabs, Elevator, Grid } from '@nutui/nutui-react-taro'
+import { Tabs, Elevator, Grid, SearchBar } from '@nutui/nutui-react-taro'
 import ChineseCities from '../../assets/CityChinese.json'
 import InternationalCities from '../../assets/CityInterNational.json'
 
@@ -136,6 +136,7 @@ export default function CitySearch() {
 
   return (
     <View className="city-search">
+      <SearchBar/>
       <Tabs
         value={activeTab}
         onChange={(value) => setActiveTab(value as 'domestic' | 'international')}
