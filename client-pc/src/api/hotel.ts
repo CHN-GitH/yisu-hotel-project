@@ -31,4 +31,8 @@ export function offlineHotel(id: string) {
 export function deleteHotel(id: string) {
   return request.delete(`/hotel/delete/${id}`)
 }
+//审核酒店（管理员）
+export function auditHotel(id: string, data: { status: string; reason?: string }) {
+  return request.patch(`/hotels/${id}/status`, data)
+}
 

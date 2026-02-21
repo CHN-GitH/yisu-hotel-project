@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Form, Input, Button, Card, Radio, message } from 'antd'
+import { Form, Input, Button, Card, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { register } from '@/api/auth'
@@ -17,10 +17,12 @@ function Register() {
         username: values.username,
         password: values.password,
         confirmPassword: values.confirmPassword,
-        role: values.role,
+        role: 'merchant',
       })
       message.success('注册成功，请登录')
       navigate('/login')
+    } catch (error) {
+      // 错误提示已由响应拦截器处理
     } finally {
       setLoading(false)
     }
@@ -95,21 +97,6 @@ function Register() {
               prefix={<LockOutlined />}
               placeholder="确认密码"
             />
-          </Form.Item>
-
-          <Form.Item
-            name="role"
-            initialValue="merchant"
-            rules={[{ required: true, message: '请选择角色' }]}
-          >
-            <Radio.Group style={{ width: '100%', textAlign: 'center' }}>
-              <Radio.Button value="merchant" style={{ width: '50%' }}>
-                商户
-              </Radio.Button>
-              <Radio.Button value="admin" style={{ width: '50%' }}>
-                管理员
-              </Radio.Button>
-            </Radio.Group>
           </Form.Item>
 
           <Form.Item>

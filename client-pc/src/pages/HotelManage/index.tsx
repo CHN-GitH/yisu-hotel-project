@@ -9,7 +9,10 @@ import {
   Input,
   Card,
   Row,
-  Col
+  Col,
+  Modal,
+  Form,
+  Input as AntInput
 } from 'antd'
 import {
   PlusOutlined,
@@ -21,7 +24,9 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import type { RootState } from '@/store'
-import { getHotelList, publishHotel, offlineHotel, deleteHotel } from '@/api/hotel'
+import { getHotelList, publishHotel, offlineHotel, deleteHotel, auditHotel } from '@/api/hotel'
+
+const { TextArea } = AntInput
 
 // 状态标签颜色映射
 const statusMap: Record<string, { color: string; text: string }> = {
@@ -33,6 +38,13 @@ const statusMap: Record<string, { color: string; text: string }> = {
   draft: { color: 'blue', text: '草稿' },
 }
 
+// 待审核操作描述
+const pendingActionMap: Record<string, string> = {
+  publish: '发布审核',
+  offline: '下线审核',
+  update: '修改审核'
+}
+
 function HotelManage() {
   const navigate = useNavigate()
   const { userInfo } = useSelector((state: RootState) => state.user)
@@ -41,12 +53,16 @@ function HotelManage() {
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<any[]>([])
   const [keyword, setKeyword] = useState('')
+  const [auditModalVisible, setAuditModalVisible] = useState(false)
+  const [currentHotel, setCurrentHotel] = useState<any>(null)
+  const [auditType, setAuditType] = useState<'approve' | 'reject' | null>(null)
+  const [auditForm] = Form.useForm()
 
   // 获取列表数据
   const fetchData = async () => {
     setLoading(true)
     try {
-      const res = await getHotelList()
+      const res: any = await getHotelList()
       setData(res || [])
     } catch (error) {
       console.error('获取酒店列表失败', error)
@@ -64,7 +80,7 @@ function HotelManage() {
   const handlePublish = async (id: string) => {
     try {
       await publishHotel(id)
-      message.success('发布成功')
+      message.success('已提交审核，请等待管理员审核')
       fetchData()
     } catch (error) {
       console.error('发布酒店失败', error)
@@ -75,7 +91,7 @@ function HotelManage() {
   const handleOffline = async (id: string) => {
     try {
       await offlineHotel(id)
-      message.success('下线成功')
+      message.success('已提交审核，请等待管理员审核')
       fetchData()
     } catch (error) {
       console.error('下线酒店失败', error)
@@ -93,6 +109,32 @@ function HotelManage() {
     }
   }
 
+  // 打开审核弹窗
+  const handleOpenAudit = (hotel: any, type: 'approve' | 'reject') => {
+    setCurrentHotel(hotel)
+    setAuditType(type)
+    auditForm.resetFields()
+    setAuditModalVisible(true)
+  }
+
+  // 提交审核
+  const handleAudit = async () => {
+    if (!currentHotel || !auditType) return
+
+    try {
+      const values = await auditForm.validateFields()
+      await auditHotel(currentHotel.id, {
+        status: auditType === 'approve' ? 'approved' : 'rejected',
+        reason: values.reason
+      })
+      message.success(auditType === 'approve' ? '审核通过' : '已拒绝')
+      setAuditModalVisible(false)
+      fetchData()
+    } catch (error) {
+      console.error('审核失败', error)
+    }
+  }
+
   // 表格列定义
   const columns = [
     {
@@ -100,12 +142,19 @@ function HotelManage() {
       dataIndex: 'nameCn',
       key: 'nameCn',
       render: (text: string, record: any) => (
-        <Space>
-          <span>{text}</span>
-          {record.nameEn && (
-            <span style={{ color: '#999', fontSize: 12 }}>({record.nameEn})</span>
+        <div>
+          <Space>
+            <span>{text}</span>
+            {record.nameEn && (
+              <span style={{ color: '#999', fontSize: 12 }}>({record.nameEn})</span>
+            )}
+          </Space>
+          {record.status === 'rejected' && record.rejectReason && (
+            <div style={{ color: '#ff4d4f', fontSize: 12, marginTop: 4 }}>
+              拒绝原因：{record.rejectReason}
+            </div>
           )}
-        </Space>
+        </div>
       ),
     },
     {
@@ -126,17 +175,24 @@ function HotelManage() {
       title: '状态',
       dataIndex: 'status',
       key: 'status',
-      width: 100,
-      render: (status: string) => (
-        <Tag color={statusMap[status]?.color}>
-          {statusMap[status]?.text}
-        </Tag>
+      width: 150,
+      render: (status: string, record: any) => (
+        <div>
+          <Tag color={statusMap[status]?.color}>
+            {statusMap[status]?.text}
+          </Tag>
+          {record.pendingAction && (
+            <div style={{ fontSize: 12, color: '#fa8c16', marginTop: 4 }}>
+              {pendingActionMap[record.pendingAction] || '待审核'}
+            </div>
+          )}
+        </div>
       ),
     },
     {
       title: '操作',
       key: 'action',
-      width: 250,
+      width: 350,
       render: (_: any, record: any) => (
         <Space size="small">
           {/* 商户操作 */}
@@ -146,10 +202,11 @@ function HotelManage() {
                 type="text"
                 icon={<EditOutlined />}
                 onClick={() => navigate(`/hotel/edit/${record.id}`)}
+                disabled={record.status === 'pending' || record.pendingAction}
               >
                 编辑
               </Button>
-              {record.status === 'offline' && (
+              {record.status === 'offline' && !record.pendingAction && (
                 <Popconfirm
                   title="确认发布？"
                   onConfirm={() => handlePublish(record.id)}
@@ -159,7 +216,7 @@ function HotelManage() {
                   </Button>
                 </Popconfirm>
               )}
-              {record.status === 'approved' && (
+              {(record.status === 'approved' || record.status === 'online') && !record.pendingAction && (
                 <Popconfirm
                   title="确认下线？"
                   onConfirm={() => handleOffline(record.id)}
@@ -177,10 +234,31 @@ function HotelManage() {
             <>
               <Button
                 type="text"
+                icon={<EditOutlined />}
                 onClick={() => navigate(`/hotel/edit/${record.id}`)}
               >
-                审核
+                查看
               </Button>
+              {record.status === 'pending' && (
+                <>
+                  <Button
+                    type="text"
+                    icon={<CheckOutlined />}
+                    onClick={() => handleOpenAudit(record, 'approve')}
+                    style={{ color: '#52c41a' }}
+                  >
+                    通过
+                  </Button>
+                  <Button
+                    type="text"
+                    danger
+                    icon={<CloseOutlined />}
+                    onClick={() => handleOpenAudit(record, 'reject')}
+                  >
+                    拒绝
+                  </Button>
+                </>
+              )}
               <Popconfirm
                 title="确认删除？"
                 description="删除后不可恢复"
@@ -240,6 +318,34 @@ function HotelManage() {
           pagination={{ pageSize: 10 }}
         />
       </Card>
+
+      {/* 审核弹窗 */}
+      <Modal
+        title={auditType === 'approve' ? '审核通过' : '审核拒绝'}
+        open={auditModalVisible}
+        onOk={handleAudit}
+        onCancel={() => setAuditModalVisible(false)}
+        okText="确定"
+        cancelText="取消"
+      >
+        <Form form={auditForm} layout="vertical">
+          <div style={{ marginBottom: 16 }}>
+            <strong>酒店：{currentHotel?.nameCn}</strong>
+          </div>
+          {auditType === 'reject' && (
+            <Form.Item
+              label="拒绝原因"
+              name="reason"
+              rules={[{ required: true, message: '请输入拒绝原因' }]}
+            >
+              <TextArea
+                rows={4}
+                placeholder="请输入拒绝原因"
+              />
+            </Form.Item>
+          )}
+        </Form>
+      </Modal>
     </div>
   )
 }

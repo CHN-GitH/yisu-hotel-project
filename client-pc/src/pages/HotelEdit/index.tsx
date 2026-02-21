@@ -36,16 +36,22 @@ function HotelEdit() {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [hotelDetail, setHotelDetail] = useState<any>(null)
 
   // 编辑时获取详情
   useEffect(() => {
     if (id) {
       setLoading(true)
       getHotelDetail(id).then((res: any) => {
+        setHotelDetail(res)
         form.setFieldsValue({
           ...res,
           openDate: res.openDate ? dayjs(res.openDate) : null,
         })
+        // 如果在审核中，显示提示
+        if (res.status === 'pending' || res.pendingAction) {
+          message.warning('该酒店正在审核中，暂不可修改')
+        }
       }).catch((error) => {
         console.error('获取酒店详情失败', error)
         message.error('获取酒店详情失败')
@@ -64,7 +70,7 @@ function HotelEdit() {
 
       if (isEdit) {
         await updateHotel(id!, data)
-        message.success('更新成功')
+        message.success('已提交审核，请等待管理员审核')
       } else {
         await createHotel(data)
         message.success('创建成功')
@@ -188,9 +194,15 @@ function HotelEdit() {
               loading={saving}
               icon={<SaveOutlined />}
               size="large"
+              disabled={isEdit && (hotelDetail?.status === 'pending' || hotelDetail?.pendingAction)}
             >
               {isEdit ? '保存修改' : '创建酒店'}
             </Button>
+            {isEdit && (hotelDetail?.status === 'pending' || hotelDetail?.pendingAction) && (
+              <div style={{ color: '#faad14', marginTop: 8, fontSize: 14 }}>
+                该酒店正在审核中，暂不可修改
+              </div>
+            )}
           </Form.Item>
         </Form>
       </Card>

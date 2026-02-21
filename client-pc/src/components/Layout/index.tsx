@@ -1,5 +1,5 @@
-import { Outlet, Navigate, useNavigate, useLocation } from 'react-router-dom'
-import { Layout as AntLayout, Menu, Button, Avatar } from 'antd'
+import { Outlet, useNavigate, useLocation } from 'react-router-dom'
+import { Layout as AntLayout, Menu, Button, Avatar, message } from 'antd'
 import {
   HomeOutlined,
   PlusOutlined,
@@ -9,8 +9,12 @@ import {
 import { useSelector, useDispatch } from 'react-redux'
 import type { RootState } from '@/store'
 import { logout } from '@/store/userSlice'
+import { useEffect } from 'react'
 
 const { Header, Sider, Content } = AntLayout
+
+// Token过期时间：10分钟（毫秒）
+const TOKEN_TIMEOUT = 10 * 60 * 1000
 
 function Layout() {
   const navigate = useNavigate()
@@ -18,12 +22,26 @@ function Layout() {
   const dispatch = useDispatch()
 
   // 从 Redux 获取登录状态
-  const { isLogin, userInfo } = useSelector((state: RootState) => state.user)
+  const { userInfo, lastActivityTime, isLogin } = useSelector((state: RootState) => state.user)
 
-  // 未登录跳转到登录页
-  if (!isLogin) {
-    return <Navigate to="/login" replace />
-  }
+  // 定期检查token是否过期
+  useEffect(() => {
+    if (!isLogin) return
+
+    const checkTokenExpired = () => {
+      const now = Date.now()
+      if (now - lastActivityTime > TOKEN_TIMEOUT) {
+        message.warning('登录已过期，请重新登录')
+        dispatch(logout())
+        navigate('/login')
+      }
+    }
+
+    // 每分钟检查一次
+    const interval = setInterval(checkTokenExpired, 60 * 1000)
+
+    return () => clearInterval(interval)
+  }, [isLogin, lastActivityTime, dispatch, navigate])
 
   // 菜单项
   const menuItems = [

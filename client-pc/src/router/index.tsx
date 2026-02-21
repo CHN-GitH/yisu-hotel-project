@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
 import { Spin } from 'antd'
 import Layout from '@/components/Layout'
+import AuthGuard from '@/components/AuthGuard'
 
 // 懒加载页面
 const Login = lazy(() => import('@/pages/Login/index.tsx'))
@@ -43,7 +44,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/',
-    element: <Layout />,
+    element: (
+      <AuthGuard>
+        <Layout />
+      </AuthGuard>
+    ),
     children: [
       {
         index: true,

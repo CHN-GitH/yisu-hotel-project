@@ -97,9 +97,9 @@ app.post('/api/auth/login', (req, res) => {
       }
     });
   } else {
-    // 401状态码：未授权
-    res.status(401).json({
-      code: 401,
+    // 返回业务错误，不使用 401 状态码
+    res.json({
+      code: 1,
       msg: "用户名或密码错误"
     });
   }
@@ -119,7 +119,9 @@ app.get('/api/hotel/list', (req, res) => {
     star: hotel.starLevel,
     minPrice: hotel.price,
     status: hotel.status === 'published' ? 'online' :
-      hotel.status === 'under_review' ? 'pending' : hotel.status
+      hotel.status === 'under_review' ? 'pending' : hotel.status,
+    rejectReason: hotel.rejectReason,
+    pendingAction: hotel.pendingAction
   });
 
   let filteredHotels = mockHotels;
@@ -156,7 +158,9 @@ app.get('/api/hotel/detail/:id', (req, res) => {
       star: hotel.starLevel,
       minPrice: hotel.price,
       status: hotel.status === 'published' ? 'online' :
-        hotel.status === 'under_review' ? 'pending' : hotel.status
+        hotel.status === 'under_review' ? 'pending' : hotel.status,
+      rejectReason: hotel.rejectReason,
+      pendingAction: hotel.pendingAction
     });
 
     res.json({
@@ -269,26 +273,34 @@ app.put('/api/hotel/update/:id', (req, res) => {
   const hotelIndex = mockHotels.findIndex(h => h.id === id);
 
   if (hotelIndex !== -1) {
-    mockHotels[hotelIndex] = {
-      ...mockHotels[hotelIndex],
-      name: nameCn || mockHotels[hotelIndex].name,
-      nameEn: nameEn !== undefined ? nameEn : mockHotels[hotelIndex].nameEn,
-      address: address || mockHotels[hotelIndex].address,
-      starLevel: star || mockHotels[hotelIndex].starLevel,
-      price: minPrice || mockHotels[hotelIndex].price,
-      openDate: openDate || mockHotels[hotelIndex].openDate,
-      facilities: facilities !== undefined ? facilities : mockHotels[hotelIndex].facilities,
-      discountsInfo: discountInfo !== undefined ? discountInfo : mockHotels[hotelIndex].discountsInfo
+    const hotel = mockHotels[hotelIndex];
+
+    // 保存新数据，等待审核
+    const newData = {
+      name: nameCn || hotel.name,
+      nameEn: nameEn !== undefined ? nameEn : hotel.nameEn,
+      address: address || hotel.address,
+      starLevel: star || hotel.starLevel,
+      price: minPrice || hotel.price,
+      openDate: openDate || hotel.openDate,
+      facilities: facilities !== undefined ? facilities : hotel.facilities,
+      discountsInfo: discountInfo !== undefined ? discountInfo : hotel.discountsInfo
     };
+
+    // 保存原始状态和待审核数据
+    hotel.originalStatus = hotel.status;
+    hotel.pendingData = newData;
+    hotel.pendingAction = 'update';
+    hotel.status = 'under_review';
 
     res.json({
       code: 0,
-      msg: "更新成功",
+      msg: "已提交审核，请等待管理员审核",
       data: {
-        ...mockHotels[hotelIndex],
-        nameCn: mockHotels[hotelIndex].name,
-        star: mockHotels[hotelIndex].starLevel,
-        minPrice: mockHotels[hotelIndex].price
+        ...hotel,
+        nameCn: hotel.name,
+        star: hotel.starLevel,
+        minPrice: hotel.price
       }
     });
   } else {
@@ -307,11 +319,13 @@ app.post('/api/hotel/publish/:id/publish', (req, res) => {
   const hotelIndex = mockHotels.findIndex(h => h.id === id);
 
   if (hotelIndex !== -1) {
-    mockHotels[hotelIndex].status = "published";
+    // 商户发布需要管理员审核
+    mockHotels[hotelIndex].status = "under_review";
+    mockHotels[hotelIndex].pendingAction = "publish";
 
     res.json({
       code: 0,
-      msg: "发布成功",
+      msg: "已提交审核，请等待管理员审核",
       data: null
     });
   } else {
@@ -330,11 +344,13 @@ app.post('/api/hotel/publish/:id/offline', (req, res) => {
   const hotelIndex = mockHotels.findIndex(h => h.id === id);
 
   if (hotelIndex !== -1) {
-    mockHotels[hotelIndex].status = "offline";
+    // 商户下线需要管理员审核
+    mockHotels[hotelIndex].status = "under_review";
+    mockHotels[hotelIndex].pendingAction = "offline";
 
     res.json({
       code: 0,
-      msg: "下线成功",
+      msg: "已提交审核，请等待管理员审核",
       data: null
     });
   } else {
@@ -376,15 +392,39 @@ app.patch('/api/hotels/:id/status', (req, res) => {
   const hotelIndex = mockHotels.findIndex(h => h.id === id);
 
   if (hotelIndex !== -1) {
-    // 将前端状态转换为后端状态
-    let backendStatus = status;
-    if (status === 'online') backendStatus = 'published';
-    if (status === 'approved') backendStatus = 'published';
-    if (status === 'pending') backendStatus = 'under_review';
+    const hotel = mockHotels[hotelIndex];
+    const pendingAction = hotel.pendingAction;
 
-    mockHotels[hotelIndex].status = backendStatus;
-    if (status === 'rejected') {
-      mockHotels[hotelIndex].rejectReason = reason;
+    if (status === 'approved') {
+      // 审核通过，执行待处理的操作
+      if (pendingAction === 'publish') {
+        hotel.status = 'published';
+      } else if (pendingAction === 'offline') {
+        hotel.status = 'offline';
+      } else if (pendingAction === 'update') {
+        // 应用待更新的数据
+        if (hotel.pendingData) {
+          Object.assign(hotel, hotel.pendingData);
+        }
+        hotel.status = hotel.originalStatus || 'published';
+      } else {
+        hotel.status = 'published';
+      }
+      delete hotel.pendingAction;
+      delete hotel.pendingData;
+      delete hotel.originalStatus;
+      delete hotel.rejectReason;
+    } else if (status === 'rejected') {
+      // 审核拒绝，恢复原状态
+      if (hotel.originalStatus) {
+        hotel.status = hotel.originalStatus;
+      } else {
+        hotel.status = 'offline';
+      }
+      hotel.rejectReason = reason;
+      delete hotel.pendingAction;
+      delete hotel.pendingData;
+      delete hotel.originalStatus;
     }
 
     res.json({

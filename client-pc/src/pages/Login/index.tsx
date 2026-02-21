@@ -19,6 +19,8 @@ function Login() {
       dispatch(setUserInfo(res))
       message.success('登录成功')
       navigate('/hotel/manage')
+    } catch (error) {
+      // 错误提示已由响应拦截器处理
     } finally {
       setLoading(false)
     }
