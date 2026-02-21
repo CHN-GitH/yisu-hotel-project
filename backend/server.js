@@ -3,10 +3,44 @@
 // 引入依赖
 const express = require('express');
 const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 
 // 创建Express应用
 const app = express();
 const PORT = 3000;  // 服务器运行在3000端口
+
+// 数据文件路径
+const DATA_DIR = path.join(__dirname, 'data');
+const USERS_FILE = path.join(DATA_DIR, 'users.json');
+const HOTELS_FILE = path.join(DATA_DIR, 'hotels.json');
+
+// 确保数据目录存在
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+
+// 从文件加载数据
+function loadDataFromFile(filePath, defaultData) {
+  try {
+    if (fs.existsSync(filePath)) {
+      const data = fs.readFileSync(filePath, 'utf8');
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error(`加载数据文件失败: ${filePath}`, error);
+  }
+  return defaultData;
+}
+
+// 保存数据到文件
+function saveDataToFile(filePath, data) {
+  try {
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+  } catch (error) {
+    console.error(`保存数据文件失败: ${filePath}`, error);
+  }
+}
 
 // 中间件：允许所有前端跨域请求
 app.use(cors());
@@ -16,8 +50,8 @@ app.use(express.json());
 
 // ========== Mock数据 ==========
 
-// 用户数据（商户+管理员）
-const mockUsers = [
+// 默认用户数据（商户+管理员）
+const defaultUsers = [
   {
     id: 1,
     username: "merchant1",
@@ -34,8 +68,8 @@ const mockUsers = [
   }
 ];
 
-// 酒店数据
-const mockHotels = [
+// 默认酒店数据
+const defaultHotels = [
   {
     id: 1,
     name: "上海陆家嘴禧玥酒店",
@@ -75,6 +109,30 @@ const mockHotels = [
   }
 ];
 
+// 从文件加载数据，如果没有则使用默认数据
+let mockUsers = loadDataFromFile(USERS_FILE, defaultUsers);
+let mockHotels = loadDataFromFile(HOTELS_FILE, defaultHotels);
+
+// ========== 中间件 ==========
+
+// 模拟解析 token，获取用户信息
+function getUserFromToken(req) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return null;
+  }
+
+  const token = authHeader.substring(7); // 移除 "Bearer " 前缀
+  // 从 token 中解析用户 ID（格式：mock-token-{id}）
+  const match = token.match(/mock-token-(\d+)/);
+  if (!match) {
+    return null;
+  }
+
+  const userId = parseInt(match[1]);
+  return mockUsers.find(u => u.id === userId);
+}
+
 // ========== API接口 ==========
 
 // 登录接口 POST /api/auth/login
@@ -109,6 +167,9 @@ app.post('/api/auth/login', (req, res) => {
 app.get('/api/hotel/list', (req, res) => {
   console.log('[获取酒店列表]', req.query);  // 打印查询参数
 
+  // 获取当前登录用户
+  const currentUser = getUserFromToken(req);
+
   // 从URL获取查询参数：?star=5&status=online
   const { star, status } = req.query;
 
@@ -125,6 +186,13 @@ app.get('/api/hotel/list', (req, res) => {
   });
 
   let filteredHotels = mockHotels;
+
+  // 根据用户角色过滤数据
+  if (currentUser && currentUser.role === 'merchant') {
+    // 商户只能看到自己的酒店
+    filteredHotels = filteredHotels.filter(h => h.merchantId === currentUser.id);
+  }
+  // 管理员可以看到所有酒店
 
   // 按星级筛选
   if (star) {
@@ -203,6 +271,9 @@ app.post('/api/auth/register', (req, res) => {
 
   mockUsers.push(newUser);
 
+  // 保存到文件
+  saveDataToFile(USERS_FILE, mockUsers);
+
   res.json({
     code: 0,
     msg: "注册成功",
@@ -251,6 +322,9 @@ app.post('/api/hotel/create', (req, res) => {
 
   mockHotels.push(newHotel);
 
+  // 保存到文件
+  saveDataToFile(HOTELS_FILE, mockHotels);
+
   res.json({
     code: 0,
     msg: "创建成功",
@@ -293,6 +367,9 @@ app.put('/api/hotel/update/:id', (req, res) => {
     hotel.pendingAction = 'update';
     hotel.status = 'under_review';
 
+    // 保存到文件
+    saveDataToFile(HOTELS_FILE, mockHotels);
+
     res.json({
       code: 0,
       msg: "已提交审核，请等待管理员审核",
@@ -320,8 +397,12 @@ app.post('/api/hotel/publish/:id/publish', (req, res) => {
 
   if (hotelIndex !== -1) {
     // 商户发布需要管理员审核
+    mockHotels[hotelIndex].originalStatus = mockHotels[hotelIndex].status;
     mockHotels[hotelIndex].status = "under_review";
     mockHotels[hotelIndex].pendingAction = "publish";
+
+    // 保存到文件
+    saveDataToFile(HOTELS_FILE, mockHotels);
 
     res.json({
       code: 0,
@@ -345,8 +426,12 @@ app.post('/api/hotel/publish/:id/offline', (req, res) => {
 
   if (hotelIndex !== -1) {
     // 商户下线需要管理员审核
+    mockHotels[hotelIndex].originalStatus = mockHotels[hotelIndex].status;
     mockHotels[hotelIndex].status = "under_review";
     mockHotels[hotelIndex].pendingAction = "offline";
+
+    // 保存到文件
+    saveDataToFile(HOTELS_FILE, mockHotels);
 
     res.json({
       code: 0,
@@ -370,6 +455,9 @@ app.delete('/api/hotel/delete/:id', (req, res) => {
 
   if (hotelIndex !== -1) {
     mockHotels.splice(hotelIndex, 1);
+
+    // 保存到文件
+    saveDataToFile(HOTELS_FILE, mockHotels);
 
     res.json({
       code: 0,
@@ -426,6 +514,9 @@ app.patch('/api/hotels/:id/status', (req, res) => {
       delete hotel.pendingData;
       delete hotel.originalStatus;
     }
+
+    // 保存到文件
+    saveDataToFile(HOTELS_FILE, mockHotels);
 
     res.json({
       code: 0,
