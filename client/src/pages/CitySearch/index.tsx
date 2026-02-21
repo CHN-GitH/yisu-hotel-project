@@ -1,8 +1,10 @@
-import React, { useState, useMemo } from 'react'
-import { View, Text, ScrollView } from '@tarojs/components'
-import { Tabs, Elevator, Grid, SearchBar } from '@nutui/nutui-react-taro'
+import React, { useState, useMemo, useCallback, useRef } from 'react'
+import { View, Text, ScrollView, Icon } from '@tarojs/components'
+import { Tabs, Elevator, SearchBar } from '@nutui/nutui-react-taro'
+import Taro from '@tarojs/taro'
 import ChineseCities from '../../assets/CityChinese.json'
 import InternationalCities from '../../assets/CityInterNational.json'
+import '../../styles/CitySearch.scss'
 
 // 定义城市数据类型
 interface CityItem {
@@ -10,6 +12,7 @@ interface CityItem {
   name: string
   country?: string
   region?: string
+  pinyin?: string
 }
 
 interface ElevatorItem {
@@ -22,6 +25,102 @@ const REGION_ORDER = ['日韩', '东南亚', '欧洲', '美洲', '澳中东非']
 
 export default function CitySearch() {
   const [activeTab, setActiveTab] = useState<'domestic' | 'international'>('domestic')
+  const [searchValue, setSearchValue] = useState('')
+  const [searchResults, setSearchResults] = useState<CityItem[]>([])
+  const [isSearching, setIsSearching] = useState(false)
+  
+  // 用于标记是否正在使用输入法输入
+  const isComposingRef = useRef(false)
+  // 用于存储输入框的实际值（非受控方式）
+  const inputValueRef = useRef('')
+
+  // 获取所有城市数据（用于搜索）
+  const allCities = useMemo(() => {
+    const cities: CityItem[] = []
+    // 国内城市
+    Object.keys(ChineseCities).forEach(key => {
+      if (key === 'hot') return
+      const cityList = ChineseCities[key as keyof typeof ChineseCities] as CityItem[]
+      cityList.forEach(city => {
+        cities.push({
+          ...city,
+          region: '国内'
+        })
+      })
+    })
+    // 海外城市
+    Object.keys(InternationalCities).forEach(key => {
+      const cityList = InternationalCities[key as keyof typeof InternationalCities] as CityItem[]
+      cityList.forEach(city => {
+        cities.push(city)
+      })
+    })
+    return cities
+  }, [])
+
+  // 执行搜索逻辑
+  const executeSearch = useCallback((value: string) => {
+    if (!value.trim()) {
+      setIsSearching(false)
+      setSearchResults([])
+      return
+    }
+    setIsSearching(true)
+    const keyword = value.toLowerCase().trim()
+    // 匹配城市名或拼音
+    const results = allCities.filter(city => {
+      const nameMatch = city.name.includes(keyword)
+      const pinyinMatch = city.pinyin?.toLowerCase().includes(keyword)
+      return nameMatch || pinyinMatch
+    })
+    setSearchResults(results.slice(0, 20)) // 最多显示20条
+  }, [allCities])
+
+  // 处理 composition 事件（输入法开始/结束）
+  const handleComposition = useCallback((e: React.CompositionEvent<HTMLInputElement>) => {
+    const { type } = e
+    if (type === 'compositionstart') {
+      isComposingRef.current = true
+    } else if (type === 'compositionend') {
+      isComposingRef.current = false
+      // compositionend 时获取最终值并执行搜索
+      const finalValue = e.currentTarget.value
+      inputValueRef.current = finalValue
+      setSearchValue(finalValue)
+      executeSearch(finalValue)
+    }
+  }, [executeSearch])
+
+  // 处理 input 输入（包括拼音输入过程中的每个字符）
+  const handleInput = useCallback((e: React.FormEvent<HTMLInputElement>) => {
+    const value = e.currentTarget.value
+    inputValueRef.current = value
+    // 更新显示值
+    setSearchValue(value)
+    // 只有在非输入法编辑状态下才执行搜索
+    if (!isComposingRef.current) {
+      executeSearch(value)
+    }
+  }, [executeSearch])
+
+  // 清除搜索
+  const handleClear = useCallback(() => {
+    setSearchValue('')
+    inputValueRef.current = ''
+    isComposingRef.current = false
+    setIsSearching(false)
+    setSearchResults([])
+  }, [])
+
+  // 选择城市
+  const handleCitySelect = useCallback((city: CityItem) => {
+    const pages = Taro.getCurrentPages()
+    const prevPage = pages[pages.length - 2]
+    if (prevPage) {
+      prevPage.selectCity = { cityName: city.name, cityId: city.id }
+    }
+    Taro.navigateBack()
+  }, [])
 
   // 国内数据处理
   const domesticElevatorData = useMemo((): ElevatorItem[] => {
@@ -110,56 +209,92 @@ export default function CitySearch() {
     return result
   }, [])
 
-  // 字母索引数据（A-Z）
-  const letterGroups = useMemo(() => {
-    const map: Record<string, CityItem[]> = {}
-    Object.keys(InternationalCities).sort().forEach(letter => {
-      const cities = InternationalCities[letter as keyof typeof InternationalCities] as CityItem[]
-      map[letter] = cities.map(city => ({
-        id: city.id,
-        name: city.name,
-        country: city.country
-      }))
-    })
-    return map
-  }, [])
-
-  // 城市点击事件
   const handleCityClick = (item: CityItem) => {
-    console.log('选中城市:', item)
+    handleCitySelect(item)
   }
 
-  // 国内索引点击
   const handleIndexClick = (key: string) => {
     console.log('点击索引:', key)
   }
 
+  const renderSearchResults = () => {
+    if (searchResults.length === 0) {
+      return (
+        <View className="search-empty">
+          <Text className="empty-text">未找到相关城市</Text>
+        </View>
+      )
+    }
+
+    return (
+      <View className="search-results">
+        {searchResults.map(city => (
+          <View 
+            key={city.id} 
+            className="search-result-item"
+            onClick={() => handleCitySelect(city)}
+          >
+            <Text className="city-name">{city.name}</Text>
+            {(city.country || city.region) && (
+              <Text className="city-extra">{city.country || city.region}</Text>
+            )}
+          </View>
+        ))}
+      </View>
+    )
+  }
+
   return (
     <View className="city-search">
-      <SearchBar/>
-      <Tabs
-        value={activeTab}
-        onChange={(value) => setActiveTab(value as 'domestic' | 'international')}
-      >
-        <Tabs.TabPane title="国内(含港澳台)" value="domestic">
-          <Elevator
-            list={domesticElevatorData}
-            height="calc(100vh - 6rem)"
-            sticky
-            onItemClick={(key, item) => handleCityClick(item)}
-            onIndexClick={handleIndexClick}
+      <View className="search-header">
+        <View className="custom-search-bar">
+          <Icon type='search' />
+          <input
+            type="text"
+            value={searchValue}
+            placeholder="请输入城市/酒店名或拼音"
+            onInput={handleInput}
+            onCompositionStart={handleComposition}
+            onCompositionEnd={handleComposition}
+            maxLength={20}
+            className="search-input"
           />
-        </Tabs.TabPane>
-        <Tabs.TabPane title="海外" value="international">
-          <Elevator
-            list={internationalElevatorData}
-            height="calc(100vh - 6rem)"
-            sticky
-            onItemClick={(key, item) => handleCityClick(item)}
-            onIndexClick={handleIndexClick}
-          />
-        </Tabs.TabPane>
-      </Tabs>
+          {searchValue && (
+            <View className="clear-icon" onClick={handleClear}>
+              <Text>×</Text>
+            </View>
+          )}
+        </View>
+      </View>
+      {isSearching ? (
+        <ScrollView className="search-result-container" scrollY>
+          {renderSearchResults()}
+        </ScrollView>
+      ) : (
+        <Tabs
+          value={activeTab}
+          onChange={(value) => setActiveTab(value as 'domestic' | 'international')}
+        >
+          <Tabs.TabPane title="国内(含港澳台)" value="domestic">
+            <Elevator
+              list={domesticElevatorData}
+              height="calc(100vh - 6rem)"
+              sticky
+              onItemClick={(key, item) => handleCityClick(item)}
+              onIndexClick={handleIndexClick}
+            />
+          </Tabs.TabPane>
+          <Tabs.TabPane title="海外" value="international">
+            <Elevator
+              list={internationalElevatorData}
+              height="calc(100vh - 6rem)"
+              sticky
+              onItemClick={(key, item) => handleCityClick(item)}
+              onIndexClick={handleIndexClick}
+            />
+          </Tabs.TabPane>
+        </Tabs>
+      )}
     </View>
   )
 }
