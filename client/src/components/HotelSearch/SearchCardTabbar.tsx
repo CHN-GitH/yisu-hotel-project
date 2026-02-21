@@ -57,6 +57,15 @@ export default function SearchCardTabbar() {
         region: "日韩",
         country: "韩国"
       }));
+    } else if (targetKey === 'tab3' || targetKey === 'tab4') {
+      // tab3 和 tab4 也重置为上海（国内城市）
+      dispatch(setCity("上海"));
+      dispatch(setSelectedCityData({
+        cityName: "上海",
+        cityId: 0,
+        region: "国内",
+        country: "中国"
+      }));
     }
     // 重置标志位
     setTimeout(() => {
@@ -81,6 +90,17 @@ export default function SearchCardTabbar() {
     if (isInInternationalTab && isChina) {
       console.log('检测到中国城市，切换到国内 tab');
       setActiveTab('tab1');
+    }
+    // tab3 和 tab4 不自动切换，但如果是海外城市，重置为上海
+    if ((activeTab === 'tab3' || activeTab === 'tab4') && !isChina) {
+      console.log('tab3/tab4 检测到海外城市，重置为上海');
+      dispatch(setCity("上海"));
+      dispatch(setSelectedCityData({
+        cityName: "上海",
+        cityId: 0,
+        region: "国内",
+        country: "中国"
+      }));
     }
   }, [country, activeTab, dispatch]);
 
@@ -120,6 +140,16 @@ export default function SearchCardTabbar() {
         <SearchCardCityInterNational />
         <SearchCardTimeRange />
         <SearchCardPriceAndStar />
+        <SearchCardSearchButton />
+      </>}
+      {activeTab === 'tab3' && <>
+        <SearchCardCityChinese />
+        <SearchCardTimeRange />
+        <SearchCardSearchButton />
+      </>}
+      {activeTab === 'tab4' && <>
+        <SearchCardCityChinese />
+        <SearchCardTimeRange />
         <SearchCardSearchButton />
       </>}
     </View>
