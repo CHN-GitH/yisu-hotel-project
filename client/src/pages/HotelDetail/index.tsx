@@ -12,6 +12,7 @@ import DetailHotExport from '../../components/HotelDetail/DetailHotExport';
 import DetailPosition from '../../components/HotelDetail/DetailPosition';
 import BookingStickyBar from '../../components/HotelDetail/DetailCalendarNumber';
 import TypeChoose, { RoomStats, RoomType } from '../../components/HotelDetail/TypeChoose';
+import BookingBar from '../../components/HotelDetail/BookingBar';
 import { HouseDetailData } from '../../services/modules/detail';
 import '../../styles/HotelDetail.scss';
 
@@ -132,43 +133,13 @@ export default function HotelDetail() {
             <DetailPosition positiondata={detaildata?.mainPart?.dynamicModule?.positionModule} />
             <DetailHotExport hotexportdata={detaildata?.mainPart?.dynamicModule?.commentModule} />
             {currentHouse && (
-              <View className='booking-bar'>
-                <View className='price-info'>
-                  <Text className='price-symbol'>¥</Text>
-                  <Text className='price-num'>{finalTotalPrice}</Text>
-                  {originalTotalPrice && (
-                    <Text className='price-original'>¥{originalTotalPrice}</Text>
-                  )}
-                  <Text className='price-unit'>/{nights}晚</Text>
-                  {hasSelectedRooms && (
-                    <>
-                      <Text className='price-unit'>
-                        {roomStats.totalCount}间
-                      </Text>
-                      <Text className='price-unit price-unit-pernight'>
-                        ¥{roomStats.totalPrice}/晚
-                      </Text>
-                    </>
-                  )}
-                </View>
-                <View 
-                  className={`book-btn ${!currentHouse.allowBooking ? 'disabled' : ''}`}
-                  onClick={() => {
-                    if (currentHouse.allowBooking) {
-                      if (roomStats.totalCount === 0) {
-                        Taro.showToast({ title: '请先选择房型', icon: 'none' });
-                      } else {
-                        Taro.showToast({ 
-                          title: `预订${nights}晚，总价¥${finalTotalPrice}`, 
-                          icon: 'none' 
-                        });
-                      }
-                    }
-                  }}
-                >
-                  {currentHouse.allowBooking ? (hasSelectedRooms ? '立即预订' : '请选择房型') : '已满房'}
-                </View>
-              </View>
+              <BookingBar
+                currentHouse={currentHouse}
+                nights={nights}
+                roomStats={roomStats}
+                finalTotalPrice={finalTotalPrice}
+                originalTotalPrice={originalTotalPrice}
+              />
             )}
           </View>
         ) : (

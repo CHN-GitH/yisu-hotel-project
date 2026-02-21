@@ -1,7 +1,7 @@
-import React, { useState, useCallback } from 'react';
-import { View, Text, Map, CoverView, CoverImage, Button } from '@tarojs/components';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { View, Text, Map, CoverView, Button } from '@tarojs/components';
 import Taro from '@tarojs/taro';
-import { Location, Minus, Plus } from '@nutui/icons-react-taro';
+import { Location, Minus, Plus, Home } from '@nutui/icons-react-taro';
 import DetailSlot from './DetailSlot';
 import '../../styles/HotelDetail.scss';
 
@@ -43,7 +43,9 @@ const bd09ToGcj02 = (bdLon: number, bdLat: number): [number, number] => {
 
 export default function DetailPosition({ positiondata = {} }: DetailPositionProps) {
   const [scale, setScale] = useState<number>(16);
+  const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
   const [showLocation, setShowLocation] = useState<boolean>(false);
+  const mapRef = useRef<any>(null);
 
   const {
     longitude: bdLongitude,
@@ -64,6 +66,17 @@ export default function DetailPosition({ positiondata = {} }: DetailPositionProp
   if (!longitude || !latitude) {
     return null;
   }
+
+  // 初始化地图上下文
+  useEffect(() => {
+    if (isFullScreen) {
+      Taro.nextTick(() => {
+        mapRef.current = Taro.createMapContext('fullScreenMap');
+      });
+    } else {
+      mapRef.current = Taro.createMapContext('miniMap');
+    }
+  }, [isFullScreen]);
 
   // 地图标记点
   const markers = [
@@ -88,28 +101,17 @@ export default function DetailPosition({ positiondata = {} }: DetailPositionProp
     setScale(prev => Math.max(prev - 1, 3));
   }, []);
 
-  // 打开外部地图导航
-  const handleOpenMap = useCallback(() => {
-    Taro.openLocation({
-      latitude,
-      longitude,
-      name: houseName || '房屋位置',
-      address: address || '',
-      scale: 18
-    });
-  }, [latitude, longitude, houseName, address]);
-
-  // 标记点点击事件
-  const handleMarkerTap = (e: any) => {
-    console.log('点击标记点', e);
-  };
+  // 切换全屏地图
+  const toggleFullScreen = useCallback(() => {
+    setIsFullScreen(prev => !prev);
+  }, []);
 
   return (
     <View className='detail-position'>
       <DetailSlot 
         title='位置周边' 
-        moreText='导航前往'
-        onMoreClick={handleOpenMap}
+        moreText='全屏地图'
+        onMoreClick={toggleFullScreen}
       >
         <View className='position-content'>
           {/* 地址信息 */}
@@ -123,8 +125,9 @@ export default function DetailPosition({ positiondata = {} }: DetailPositionProp
             </View>
           </View>
           {/* 可缩放地图容器 */}
-          <View className='map-container'>
+          <View className={`map-container ${isFullScreen ? 'fullscreen' : ''}`}>
             <Map
+              id={isFullScreen ? 'fullScreenMap' : 'miniMap'}
               className='scalable-map'
               longitude={longitude}
               latitude={latitude}
@@ -134,13 +137,28 @@ export default function DetailPosition({ positiondata = {} }: DetailPositionProp
               enableZoom
               enableScroll
               enableRotate
-              onMarkerTap={handleMarkerTap}
               onRegionChange={(e) => {
                 console.log('地图区域变化', e);
               }}
             />
             {/* 地图控制按钮 */}
             <CoverView className='map-controls'>
+              {!isFullScreen && (
+                <CoverView className='control-btn fullscreen-btn' onClick={toggleFullScreen}>
+                  {/* 自定义全屏图标 */}
+                  <View className='custom-icon fullscreen-icon'>
+                    <View className='icon-corner icon-corner-tl' />
+                    <View className='icon-corner icon-corner-tr' />
+                    <View className='icon-corner icon-corner-bl' />
+                    <View className='icon-corner icon-corner-br' />
+                  </View>
+                </CoverView>
+              )}
+              {isFullScreen && (
+                <CoverView className='control-btn fullscreen-btn' onClick={toggleFullScreen}>
+                  <Home/>
+                </CoverView>
+              )}
               <CoverView className='control-btn zoom-in' onClick={handleZoomIn}>
                 <Plus size={20} color='#333' />
               </CoverView>
@@ -148,16 +166,15 @@ export default function DetailPosition({ positiondata = {} }: DetailPositionProp
                 <Minus size={20} color='#333' />
               </CoverView>
             </CoverView>
-          </View>
-          {/* 操作按钮 */}
-          <View className='map-actions'>
-            <Button 
-              className='action-btn primary'
-              onClick={handleOpenMap}
-            >
-              <Location size={14} color='#fff' />
-              <Text className='btn-text'>全屏地图</Text>
-            </Button>
+            {/* 全屏模式下的地址信息覆盖层 */}
+            {isFullScreen && (
+              <CoverView className='map-overlay-info'>
+                <CoverView className='overlay-content'>
+                  <Text className='overlay-title'>{houseName || '房屋位置'}</Text>
+                  <Text className='overlay-address'>{address}</Text>
+                </CoverView>
+              </CoverView>
+            )}
           </View>
         </View>
       </DetailSlot>
