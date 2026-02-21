@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { message, Spin } from 'antd'
@@ -46,9 +46,10 @@ function UserActivityTracker() {
 
 // 路由守卫组件
 function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { isLogin, isRestoring } = useSelector((state: RootState) => state.user)
+  const { isLogin, isRestoring, isManualLogout } = useSelector((state: RootState) => state.user)
   const navigate = useNavigate()
   const location = useLocation()
+  const hasShownWarning = useRef(false)
 
   useEffect(() => {
     // 正在恢复中，不执行任何操作
@@ -57,11 +58,30 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
     // 不需要登录的页面
     const publicPaths = ['/login', '/register']
     
-    if (!isLogin && !publicPaths.includes(location.pathname)) {
-      message.warning('请先登录')
-      navigate('/login')
+    // 如果已经在登录页，不需要提示
+    if (publicPaths.includes(location.pathname)) {
+      hasShownWarning.current = false
+      return
     }
-  }, [isLogin, isRestoring, navigate, location.pathname])
+    
+    // 如果是主动退出登录，不显示提示
+    if (isManualLogout) {
+      hasShownWarning.current = false
+      return
+    }
+    
+    if (!isLogin && !publicPaths.includes(location.pathname)) {
+      // 只在第一次需要登录时显示提示，避免路由跳转时重复提示
+      if (!hasShownWarning.current) {
+        message.warning('请先登录')
+        hasShownWarning.current = true
+      }
+      navigate('/login')
+    } else if (isLogin) {
+      // 登录成功后重置标志
+      hasShownWarning.current = false
+    }
+  }, [isLogin, isRestoring, isManualLogout, navigate, location.pathname])
 
   // 正在恢复用户信息，显示加载状态
   if (isRestoring) {

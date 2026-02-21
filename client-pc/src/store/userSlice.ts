@@ -10,6 +10,7 @@ interface UserState {
   isLogin: boolean,
   lastActivityTime: number,
   isRestoring: boolean,
+  isManualLogout: boolean,
 }
 
 const initialState: UserState = {
@@ -17,6 +18,7 @@ const initialState: UserState = {
   isLogin: false,
   lastActivityTime: Date.now(),
   isRestoring: true,
+  isManualLogout: false,
 }
 
 const userSlice = createSlice({
@@ -28,6 +30,7 @@ const userSlice = createSlice({
       state.userInfo = action.payload
       state.isLogin = true
       state.isRestoring = false
+      state.isManualLogout = false
       state.lastActivityTime = Date.now()
       localStorage.setItem('userInfo', JSON.stringify(action.payload))
       localStorage.setItem('lastActivityTime', String(Date.now()))
@@ -37,6 +40,7 @@ const userSlice = createSlice({
       state.userInfo = null
       state.isLogin = false
       state.isRestoring = false
+      state.isManualLogout = true
       state.lastActivityTime = 0
       localStorage.removeItem('userInfo')
       localStorage.removeItem('lastActivityTime')

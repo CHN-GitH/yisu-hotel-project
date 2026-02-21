@@ -149,7 +149,7 @@ function HotelManage() {
               <span style={{ color: '#999', fontSize: 12 }}>({record.nameEn})</span>
             )}
           </Space>
-          {record.status === 'rejected' && record.rejectReason && (
+          {record.rejectReason && (
             <div style={{ color: '#ff4d4f', fontSize: 12, marginTop: 4 }}>
               拒绝原因：{record.rejectReason}
             </div>
