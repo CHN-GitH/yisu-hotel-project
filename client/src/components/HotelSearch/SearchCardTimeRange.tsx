@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
@@ -7,13 +7,22 @@ import { Calendar } from '@nutui/nutui-react-taro'
 import dayjs from 'dayjs'
 import '../../styles/HotelSearch.scss'
 
-export default function SearchCard() {
+export default function SearchCardTimeRange() {
   const dispatch = useAppDispatch()
   const { checkIn, checkOut, nights } = useAppSelector(state => state.search)
   const [showCalendar, setShowCalendar] = useState(false)
   
   // 格式化日期数组，需要Date对象或日期字符串数组
   const dateRange = checkIn && checkOut ? [checkIn, checkOut] : []
+
+  // 判断是否需要显示凌晨入住提示（当前时间在0-6点，且入住日期是今天）
+  const showEarlyMorningTip = useMemo(() => {
+    const now = dayjs()
+    const currentHour = now.hour()
+    const isEarlyMorning = currentHour >= 0 && currentHour < 6
+    const isCheckInToday = checkIn && dayjs(checkIn).isSame(now, 'day')
+    return isEarlyMorning && isCheckInToday
+  }, [checkIn])
 
   // 确认日历
   const handleDateConfirm = (param: any) => {
@@ -85,7 +94,17 @@ export default function SearchCard() {
     <>
       <View className='search-row' onClick={() => setShowCalendar(true)}>
         <View className='search-time'>
-          <Text className='search-time-date'>{formatDisplayDate(checkIn)}</Text>
+          <View className='search-time-checkin'>
+            <Text className='search-time-date'>{formatDisplayDate(checkIn)}</Text>
+            {showEarlyMorningTip && (
+              <View className='early-morning-tip'>
+                <View className='early-morning-arrow'></View>
+                <View className='early-morning-bubble'>
+                  <Text className='early-morning-text'>当天已过0点，已选择今天凌晨6点前入住。中午离店</Text>
+                </View>
+              </View>
+            )}
+          </View>
           {checkIn && dayjs(checkIn).isSame(dayjs(), 'day')
             ? <Text className='search-time-week'>今天</Text>
             : <Text className='search-time-week'>{checkIn ? getWeekDay(checkIn) : '--'}</Text>
