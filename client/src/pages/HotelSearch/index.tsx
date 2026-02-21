@@ -8,9 +8,7 @@ import '../../styles/HotelSearch.scss'
 export default function HotelSearch() {
   return (
     <View className='index-page'>
-      {/* Banner */}
       <SearchBanner />
-      {/* 搜索卡片 */}
       <SearchCardTabbar />
     </View>
   )

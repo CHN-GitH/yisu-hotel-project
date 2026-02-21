@@ -1,3 +1,4 @@
+// src\store\index.ts
 import { configureStore } from '@reduxjs/toolkit'
 import searchReducer from './slices/searchSlice'
 import hotelReducer from './slices/hotelSlice'
@@ -9,6 +10,7 @@ import homeListReducer from './slices/homelistSlice';
 import hotSuggestsReducer from './slices/hotSuggestsSlice';
 import loadingReducer from './slices/loadingSlice';
 import searchHotelReducer from './slices/searchHotelSlice';
+import searchCityReducer from './slices/searchCitySlice';
 
 export const store = configureStore({
   reducer: {
@@ -21,7 +23,8 @@ export const store = configureStore({
     homelist: homeListReducer,
     hotSuggests: hotSuggestsReducer,
     loading: loadingReducer,
-    searchHotel: searchHotelReducer
+    searchHotel: searchHotelReducer,
+    searchCity: searchCityReducer
   }
 })
 

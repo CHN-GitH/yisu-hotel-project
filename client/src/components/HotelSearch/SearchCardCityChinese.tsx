@@ -3,7 +3,7 @@ import Taro from "@tarojs/taro";
 import { View, Text, Input } from "@tarojs/components";
 import { TriangleDown, Location } from "@nutui/icons-react-taro";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { setCity } from "../../store/slices/searchSlice";
+import { setCity, setSelectedCityData } from "../../store/slices/searchCitySlice";
 import "../../styles/HotelSearch.scss";
 
 // H5 端百度地图类型声明
@@ -15,23 +15,29 @@ declare global {
 
 export default function SearchCardCityChinese() {
   const dispatch = useAppDispatch();
-  const { city } = useAppSelector((state) => state.search);
+  // 从 searchCity reducer 读取数据
+  const { city, selectedCityData } = useAppSelector((state) => state.searchCity);
+  
   const [isLocating, setIsLocating] = useState(false);
+  const [searchInputValue, setSearchInputValue] = useState("");
 
   const isWeapp = process.env.TARO_ENV === "weapp";
   const isH5 = process.env.TARO_ENV === "h5";
 
-  // 替换原handleCityClick：跳转到城市选择页（路径确保和实际文件一致）
+  // 监听城市变化（调试用）
+  useEffect(() => {
+    console.log('Redux city updated:', city, selectedCityData);
+  }, [city, selectedCityData]);
+
+  // 跳转到城市选择页
   const handleCityClick = () => {
     Taro.navigateTo({
-      url: "/pages/CitySearch/index", // 确认路径和文件结构一致
-      // 监听返回结果（选择城市后更新）
-      events: {
-        selectCity: (data: { cityName: string }) => {
-          dispatch(setCity(data.cityName));
-        },
-      },
+      url: "/pages/CitySearch/index",
     });
+  };
+
+  const handleInputChange = (e: any) => {
+    setSearchInputValue(e.detail.value);
   };
 
   // H5 端：动态加载百度地图 WebGL API
@@ -189,6 +195,10 @@ export default function SearchCardCityChinese() {
       // 3. 更新城市
       if (cityName) {
         dispatch(setCity(cityName));
+        dispatch(setSelectedCityData({
+          cityName: cityName,
+          cityId: 0,
+        }));
         Taro.showToast({ title: `已定位到${cityName}`, icon: "success" });
       } else {
         throw new Error("获取城市名称为空");
@@ -224,6 +234,8 @@ export default function SearchCardCityChinese() {
         <Input
           className="search-city-input"
           placeholder=" 位置/品牌/酒店"
+          value={searchInputValue}
+          onInput={handleInputChange}
           onClick={handleCityClick}
         />
         <Location

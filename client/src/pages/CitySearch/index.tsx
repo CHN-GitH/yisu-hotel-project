@@ -1,7 +1,9 @@
 import React, { useState, useMemo, useCallback, useRef } from 'react'
-import { View, Text, ScrollView, Icon } from '@tarojs/components'
-import { Tabs, Elevator, SearchBar } from '@nutui/nutui-react-taro'
 import Taro from '@tarojs/taro'
+import { View, Text, ScrollView, Icon } from '@tarojs/components'
+import { Tabs, Elevator } from '@nutui/nutui-react-taro'
+import { useAppDispatch } from '../../store/hooks'
+import { setCity, setSelectedCityData } from '../../store/slices/searchCitySlice'
 import ChineseCities from '../../assets/CityChinese.json'
 import InternationalCities from '../../assets/CityInterNational.json'
 import '../../styles/CitySearch.scss'
@@ -24,6 +26,7 @@ interface ElevatorItem {
 const REGION_ORDER = ['日韩', '东南亚', '欧洲', '美洲', '澳中东非']
 
 export default function CitySearch() {
+  const dispatch = useAppDispatch()
   const [activeTab, setActiveTab] = useState<'domestic' | 'international'>('domestic')
   const [searchValue, setSearchValue] = useState('')
   const [searchResults, setSearchResults] = useState<CityItem[]>([])
@@ -114,13 +117,15 @@ export default function CitySearch() {
 
   // 选择城市
   const handleCitySelect = useCallback((city: CityItem) => {
-    const pages = Taro.getCurrentPages()
-    const prevPage = pages[pages.length - 2]
-    if (prevPage) {
-      prevPage.selectCity = { cityName: city.name, cityId: city.id }
-    }
+    dispatch(setCity(city.name))
+    dispatch(setSelectedCityData({
+      cityName: city.name,
+      cityId: city.id,
+      country: city.country,
+      region: city.region
+    }))
     Taro.navigateBack()
-  }, [])
+  }, [dispatch])
 
   // 国内数据处理
   const domesticElevatorData = useMemo((): ElevatorItem[] => {
