@@ -2,10 +2,11 @@ import React, { useState, useMemo, useCallback, useRef } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text, ScrollView, Icon } from '@tarojs/components'
 import { Tabs, Elevator } from '@nutui/nutui-react-taro'
-import { useAppDispatch } from '../../store/hooks'
-import { setCity, setSelectedCityData } from '../../store/slices/searchCitySlice'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'  // 添加 useAppSelector
+import { setCity, setSelectedCityData, setSelectedHotel } from '../../store/slices/searchCitySlice'
 import ChineseCities from '../../assets/CityChinese.json'
 import InternationalCities from '../../assets/CityInterNational.json'
+import HotelShang from '../../assets/HotelShang.json'
 import '../../styles/CitySearch.scss'
 
 // 定义城市数据类型
@@ -14,6 +15,12 @@ interface CityItem {
   name: string
   country?: string
   region?: string
+  pinyin?: string
+}
+
+interface HotelItem {
+  id: string | number
+  name: string
   pinyin?: string
 }
 
@@ -27,9 +34,10 @@ const REGION_ORDER = ['日韩', '东南亚', '欧洲', '美洲', '澳中东非']
 
 export default function CitySearch() {
   const dispatch = useAppDispatch()
-  const [activeTab, setActiveTab] = useState<'domestic' | 'international'>('domestic')
+  const { city: currentCity } = useAppSelector((state) => state.searchCity)
+  const [activeTab, setActiveTab] = useState<'domestic' | 'international' | 'hotel'>('domestic')
   const [searchValue, setSearchValue] = useState('')
-  const [searchResults, setSearchResults] = useState<CityItem[]>([])
+  const [searchResults, setSearchResults] = useState<(CityItem | HotelItem)[]>([])
   const [isSearching, setIsSearching] = useState(false)
   
   // 用于标记是否正在使用输入法输入
@@ -61,7 +69,19 @@ export default function CitySearch() {
     return cities
   }, [])
 
-  // 执行搜索逻辑
+  // 获取所有酒店数据
+  const allHotels = useMemo(() => {
+    const hotels: HotelItem[] = []
+    Object.keys(HotelShang).forEach(key => {
+      const hotelList = HotelShang[key as keyof typeof HotelShang] as HotelItem[]
+      hotelList.forEach(hotel => {
+        hotels.push(hotel)
+      })
+    })
+    return hotels
+  }, [])
+
+  // 执行搜索逻辑 - 同时搜索城市和酒店
   const executeSearch = useCallback((value: string) => {
     if (!value.trim()) {
       setIsSearching(false)
@@ -70,14 +90,22 @@ export default function CitySearch() {
     }
     setIsSearching(true)
     const keyword = value.toLowerCase().trim()
-    // 匹配城市名或拼音
-    const results = allCities.filter(city => {
+    // 搜索城市
+    const cityResults = allCities.filter(city => {
       const nameMatch = city.name.includes(keyword)
       const pinyinMatch = city.pinyin?.toLowerCase().includes(keyword)
       return nameMatch || pinyinMatch
-    })
-    setSearchResults(results.slice(0, 20)) // 最多显示20条
-  }, [allCities])
+    }).map(city => ({...city, type: 'city' as const}))
+    // 搜索酒店
+    const hotelResults = allHotels.filter(hotel => {
+      const nameMatch = hotel.name.includes(keyword)
+      const pinyinMatch = hotel.pinyin?.toLowerCase().includes(keyword)
+      return nameMatch || pinyinMatch
+    }).map(hotel => ({...hotel, type: 'hotel' as const}))
+    // 合并结果，城市优先，最多显示20条
+    const combinedResults = [...cityResults, ...hotelResults].slice(0, 20)
+    setSearchResults(combinedResults)
+  }, [allCities, allHotels])
 
   // 处理 composition 事件（输入法开始/结束）
   const handleComposition = useCallback((e: React.CompositionEvent<HTMLInputElement>) => {
@@ -123,6 +151,18 @@ export default function CitySearch() {
       cityId: city.id,
       country: city.country,
       region: city.region
+    }))
+    // 选择城市时清空酒店
+    dispatch(setSelectedHotel(null))
+    Taro.navigateBack()
+  }, [dispatch])
+
+  // 选择酒店
+  const handleHotelSelect = useCallback((hotel: HotelItem) => {
+    dispatch(setSelectedHotel({
+      hotelName: hotel.name,
+      hotelId: hotel.id,
+      pinyin: hotel.pinyin
     }))
     Taro.navigateBack()
   }, [dispatch])
@@ -214,6 +254,11 @@ export default function CitySearch() {
     return result
   }, [])
 
+  // 酒店数据 - 按 Grid 每行两个显示
+  const hotelGridData = useMemo(() => {
+    return allHotels
+  }, [allHotels])
+
   const handleCityClick = (item: CityItem) => {
     handleCitySelect(item)
   }
@@ -222,30 +267,54 @@ export default function CitySearch() {
     console.log('点击索引:', key)
   }
 
+  // 渲染搜索结果（包含城市和酒店）
   const renderSearchResults = () => {
     if (searchResults.length === 0) {
       return (
         <View className="search-empty">
-          <Text className="empty-text">未找到相关城市</Text>
+          <Text className="empty-text">未找到相关城市或酒店</Text>
         </View>
       )
     }
 
     return (
       <View className="search-results">
-        {searchResults.map(city => (
+        {searchResults.map((item: any) => (
           <View 
-            key={city.id} 
-            className="search-result-item"
-            onClick={() => handleCitySelect(city)}
+            key={item.id} 
+            className={`search-result-item ${item.type === 'hotel' ? 'hotel-item' : ''}`}
+            onClick={() => item.type === 'hotel' ? handleHotelSelect(item) : handleCitySelect(item)}
           >
-            <Text className="city-name">{city.name}</Text>
-            {(city.country || city.region) && (
-              <Text className="city-extra">{city.country || city.region}</Text>
+            <Text className="city-name">{item.name}</Text>
+            {item.type === 'hotel' ? (
+              <Text className="hotel-tag">酒店</Text>
+            ) : (
+              (item.country || item.region) && (
+                <Text className="city-extra">{item.country || item.region}</Text>
+              )
             )}
           </View>
         ))}
       </View>
+    )
+  }
+
+  // 渲染酒店 Grid
+  const renderHotelGrid = () => {
+    return (
+      <ScrollView className="hotel-grid-container" scrollY style={{ height: 'calc(100vh - 6rem)' }}>
+        <View className="hotel-grid">
+          {hotelGridData.map((hotel, index) => (
+            <View 
+              key={hotel.id} 
+              className="hotel-grid-item"
+              onClick={() => handleHotelSelect(hotel)}
+            >
+              <Text className="hotel-name">{hotel.name}</Text>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
     )
   }
 
@@ -278,7 +347,7 @@ export default function CitySearch() {
       ) : (
         <Tabs
           value={activeTab}
-          onChange={(value) => setActiveTab(value as 'domestic' | 'international')}
+          onChange={(value) => setActiveTab(value as 'domestic' | 'international' | 'hotel')}
         >
           <Tabs.TabPane title="国内(含港澳台)" value="domestic">
             <Elevator
@@ -297,6 +366,9 @@ export default function CitySearch() {
               onItemClick={(key, item) => handleCityClick(item)}
               onIndexClick={handleIndexClick}
             />
+          </Tabs.TabPane>
+          <Tabs.TabPane title="上海酒店" value="hotel">
+            {renderHotelGrid()}
           </Tabs.TabPane>
         </Tabs>
       )}
