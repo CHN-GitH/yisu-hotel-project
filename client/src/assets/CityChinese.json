@@ -2,1294 +2,1612 @@
     "A": [{
         "id": "152900",
         "name": "阿拉善盟",
-        "pinyin": "alashanmeng"
+        "pinyin": "alashanmeng",
+        "country": "中国"
     }, {
         "id": "210300",
         "name": "鞍山",
-        "pinyin": "anshan"
+        "pinyin": "anshan",
+        "country": "中国"
     }, {
         "id": "340800",
         "name": "安庆",
-        "pinyin": "anqing"
+        "pinyin": "anqing",
+        "country": "中国"
     }, {
         "id": "410500",
         "name": "安阳",
-        "pinyin": "anyang"
+        "pinyin": "anyang",
+        "country": "中国"
     }, {
         "id": "513200",
         "name": "阿坝藏族羌族自治州",
-        "pinyin": "abazangzuqiangzuzizhizhou"
+        "pinyin": "abazangzuqiangzuzizhizhou",
+        "country": "中国"
     }, {
         "id": "520400",
         "name": "安顺",
-        "pinyin": "anshun"
+        "pinyin": "anshun",
+        "country": "中国"
     }, {
         "id": "542500",
         "name": "阿里地区",
-        "pinyin": "alidiqu"
+        "pinyin": "alidiqu",
+        "country": "中国"
     }, {
         "id": "610900",
         "name": "安康",
-        "pinyin": "ankang"
+        "pinyin": "ankang",
+        "country": "中国"
     }, {
         "id": "652900",
         "name": "阿克苏地区",
-        "pinyin": "akesudiqu"
+        "pinyin": "akesudiqu",
+        "country": "中国"
     }, {
         "id": "654300",
         "name": "阿泰勒地区",
-        "pinyin": "ataileidiqu"
+        "pinyin": "ataileidiqu",
+        "country": "中国"
     }, {
         "id": "820100",
         "name": "澳门半岛",
-        "pinyin": "aomenbandao"
+        "pinyin": "aomenbandao",
+        "country": "中国"
     }, {
         "id": "659002",
         "name": "阿拉尔市",
-        "pinyin": "alaershi"
+        "pinyin": "alaershi",
+        "country": "中国"
     }],
     "B": [{
         "id": "110100",
         "name": "北京",
-        "pinyin": "beijing"
+        "pinyin": "beijing",
+        "country": "中国"
     }, {
         "id": "130600",
         "name": "保定",
-        "pinyin": "baoding"
+        "pinyin": "baoding",
+        "country": "中国"
     }, {
         "id": "150200",
         "name": "包头",
-        "pinyin": "baotou"
+        "pinyin": "baotou",
+        "country": "中国"
     }, {
         "id": "150800",
         "name": "巴彦淖尔",
-        "pinyin": "bayannaoer"
+        "pinyin": "bayannaoer",
+        "country": "中国"
     }, {
         "id": "210500",
         "name": "本溪",
-        "pinyin": "benxi"
+        "pinyin": "benxi",
+        "country": "中国"
     }, {
         "id": "220600",
         "name": "白山",
-        "pinyin": "baishan"
+        "pinyin": "baishan",
+        "country": "中国"
     }, {
         "id": "220800",
         "name": "白城",
-        "pinyin": "baicheng"
+        "pinyin": "baicheng",
+        "country": "中国"
     }, {
         "id": "340300",
         "name": "蚌埠",
-        "pinyin": "bengbu"
+        "pinyin": "bengbu",
+        "country": "中国"
     }, {
         "id": "341600",
         "name": "亳州",
-        "pinyin": "bozhou"
+        "pinyin": "bozhou",
+        "country": "中国"
     }, {
         "id": "371600",
         "name": "滨州",
-        "pinyin": "binzhou"
+        "pinyin": "binzhou",
+        "country": "中国"
     }, {
         "id": "450500",
         "name": "北海",
-        "pinyin": "beihai"
+        "pinyin": "beihai",
+        "country": "中国"
     }, {
         "id": "451000",
         "name": "百色",
-        "pinyin": "baise"
+        "pinyin": "baise",
+        "country": "中国"
     }, {
         "id": "511900",
         "name": "巴中",
-        "pinyin": "bazhong"
+        "pinyin": "bazhong",
+        "country": "中国"
     }, {
         "id": "522400",
         "name": "毕节地区",
-        "pinyin": "bijiediqu"
+        "pinyin": "bijiediqu",
+        "country": "中国"
     }, {
         "id": "530500",
         "name": "保山",
-        "pinyin": "baoshan"
+        "pinyin": "baoshan",
+        "country": "中国"
     }, {
         "id": "610300",
         "name": "宝鸡",
-        "pinyin": "baoji"
+        "pinyin": "baoji",
+        "country": "中国"
     }, {
         "id": "620400",
         "name": "白银",
-        "pinyin": "baiyin"
+        "pinyin": "baiyin",
+        "country": "中国"
     }, {
         "id": "652700",
         "name": "博尔塔拉蒙古自治州",
-        "pinyin": "boertalamengguzizhizhou"
+        "pinyin": "boertalamengguzizhizhou",
+        "country": "中国"
     }, {
         "id": "652800",
         "name": "巴音郭楞蒙古自治州",
-        "pinyin": "bayinguolengmengguzizhizhou"
+        "pinyin": "bayinguolengmengguzizhizhou",
+        "country": "中国"
     }],
     "C": [{
         "id": "130800",
         "name": "承德",
-        "pinyin": "chengde"
+        "pinyin": "chengde",
+        "country": "中国"
     }, {
         "id": "130900",
         "name": "沧州",
-        "pinyin": "cangzhou"
+        "pinyin": "cangzhou",
+        "country": "中国"
     }, {
         "id": "140400",
         "name": "长治",
-        "pinyin": "changzhi"
+        "pinyin": "changzhi",
+        "country": "中国"
     }, {
         "id": "150400",
         "name": "赤峰",
-        "pinyin": "chifeng"
+        "pinyin": "chifeng",
+        "country": "中国"
     }, {
         "id": "220100",
         "name": "长春",
-        "pinyin": "changchun"
+        "pinyin": "changchun",
+        "country": "中国"
     }, {
         "id": "320400",
         "name": "常州",
-        "pinyin": "changzhou"
+        "pinyin": "changzhou",
+        "country": "中国"
     }, {
         "id": "341100",
         "name": "滁州",
-        "pinyin": "chuzhou"
+        "pinyin": "chuzhou",
+        "country": "中国"
     }, {
         "id": "341400",
         "name": "巢湖",
-        "pinyin": "chaohu"
+        "pinyin": "chaohu",
+        "country": "中国"
     }, {
         "id": "341700",
         "name": "池州",
-        "pinyin": "chizhou"
+        "pinyin": "chizhou",
+        "country": "中国"
     }, {
         "id": "430100",
         "name": "长沙",
-        "pinyin": "changsha"
+        "pinyin": "changsha",
+        "country": "中国"
     }, {
         "id": "430700",
         "name": "常德",
-        "pinyin": "changde"
+        "pinyin": "changde",
+        "country": "中国"
     }, {
         "id": "431000",
         "name": "郴州",
-        "pinyin": "chenzhou"
+        "pinyin": "chenzhou",
+        "country": "中国"
     }, {
         "id": "445100",
         "name": "潮州",
-        "pinyin": "chaozhou"
+        "pinyin": "chaozhou",
+        "country": "中国"
     }, {
         "id": "451400",
         "name": "崇左",
-        "pinyin": "chongzuo"
+        "pinyin": "chongzuo",
+        "country": "中国"
     }, {
         "id": "500100",
         "name": "重庆",
-        "pinyin": "chongqing"
+        "pinyin": "chongqing",
+        "country": "中国"
     }, {
         "id": "510100",
         "name": "成都",
-        "pinyin": "chengdu"
+        "pinyin": "chengdu",
+        "country": "中国"
     }, {
         "id": "532300",
         "name": "楚雄彝族自治州",
-        "pinyin": "chuxiongyizuzizhizhou"
+        "pinyin": "chuxiongyizuzizhizhou",
+        "country": "中国"
     }, {
         "id": "542100",
         "name": "昌都地区",
-        "pinyin": "changdudiqu"
+        "pinyin": "changdudiqu",
+        "country": "中国"
     }, {
         "id": "652300",
         "name": "昌吉回族自治州",
-        "pinyin": "changjihuizuzizhizhou"
+        "pinyin": "changjihuizuzizhizhou",
+        "country": "中国"
     }],
     "D": [{
         "id": "140200",
         "name": "大同",
-        "pinyin": "datong"
+        "pinyin": "datong",
+        "country": "中国"
     }, {
         "id": "210200",
         "name": "大连",
-        "pinyin": "dalian"
+        "pinyin": "dalian",
+        "country": "中国"
     }, {
         "id": "210600",
         "name": "丹东",
-        "pinyin": "dandong"
+        "pinyin": "dandong",
+        "country": "中国"
     }, {
         "id": "230600",
         "name": "大庆",
-        "pinyin": "daqing"
+        "pinyin": "daqing",
+        "country": "中国"
     }, {
         "id": "232700",
         "name": "大兴安岭地区",
-        "pinyin": "daxinganlingdiqu"
+        "pinyin": "daxinganlingdiqu",
+        "country": "中国"
     }, {
         "id": "370500",
         "name": "东营",
-        "pinyin": "dongying"
+        "pinyin": "dongying",
+        "country": "中国"
     }, {
         "id": "371400",
         "name": "德州",
-        "pinyin": "dezhou"
+        "pinyin": "dezhou",
+        "country": "中国"
     }, {
         "id": "441900",
         "name": "东莞",
-        "pinyin": "dongguan"
+        "pinyin": "dongguan",
+        "country": "中国"
     }, {
         "id": "510600",
         "name": "德阳",
-        "pinyin": "deyang"
+        "pinyin": "deyang",
+        "country": "中国"
     }, {
         "id": "511700",
         "name": "达州",
-        "pinyin": "dazhou"
+        "pinyin": "dazhou",
+        "country": "中国"
     }, {
         "id": "532900",
         "name": "大理白族自治州",
-        "pinyin": "dalibaizuzizhizhou"
+        "pinyin": "dalibaizuzizhizhou",
+        "country": "中国"
     }, {
         "id": "533100",
         "name": "德宏傣族景颇族自治州",
-        "pinyin": "dehongdaizujingpozuzizhizhou"
+        "pinyin": "dehongdaizujingpozuzizhizhou",
+        "country": "中国"
     }, {
         "id": "533400",
         "name": "迪庆藏族自治州",
-        "pinyin": "diqingzangzuzizhizhou"
+        "pinyin": "diqingzangzuzizhizhou",
+        "country": "中国"
     }, {
         "id": "621100",
         "name": "定西",
-        "pinyin": "dingxi"
+        "pinyin": "dingxi",
+        "country": "中国"
     }, {
         "id": "469003",
         "name": "儋州市",
-        "pinyin": "danzhoushi"
+        "pinyin": "danzhoushi",
+        "country": "中国"
     }],
     "E": [{
         "id": "150600",
         "name": "鄂尔多斯",
-        "pinyin": "eerduosi"
+        "pinyin": "eerduosi",
+        "country": "中国"
     }, {
         "id": "420700",
         "name": "鄂州",
-        "pinyin": "ezhou"
+        "pinyin": "ezhou",
+        "country": "中国"
     }, {
         "id": "422800",
         "name": "恩施土家族苗族自治州",
-        "pinyin": "enshitujiazumiaozuzizhizhou"
+        "pinyin": "enshitujiazumiaozuzizhizhou",
+        "country": "中国"
     }],
     "F": [{
         "id": "210400",
         "name": "抚顺",
-        "pinyin": "fushun"
+        "pinyin": "fushun",
+        "country": "中国"
     }, {
         "id": "210900",
         "name": "阜新",
-        "pinyin": "fuxin"
+        "pinyin": "fuxin",
+        "country": "中国"
     }, {
         "id": "341200",
         "name": "阜阳",
-        "pinyin": "fuyang"
+        "pinyin": "fuyang",
+        "country": "中国"
     }, {
         "id": "350100",
         "name": "福州",
-        "pinyin": "fuzhou"
+        "pinyin": "fuzhou",
+        "country": "中国"
     }, {
         "id": "361000",
         "name": "抚州",
-        "pinyin": "fuzhou"
+        "pinyin": "fuzhou",
+        "country": "中国"
     }, {
         "id": "440600",
         "name": "佛山",
-        "pinyin": "foshan"
+        "pinyin": "foshan",
+        "country": "中国"
     }, {
         "id": "450600",
         "name": "防城港市",
-        "pinyin": "fangchenggangshi"
+        "pinyin": "fangchenggangshi",
+        "country": "中国"
     }],
     "G": [{
         "id": "360700",
         "name": "赣州",
-        "pinyin": "ganzhou"
+        "pinyin": "ganzhou",
+        "country": "中国"
     }, {
         "id": "440100",
         "name": "广州",
-        "pinyin": "guangzhou"
+        "pinyin": "guangzhou",
+        "country": "中国"
     }, {
         "id": "450300",
         "name": "桂林",
-        "pinyin": "guilin"
+        "pinyin": "guilin",
+        "country": "中国"
     }, {
         "id": "450800",
         "name": "贵港",
-        "pinyin": "guigang"
+        "pinyin": "guigang",
+        "country": "中国"
     }, {
         "id": "510800",
         "name": "广元",
-        "pinyin": "guangyuan"
+        "pinyin": "guangyuan",
+        "country": "中国"
     }, {
         "id": "511600",
         "name": "广安",
-        "pinyin": "guangan"
+        "pinyin": "guangan",
+        "country": "中国"
     }, {
         "id": "513300",
         "name": "甘孜藏族自治州",
-        "pinyin": "ganzizangzuzizhizhou"
+        "pinyin": "ganzizangzuzizhizhou",
+        "country": "中国"
     }, {
         "id": "520100",
         "name": "贵阳",
-        "pinyin": "guiyang"
+        "pinyin": "guiyang",
+        "country": "中国"
     }, {
         "id": "623000",
         "name": "甘南藏族自治州",
-        "pinyin": "gannanzangzuzizhizhou"
+        "pinyin": "gannanzangzuzizhizhou",
+        "country": "中国"
     }, {
         "id": "632600",
         "name": "果洛藏族自治州",
-        "pinyin": "guoluozangzuzizhizhou"
+        "pinyin": "guoluozangzuzizhizhou",
+        "country": "中国"
     }, {
         "id": "640400",
         "name": "固原",
-        "pinyin": "guyuan"
+        "pinyin": "guyuan",
+        "country": "中国"
     }, {
         "id": "710200",
         "name": "高雄",
-        "pinyin": "gaoxiong"
+        "pinyin": "gaoxiong",
+        "country": "中国"
     }, {
         "id": "712300",
         "name": "高雄县",
-        "pinyin": "gaoxiongxian"
+        "pinyin": "gaoxiongxian",
+        "country": "中国"
     }],
     "H": [{
         "id": "130400",
         "name": "邯郸",
-        "pinyin": "handan"
+        "pinyin": "handan",
+        "country": "中国"
     }, {
         "id": "131100",
         "name": "衡水",
-        "pinyin": "hengshui"
+        "pinyin": "hengshui",
+        "country": "中国"
     }, {
         "id": "150100",
         "name": "呼和浩特",
-        "pinyin": "huhehaote"
+        "pinyin": "huhehaote",
+        "country": "中国"
     }, {
         "id": "150700",
         "name": "呼伦贝尔",
-        "pinyin": "hulunbeier"
+        "pinyin": "hulunbeier",
+        "country": "中国"
     }, {
         "id": "211400",
         "name": "葫芦岛",
-        "pinyin": "huludao"
+        "pinyin": "huludao",
+        "country": "中国"
     }, {
         "id": "230100",
         "name": "哈尔滨",
-        "pinyin": "haerbin"
+        "pinyin": "haerbin",
+        "country": "中国"
     }, {
         "id": "230400",
         "name": "鹤岗",
-        "pinyin": "hegang"
+        "pinyin": "hegang",
+        "country": "中国"
     }, {
         "id": "231100",
         "name": "黑河",
-        "pinyin": "heihe"
+        "pinyin": "heihe",
+        "country": "中国"
     }, {
         "id": "320800",
         "name": "淮安",
-        "pinyin": "huaian"
+        "pinyin": "huaian",
+        "country": "中国"
     }, {
         "id": "330100",
         "name": "杭州",
-        "pinyin": "hangzhou"
+        "pinyin": "hangzhou",
+        "country": "中国"
     }, {
         "id": "330500",
         "name": "湖州",
-        "pinyin": "huzhou"
+        "pinyin": "huzhou",
+        "country": "中国"
     }, {
         "id": "340100",
         "name": "合肥",
-        "pinyin": "hefei"
+        "pinyin": "hefei",
+        "country": "中国"
     }, {
         "id": "340400",
         "name": "淮南",
-        "pinyin": "huainan"
+        "pinyin": "huainan",
+        "country": "中国"
     }, {
         "id": "340600",
         "name": "淮北",
-        "pinyin": "huaibei"
+        "pinyin": "huaibei",
+        "country": "中国"
     }, {
         "id": "341000",
         "name": "黄山",
-        "pinyin": "huangshan"
+        "pinyin": "huangshan",
+        "country": "中国"
     }, {
         "id": "371700",
         "name": "菏泽",
-        "pinyin": "heze"
+        "pinyin": "heze",
+        "country": "中国"
     }, {
         "id": "410600",
         "name": "鹤壁",
-        "pinyin": "hebi"
+        "pinyin": "hebi",
+        "country": "中国"
     }, {
         "id": "420200",
         "name": "黄石",
-        "pinyin": "huangshi"
+        "pinyin": "huangshi",
+        "country": "中国"
     }, {
         "id": "421100",
         "name": "黄冈",
-        "pinyin": "huanggang"
+        "pinyin": "huanggang",
+        "country": "中国"
     }, {
         "id": "430400",
         "name": "衡阳",
-        "pinyin": "hengyang"
+        "pinyin": "hengyang",
+        "country": "中国"
     }, {
         "id": "431200",
         "name": "怀化",
-        "pinyin": "huaihua"
+        "pinyin": "huaihua",
+        "country": "中国"
     }, {
         "id": "441300",
         "name": "惠州",
-        "pinyin": "huizhou"
+        "pinyin": "huizhou",
+        "country": "中国"
     }, {
         "id": "441600",
         "name": "河源",
-        "pinyin": "heyuan"
+        "pinyin": "heyuan",
+        "country": "中国"
     }, {
         "id": "451100",
         "name": "贺州",
-        "pinyin": "hezhou"
+        "pinyin": "hezhou",
+        "country": "中国"
     }, {
         "id": "451200",
         "name": "河池",
-        "pinyin": "hechi"
+        "pinyin": "hechi",
+        "country": "中国"
     }, {
         "id": "460100",
         "name": "海口",
-        "pinyin": "haikou"
+        "pinyin": "haikou",
+        "country": "中国"
     }, {
         "id": "532500",
         "name": "红河哈尼族彝族自治州",
-        "pinyin": "honghehanizuyizuzizhizhou"
+        "pinyin": "honghehanizuyizuzizhizhou",
+        "country": "中国"
     }, {
         "id": "610700",
         "name": "汉中",
-        "pinyin": "hanzhong"
+        "pinyin": "hanzhong",
+        "country": "中国"
     }, {
         "id": "632100",
         "name": "海东地区",
-        "pinyin": "haidongdiqu"
+        "pinyin": "haidongdiqu",
+        "country": "中国"
     }, {
         "id": "632200",
         "name": "海北藏族自治州",
-        "pinyin": "haibeizangzuzizhizhou"
+        "pinyin": "haibeizangzuzizhizhou",
+        "country": "中国"
     }, {
         "id": "632300",
         "name": "黄南藏族自治州",
-        "pinyin": "huangnanzangzuzizhizhou"
+        "pinyin": "huangnanzangzuzizhizhou",
+        "country": "中国"
     }, {
         "id": "632500",
         "name": "海南藏族自治州",
-        "pinyin": "hainanzangzuzizhizhou"
+        "pinyin": "hainanzangzuzizhizhou",
+        "country": "中国"
     }, {
         "id": "632800",
         "name": "海西蒙古族藏族自治州",
-        "pinyin": "haiximengguzuzangzuzizhizhou"
+        "pinyin": "haiximengguzuzangzuzizhizhou",
+        "country": "中国"
     }, {
         "id": "652200",
         "name": "哈密地区",
-        "pinyin": "hamidiqu"
+        "pinyin": "hamidiqu",
+        "country": "中国"
     }, {
         "id": "653200",
         "name": "和田地区",
-        "pinyin": "hatiandiqu"
+        "pinyin": "hatiandiqu",
+        "country": "中国"
     }, {
         "id": "712600",
         "name": "花莲县",
-        "pinyin": "hualianxian"
+        "pinyin": "hualianxian",
+        "country": "中国"
     }],
     "J": [{
         "id": "140500",
         "name": "晋城",
-        "pinyin": "jincheng"
+        "pinyin": "jincheng",
+        "country": "中国"
     }, {
         "id": "140700",
         "name": "晋中",
-        "pinyin": "jinzhong"
+        "pinyin": "jinzhong",
+        "country": "中国"
     }, {
         "id": "210700",
         "name": "锦州",
-        "pinyin": "jinzhou"
+        "pinyin": "jinzhou",
+        "country": "中国"
     }, {
         "id": "220200",
         "name": "吉林",
-        "pinyin": "jilin"
+        "pinyin": "jilin",
+        "country": "中国"
     }, {
         "id": "230300",
         "name": "鸡西",
-        "pinyin": "jixi"
+        "pinyin": "jixi",
+        "country": "中国"
     }, {
         "id": "230800",
         "name": "佳木斯",
-        "pinyin": "jiamusi"
+        "pinyin": "jiamusi",
+        "country": "中国"
     }, {
         "id": "330400",
         "name": "嘉兴",
-        "pinyin": "jiaxing"
+        "pinyin": "jiaxing",
+        "country": "中国"
     }, {
         "id": "330700",
         "name": "金华",
-        "pinyin": "jinhua"
+        "pinyin": "jinhua",
+        "country": "中国"
     }, {
         "id": "360200",
         "name": "景德镇",
-        "pinyin": "jingdezhen"
+        "pinyin": "jingdezhen",
+        "country": "中国"
     }, {
         "id": "360400",
         "name": "九江",
-        "pinyin": "jiujiang"
+        "pinyin": "jiujiang",
+        "country": "中国"
     }, {
         "id": "360800",
         "name": "吉安",
-        "pinyin": "jian"
+        "pinyin": "jian",
+        "country": "中国"
     }, {
         "id": "370100",
         "name": "济南",
-        "pinyin": "jinan"
+        "pinyin": "jinan",
+        "country": "中国"
     }, {
         "id": "370800",
         "name": "济宁",
-        "pinyin": "jining"
+        "pinyin": "jining",
+        "country": "中国"
     }, {
         "id": "410800",
         "name": "焦作",
-        "pinyin": "jiaozuo"
+        "pinyin": "jiaozuo",
+        "country": "中国"
     }, {
         "id": "420800",
         "name": "荆门",
-        "pinyin": "jingmen"
+        "pinyin": "jingmen",
+        "country": "中国"
     }, {
         "id": "421000",
         "name": "荆州",
-        "pinyin": "jingzhou"
+        "pinyin": "jingzhou",
+        "country": "中国"
     }, {
         "id": "440700",
         "name": "江门",
-        "pinyin": "jiangmen"
+        "pinyin": "jiangmen",
+        "country": "中国"
     }, {
         "id": "445200",
         "name": "揭阳",
-        "pinyin": "jieyang"
+        "pinyin": "jieyang",
+        "country": "中国"
     }, {
         "id": "620200",
         "name": "嘉峪关",
-        "pinyin": "jiayuguan"
+        "pinyin": "jiayuguan",
+        "country": "中国"
     }, {
         "id": "620300",
         "name": "金昌",
-        "pinyin": "jinchang"
+        "pinyin": "jinchang",
+        "country": "中国"
     }, {
         "id": "620900",
         "name": "酒泉",
-        "pinyin": "jiuquan"
+        "pinyin": "jiuquan",
+        "country": "中国"
     }, {
         "id": "710500",
         "name": "金门县",
-        "pinyin": "jinmenxian"
+        "pinyin": "jinmenxian",
+        "country": "中国"
     }, {
         "id": "710700",
         "name": "基隆",
-        "pinyin": "jilong"
+        "pinyin": "jilong",
+        "country": "中国"
     }, {
         "id": "710900",
         "name": "嘉义",
-        "pinyin": "jiayi"
+        "pinyin": "jiayi",
+        "country": "中国"
     }, {
         "id": "810200",
         "name": "九龙",
-        "pinyin": "jiulong"
+        "pinyin": "jiulong",
+        "country": "中国"
     }, {
         "id": "410881",
         "name": "济源市",
-        "pinyin": "jiyuanshi"
+        "pinyin": "jiyuanshi",
+        "country": "中国"
     }, {
         "id": "711900",
         "name": "嘉义县",
-        "pinyin": "jiayixian"
+        "pinyin": "jiayixian",
+        "country": "中国"
     }],
     "K": [{
         "id": "410200",
         "name": "开封",
-        "pinyin": "kaifeng"
+        "pinyin": "kaifeng",
+        "country": "中国"
     }, {
         "id": "530100",
         "name": "昆明",
-        "pinyin": "kunming"
+        "pinyin": "kunming",
+        "country": "中国"
     }, {
         "id": "650200",
         "name": "克拉玛依",
-        "pinyin": "kelamayi"
+        "pinyin": "kelamayi",
+        "country": "中国"
     }, {
         "id": "653000",
         "name": "克孜勒苏柯尔克孜自治州",
-        "pinyin": "kezilesukeerkezizizhizhou"
+        "pinyin": "kezilesukeerkezizizhizhou",
+        "country": "中国"
     }, {
         "id": "653100",
         "name": "喀什地区",
-        "pinyin": "kashidiqu"
+        "pinyin": "kashidiqu",
+        "country": "中国"
     }],
     "L": [{
         "id": "131000",
         "name": "廊坊",
-        "pinyin": "langfang"
+        "pinyin": "langfang",
+        "country": "中国"
     }, {
         "id": "141000",
         "name": "临汾",
-        "pinyin": "linfen"
+        "pinyin": "linfen",
+        "country": "中国"
     }, {
         "id": "141100",
         "name": "吕梁",
-        "pinyin": "lvliang"
+        "pinyin": "lvliang",
+        "country": "中国"
     }, {
         "id": "211000",
         "name": "辽阳",
-        "pinyin": "liaoyang"
+        "pinyin": "liaoyang",
+        "country": "中国"
     }, {
         "id": "220400",
         "name": "辽源",
-        "pinyin": "liaoyuan"
+        "pinyin": "liaoyuan",
+        "country": "中国"
     }, {
         "id": "320700",
         "name": "连云港",
-        "pinyin": "lianyungang"
+        "pinyin": "lianyungang",
+        "country": "中国"
     }, {
         "id": "331100",
         "name": "丽水",
-        "pinyin": "lishui"
+        "pinyin": "lishui",
+        "country": "中国"
     }, {
         "id": "341500",
         "name": "六安",
-        "pinyin": "luan"
+        "pinyin": "luan",
+        "country": "中国"
     }, {
         "id": "350800",
         "name": "龙岩",
-        "pinyin": "longyan"
+        "pinyin": "longyan",
+        "country": "中国"
     }, {
         "id": "371200",
         "name": "莱芜",
-        "pinyin": "laiwu"
+        "pinyin": "laiwu",
+        "country": "中国"
     }, {
         "id": "371300",
         "name": "临沂",
-        "pinyin": "linyi"
+        "pinyin": "linyi",
+        "country": "中国"
     }, {
         "id": "371500",
         "name": "聊城",
-        "pinyin": "liaocheng"
+        "pinyin": "liaocheng",
+        "country": "中国"
     }, {
         "id": "410300",
         "name": "洛阳",
-        "pinyin": "luoyang"
+        "pinyin": "luoyang",
+        "country": "中国"
     }, {
         "id": "431300",
         "name": "娄底",
-        "pinyin": "loudi"
+        "pinyin": "loudi",
+        "country": "中国"
     }, {
         "id": "450200",
         "name": "柳州",
-        "pinyin": "liuzhou"
+        "pinyin": "liuzhou",
+        "country": "中国"
     }, {
         "id": "451300",
         "name": "来宾",
-        "pinyin": "laibin"
+        "pinyin": "laibin",
+        "country": "中国"
     }, {
         "id": "510500",
         "name": "泸州",
-        "pinyin": "luzhou"
+        "pinyin": "luzhou",
+        "country": "中国"
     }, {
         "id": "511100",
         "name": "乐山",
-        "pinyin": "leshan"
+        "pinyin": "leshan",
+        "country": "中国"
     }, {
         "id": "513400",
         "name": "凉山彝族自治州",
-        "pinyin": "liangshanyizuzizhizhou"
+        "pinyin": "liangshanyizuzizhizhou",
+        "country": "中国"
     }, {
         "id": "520200",
         "name": "六盘水",
-        "pinyin": "liupanshui"
+        "pinyin": "liupanshui",
+        "country": "中国"
     }, {
         "id": "530700",
         "name": "丽江",
-        "pinyin": "lijiang"
+        "pinyin": "lijiang",
+        "country": "中国"
     }, {
         "id": "530900",
         "name": "临沧",
-        "pinyin": "lincang"
+        "pinyin": "lincang",
+        "country": "中国"
     }, {
         "id": "540100",
         "name": "拉萨",
-        "pinyin": "lasa"
+        "pinyin": "lasa",
+        "country": "中国"
     }, {
         "id": "542600",
         "name": "林芝地区",
-        "pinyin": "linzhidiqu"
+        "pinyin": "linzhidiqu",
+        "country": "中国"
     }, {
         "id": "620100",
         "name": "兰州",
-        "pinyin": "lanzhou"
+        "pinyin": "lanzhou",
+        "country": "中国"
     }, {
         "id": "621200",
         "name": "陇南",
-        "pinyin": "longnan"
+        "pinyin": "longnan",
+        "country": "中国"
     }, {
         "id": "622900",
         "name": "临夏回族自治州",
-        "pinyin": "linxiahuizuzizhizhou"
+        "pinyin": "linxiahuizuzizhizhou",
+        "country": "中国"
     }, {
         "id": "820200",
         "name": "离岛",
-        "pinyin": "lidao"
+        "pinyin": "lidao",
+        "country": "中国"
     }],
     "M": [{
         "id": "231000",
         "name": "牡丹江",
-        "pinyin": "mudanjiang"
+        "pinyin": "mudanjiang",
+        "country": "中国"
     }, {
         "id": "340500",
         "name": "马鞍山",
-        "pinyin": "maanshan"
+        "pinyin": "maanshan",
+        "country": "中国"
     }, {
         "id": "440900",
         "name": "茂名",
-        "pinyin": "maoming"
+        "pinyin": "maoming",
+        "country": "中国"
     }, {
         "id": "441400",
         "name": "梅州",
-        "pinyin": "meizhou"
+        "pinyin": "meizhou",
+        "country": "中国"
     }, {
         "id": "510700",
         "name": "绵阳",
-        "pinyin": "mianyang"
+        "pinyin": "mianyang",
+        "country": "中国"
     }, {
         "id": "511400",
         "name": "眉山",
-        "pinyin": "meishan"
+        "pinyin": "meishan",
+        "country": "中国"
     }, {
         "id": "711500",
         "name": "苗栗县",
-        "pinyin": "miaolixian"
+        "pinyin": "miaolixian",
+        "country": "中国"
     }],
     "N": [{
         "id": "320100",
         "name": "南京",
-        "pinyin": "nanjing"
+        "pinyin": "nanjing",
+        "country": "中国"
     }, {
         "id": "320600",
         "name": "南通",
-        "pinyin": "nantong"
+        "pinyin": "nantong",
+        "country": "中国"
     }, {
         "id": "330200",
         "name": "宁波",
-        "pinyin": "ningbo"
+        "pinyin": "ningbo",
+        "country": "中国"
     }, {
         "id": "350700",
         "name": "南平",
-        "pinyin": "nanping"
+        "pinyin": "nanping",
+        "country": "中国"
     }, {
         "id": "350900",
         "name": "宁德",
-        "pinyin": "ningde"
+        "pinyin": "ningde",
+        "country": "中国"
     }, {
         "id": "360100",
         "name": "南昌",
-        "pinyin": "nanchang"
+        "pinyin": "nanchang",
+        "country": "中国"
     }, {
         "id": "411300",
         "name": "南阳",
-        "pinyin": "nanyang"
+        "pinyin": "nanyang",
+        "country": "中国"
     }, {
         "id": "450100",
         "name": "南宁",
-        "pinyin": "nanning"
+        "pinyin": "nanning",
+        "country": "中国"
     }, {
         "id": "511000",
         "name": "内江",
-        "pinyin": "neijiang"
+        "pinyin": "neijiang",
+        "country": "中国"
     }, {
         "id": "511300",
         "name": "南充",
-        "pinyin": "nanchong"
+        "pinyin": "nanchong",
+        "country": "中国"
     }, {
         "id": "533300",
         "name": "怒江傈僳族自治州",
-        "pinyin": "nujianglisuzuzizhizhou"
+        "pinyin": "nujianglisuzuzizhizhou",
+        "country": "中国"
     }, {
         "id": "542400",
         "name": "那曲地区",
-        "pinyin": "naqudiqu"
+        "pinyin": "naqudiqu",
+        "country": "中国"
     }, {
         "id": "710600",
         "name": "南投县",
-        "pinyin": "nantouxian"
+        "pinyin": "nantouxian",
+        "country": "中国"
     }],
     "P": [{
         "id": "211100",
         "name": "盘锦",
-        "pinyin": "panjin"
+        "pinyin": "panjin",
+        "country": "中国"
     }, {
         "id": "350300",
         "name": "莆田",
-        "pinyin": "putian"
+        "pinyin": "putian",
+        "country": "中国"
     }, {
         "id": "360300",
         "name": "萍乡",
-        "pinyin": "pingxiang"
+        "pinyin": "pingxiang",
+        "country": "中国"
     }, {
         "id": "410400",
         "name": "平顶山",
-        "pinyin": "pingdingshan"
+        "pinyin": "pingdingshan",
+        "country": "中国"
     }, {
         "id": "410900",
         "name": "濮阳",
-        "pinyin": "puyang"
+        "pinyin": "puyang",
+        "country": "中国"
     }, {
         "id": "510400",
         "name": "攀枝花",
-        "pinyin": "panzhihua"
+        "pinyin": "panzhihua",
+        "country": "中国"
     }, {
         "id": "530800",
         "name": "普洱",
-        "pinyin": "puer"
+        "pinyin": "puer",
+        "country": "中国"
     }, {
         "id": "620800",
         "name": "平凉",
-        "pinyin": "pingliang"
+        "pinyin": "pingliang",
+        "country": "中国"
     }, {
         "id": "712400",
         "name": "屏东县",
-        "pinyin": "pingdongxian"
+        "pinyin": "pingdongxian",
+        "country": "中国"
     }, {
         "id": "712700",
         "name": "澎湖县",
-        "pinyin": "penghuxian"
+        "pinyin": "penghuxian",
+        "country": "中国"
     }],
     "Q": [{
         "id": "130300",
         "name": "秦皇岛",
-        "pinyin": "qinhuangdao"
+        "pinyin": "qinhuangdao",
+        "country": "中国"
     }, {
         "id": "230200",
         "name": "齐齐哈尔",
-        "pinyin": "qiqihaer"
+        "pinyin": "qiqihaer",
+        "country": "中国"
     }, {
         "id": "230900",
         "name": "七台河",
-        "pinyin": "qitaihe"
+        "pinyin": "qitaihe",
+        "country": "中国"
     }, {
         "id": "330800",
         "name": "衢州",
-        "pinyin": "quzhou"
+        "pinyin": "quzhou",
+        "country": "中国"
     }, {
         "id": "350500",
         "name": "泉州",
-        "pinyin": "quanzhou"
+        "pinyin": "quanzhou",
+        "country": "中国"
     }, {
         "id": "370200",
         "name": "青岛",
-        "pinyin": "qingdao"
+        "pinyin": "qingdao",
+        "country": "中国"
     }, {
         "id": "441800",
         "name": "清远",
-        "pinyin": "qingyuan"
+        "pinyin": "qingyuan",
+        "country": "中国"
     }, {
         "id": "450700",
         "name": "钦州",
-        "pinyin": "qinzhou"
+        "pinyin": "qinzhou",
+        "country": "中国"
     }, {
         "id": "522300",
         "name": "黔西南布依族苗族自治州",
-        "pinyin": "qianxinanbuyizumiaozuzizhizhou"
+        "pinyin": "qianxinanbuyizumiaozuzizhizhou",
+        "country": "中国"
     }, {
         "id": "522600",
         "name": "黔东南苗族侗族自治州",
-        "pinyin": "qiandongnanmiaozudongzuzizhizhou"
+        "pinyin": "qiandongnanmiaozudongzuzizhizhou",
+        "country": "中国"
     }, {
         "id": "522700",
         "name": "黔南布依族苗族自治州",
-        "pinyin": "qiannanbuyizumiaozuzizhizhou"
+        "pinyin": "qiannanbuyizumiaozuzizhizhou",
+        "country": "中国"
     }, {
         "id": "530300",
         "name": "曲靖",
-        "pinyin": "qujing"
+        "pinyin": "qujing",
+        "country": "中国"
     }, {
         "id": "621000",
         "name": "庆阳",
-        "pinyin": "qingyang"
+        "pinyin": "qingyang",
+        "country": "中国"
     }, {
         "id": "429005",
         "name": "潜江市",
-        "pinyin": "qianjiangshi"
+        "pinyin": "qianjiangshi",
+        "country": "中国"
     }],
     "R": [{
         "id": "371100",
         "name": "日照",
-        "pinyin": "rizhao"
+        "pinyin": "rizhao",
+        "country": "中国"
     }, {
         "id": "542300",
         "name": "日喀则地区",
-        "pinyin": "rikazediqu"
+        "pinyin": "rikazediqu",
+        "country": "中国"
     }],
     "S": [{
         "id": "130100",
         "name": "石家庄",
-        "pinyin": "shijiazhuang"
+        "pinyin": "shijiazhuang",
+        "country": "中国"
     }, {
         "id": "140600",
         "name": "朔州",
-        "pinyin": "shuozhou"
+        "pinyin": "shuozhou",
+        "country": "中国"
     }, {
         "id": "210100",
         "name": "沈阳",
-        "pinyin": "shenyang"
+        "pinyin": "shenyang",
+        "country": "中国"
     }, {
         "id": "220300",
         "name": "四平",
-        "pinyin": "siping"
+        "pinyin": "siping",
+        "country": "中国"
     }, {
         "id": "220700",
         "name": "松原",
-        "pinyin": "songyuan"
+        "pinyin": "songyuan",
+        "country": "中国"
     }, {
         "id": "230500",
         "name": "双鸭山",
-        "pinyin": "shuangyashan"
+        "pinyin": "shuangyashan",
+        "country": "中国"
     }, {
         "id": "231200",
         "name": "绥化",
-        "pinyin": "suihua"
+        "pinyin": "suihua",
+        "country": "中国"
     }, {
         "id": "310100",
         "name": "上海",
-        "pinyin": "shanghai"
+        "pinyin": "shanghai",
+        "country": "中国"
     }, {
         "id": "320500",
         "name": "苏州",
-        "pinyin": "suzhou"
+        "pinyin": "suzhou",
+        "country": "中国"
     }, {
         "id": "321300",
         "name": "宿迁",
-        "pinyin": "suqian"
+        "pinyin": "suqian",
+        "country": "中国"
     }, {
         "id": "330600",
         "name": "绍兴",
-        "pinyin": "shaoxing"
+        "pinyin": "shaoxing",
+        "country": "中国"
     }, {
         "id": "341300",
         "name": "宿州",
-        "pinyin": "suzhou"
+        "pinyin": "suzhou",
+        "country": "中国"
     }, {
         "id": "350400",
         "name": "三明",
-        "pinyin": "sanming"
+        "pinyin": "sanming",
+        "country": "中国"
     }, {
         "id": "361100",
         "name": "上饶",
-        "pinyin": "shangrao"
+        "pinyin": "shangrao",
+        "country": "中国"
     }, {
         "id": "411200",
         "name": "三门峡",
-        "pinyin": "sanmenxia"
+        "pinyin": "sanmenxia",
+        "country": "中国"
     }, {
         "id": "411400",
         "name": "商丘",
-        "pinyin": "shangqiu"
+        "pinyin": "shangqiu",
+        "country": "中国"
     }, {
         "id": "420300",
         "name": "十堰",
-        "pinyin": "shiyan"
+        "pinyin": "shiyan",
+        "country": "中国"
     }, {
         "id": "421300",
         "name": "随州",
-        "pinyin": "suizhou"
+        "pinyin": "suizhou",
+        "country": "中国"
     }, {
         "id": "430500",
         "name": "邵阳",
-        "pinyin": "shaoyang"
+        "pinyin": "shaoyang",
+        "country": "中国"
     }, {
         "id": "440200",
         "name": "韶关",
-        "pinyin": "shaoguan"
+        "pinyin": "shaoguan",
+        "country": "中国"
     }, {
         "id": "440300",
         "name": "深圳",
-        "pinyin": "shenzhen"
+        "pinyin": "shenzhen",
+        "country": "中国"
     }, {
         "id": "440500",
         "name": "汕头",
-        "pinyin": "shantou"
+        "pinyin": "shantou",
+        "country": "中国"
     }, {
         "id": "441500",
         "name": "汕尾",
-        "pinyin": "shanwei"
+        "pinyin": "shanwei",
+        "country": "中国"
     }, {
         "id": "460200",
         "name": "三亚",
-        "pinyin": "sanya"
+        "pinyin": "sanya",
+        "country": "中国"
     }, {
         "id": "510900",
         "name": "遂宁",
-        "pinyin": "suining"
+        "pinyin": "suining",
+        "country": "中国"
     }, {
         "id": "542200",
         "name": "山南地区",
-        "pinyin": "shannandiqu"
+        "pinyin": "shannandiqu",
+        "country": "中国"
     }, {
         "id": "611000",
         "name": "商洛",
-        "pinyin": "shangluo"
+        "pinyin": "shangluo",
+        "country": "中国"
     }, {
         "id": "640200",
         "name": "石嘴山",
-        "pinyin": "shizuishan"
+        "pinyin": "shizuishan",
+        "country": "中国"
     }, {
         "id": "429021",
         "name": "神农架林区",
-        "pinyin": "shennongjialinqu"
+        "pinyin": "shennongjialinqu",
+        "country": "中国"
     }, {
         "id": "659001",
         "name": "石河子市",
-        "pinyin": "shihezishi"
+        "pinyin": "shihezishi",
+        "country": "中国"
     }, {
         "id": "460300",
         "name": "三沙市",
-        "pinyin": "sanshashi"
+        "pinyin": "sanshashi",
+        "country": "中国"
     }],
     "T": [{
         "id": "120100",
         "name": "天津",
-        "pinyin": "tianjin"
+        "pinyin": "tianjin",
+        "country": "中国"
     }, {
         "id": "130200",
         "name": "唐山",
-        "pinyin": "tangshan"
+        "pinyin": "tangshan",
+        "country": "中国"
     }, {
         "id": "140100",
         "name": "太原",
-        "pinyin": "taiyuan"
+        "pinyin": "taiyuan",
+        "country": "中国"
     }, {
         "id": "150500",
         "name": "通辽",
-        "pinyin": "tongliao"
+        "pinyin": "tongliao",
+        "country": "中国"
     }, {
         "id": "211200",
         "name": "铁岭",
-        "pinyin": "tieling"
+        "pinyin": "tieling",
+        "country": "中国"
     }, {
         "id": "220500",
         "name": "通化",
-        "pinyin": "tonghua"
+        "pinyin": "tonghua",
+        "country": "中国"
     }, {
         "id": "321200",
         "name": "泰州",
-        "pinyin": "taizhou"
+        "pinyin": "taizhou",
+        "country": "中国"
     }, {
         "id": "331000",
         "name": "台州",
-        "pinyin": "taizhou"
+        "pinyin": "taizhou",
+        "country": "中国"
     }, {
         "id": "340700",
         "name": "铜陵",
-        "pinyin": "tongling"
+        "pinyin": "tongling",
+        "country": "中国"
     }, {
         "id": "370900",
         "name": "泰安",
-        "pinyin": "taian"
+        "pinyin": "taian",
+        "country": "中国"
     }, {
         "id": "411100",
         "name": "漯河",
-        "pinyin": "luohe"
+        "pinyin": "luohe",
+        "country": "中国"
     }, {
         "id": "522200",
         "name": "铜仁地区",
-        "pinyin": "tongjindiqu"
+        "pinyin": "tongjindiqu",
+        "country": "中国"
     }, {
         "id": "610200",
         "name": "铜川",
-        "pinyin": "tongchuan"
+        "pinyin": "tongchuan",
+        "country": "中国"
     }, {
         "id": "620500",
         "name": "天水",
-        "pinyin": "tianshui"
+        "pinyin": "tianshui",
+        "country": "中国"
     }, {
         "id": "652100",
         "name": "吐鲁番地区",
-        "pinyin": "tulufandiqu"
+        "pinyin": "tulufandiqu",
+        "country": "中国"
     }, {
         "id": "654200",
         "name": "塔城地区",
-        "pinyin": "tachengdiqu"
+        "pinyin": "tachengdiqu",
+        "country": "中国"
     }, {
         "id": "710100",
         "name": "台北",
-        "pinyin": "taibei"
+        "pinyin": "taibei",
+        "country": "中国"
     }, {
         "id": "710300",
         "name": "台南",
-        "pinyin": "tainan"
+        "pinyin": "tainan",
+        "country": "中国"
     }, {
         "id": "710400",
         "name": "台中",
-        "pinyin": "taizhong"
+        "pinyin": "taizhong",
+        "country": "中国"
     }, {
         "id": "429006",
         "name": "天门市",
-        "pinyin": "tianmenshi"
+        "pinyin": "tianmenshi",
+        "country": "中国"
     }, {
         "id": "659003",
         "name": "图木舒克市",
-        "pinyin": "tumushukeshi"
+        "pinyin": "tumushukeshi",
+        "country": "中国"
     }, {
         "id": "711100",
         "name": "台北县",
-        "pinyin": "taibeixian"
+        "pinyin": "taibeixian",
+        "country": "中国"
     }, {
         "id": "711400",
         "name": "桃园县",
-        "pinyin": "taoyuanxian"
+        "pinyin": "taoyuanxian",
+        "country": "中国"
     }, {
         "id": "711600",
         "name": "台中县",
-        "pinyin": "taizhongxian"
+        "pinyin": "taizhongxian",
+        "country": "中国"
     }, {
         "id": "712200",
         "name": "台南县",
-        "pinyin": "tainanxian"
+        "pinyin": "tainanxian",
+        "country": "中国"
     }, {
         "id": "712500",
         "name": "台东县",
-        "pinyin": "taidongxian"
+        "pinyin": "taidongxian",
+        "country": "中国"
     }],
     "W": [{
         "id": "150300",
         "name": "乌海",
-        "pinyin": "wuhai"
+        "pinyin": "wuhai",
+        "country": "中国"
     }, {
         "id": "150900",
         "name": "乌兰察布",
-        "pinyin": "wulanchabu"
+        "pinyin": "wulanchabu",
+        "country": "中国"
     }, {
         "id": "320200",
         "name": "无锡",
-        "pinyin": "wuxi"
+        "pinyin": "wuxi",
+        "country": "中国"
     }, {
         "id": "330300",
         "name": "温州",
-        "pinyin": "wenzhou"
+        "pinyin": "wenzhou",
+        "country": "中国"
     }, {
         "id": "340200",
         "name": "芜湖",
-        "pinyin": "wuhu"
+        "pinyin": "wuhu",
+        "country": "中国"
     }, {
         "id": "370700",
         "name": "潍坊",
-        "pinyin": "weifang"
+        "pinyin": "weifang",
+        "country": "中国"
     }, {
         "id": "371000",
         "name": "威海",
-        "pinyin": "weihai"
+        "pinyin": "weihai",
+        "country": "中国"
     }, {
         "id": "420100",
         "name": "武汉",
-        "pinyin": "wuhan"
+        "pinyin": "wuhan",
+        "country": "中国"
     }, {
         "id": "450400",
         "name": "梧州",
-        "pinyin": "wuzhou"
+        "pinyin": "wuzhou",
+        "country": "中国"
     }, {
         "id": "532600",
         "name": "文山壮族苗族自治州",
-        "pinyin": "wenshanzhuangzumiaozuzizhizhou"
+        "pinyin": "wenshanzhuangzumiaozuzizhizhou",
+        "country": "中国"
     }, {
         "id": "610500",
         "name": "渭南",
-        "pinyin": "weinan"
+        "pinyin": "weinan",
+        "country": "中国"
     }, {
         "id": "620600",
         "name": "武威",
-        "pinyin": "wuwei"
+        "pinyin": "wuwei",
+        "country": "中国"
     }, {
         "id": "640300",
         "name": "吴忠",
-        "pinyin": "wuzhong"
+        "pinyin": "wuzhong",
+        "country": "中国"
     }, {
         "id": "650100",
         "name": "乌鲁木齐",
-        "pinyin": "wulumuqi"
+        "pinyin": "wulumuqi",
+        "country": "中国"
     }, {
         "id": "659004",
         "name": "五家渠市",
-        "pinyin": "wujiaqushi"
+        "pinyin": "wujiaqushi",
+        "country": "中国"
     }],
     "X": [{
         "id": "130500",
         "name": "邢台",
-        "pinyin": "xingtai"
+        "pinyin": "xingtai",
+        "country": "中国"
     }, {
         "id": "140900",
         "name": "忻州",
-        "pinyin": "xinzhou"
+        "pinyin": "xinzhou",
+        "country": "中国"
     }, {
         "id": "152200",
         "name": "兴安盟",
-        "pinyin": "xinganmeng"
+        "pinyin": "xinganmeng",
+        "country": "中国"
     }, {
         "id": "152500",
         "name": "锡林郭勒盟",
-        "pinyin": "xilinguolemeng"
+        "pinyin": "xilinguolemeng",
+        "country": "中国"
     }, {
         "id": "320300",
         "name": "徐州",
-        "pinyin": "xuzhou"
+        "pinyin": "xuzhou",
+        "country": "中国"
     }, {
         "id": "341800",
         "name": "宣城",
-        "pinyin": "xuancheng"
+        "pinyin": "xuancheng",
+        "country": "中国"
     }, {
         "id": "350200",
         "name": "厦门",
-        "pinyin": "xiamen"
+        "pinyin": "xiamen",
+        "country": "中国"
     }, {
         "id": "360500",
         "name": "新余",
-        "pinyin": "xinyu"
+        "pinyin": "xinyu",
+        "country": "中国"
     }, {
         "id": "410700",
         "name": "新乡",
-        "pinyin": "xinxiang"
+        "pinyin": "xinxiang",
+        "country": "中国"
     }, {
         "id": "411000",
         "name": "许昌",
-        "pinyin": "xuchang"
+        "pinyin": "xuchang",
+        "country": "中国"
     }, {
         "id": "411500",
         "name": "信阳",
-        "pinyin": "xinyang"
+        "pinyin": "xinyang",
+        "country": "中国"
     }, {
         "id": "420600",
         "name": "襄阳",
-        "pinyin": "xiangyang"
+        "pinyin": "xiangyang",
+        "country": "中国"
     }, {
         "id": "420900",
         "name": "孝感",
-        "pinyin": "xiaogan"
+        "pinyin": "xiaogan",
+        "country": "中国"
     }, {
         "id": "421200",
         "name": "咸宁",
-        "pinyin": "xianning"
+        "pinyin": "xianning",
+        "country": "中国"
     }, {
         "id": "430300",
         "name": "湘潭",
-        "pinyin": "xiangtan"
+        "pinyin": "xiangtan",
+        "country": "中国"
     }, {
         "id": "433100",
         "name": "湘西土家族苗族自治州",
-        "pinyin": "xiangxitujiazumiaozuzizhizhou"
+        "pinyin": "xiangxitujiazumiaozuzizhizhou",
+        "country": "中国"
     }, {
         "id": "532800",
         "name": "西双版纳傣族自治州",
@@ -1297,267 +1615,335 @@
     },     {
         "id": "610100",
         "name": "西安",
-        "pinyin": "xian"
+        "pinyin": "xian",
+        "country": "中国"
     }, {
         "id": "610400",
         "name": "咸阳",
-        "pinyin": "xianyang"
+        "pinyin": "xianyang",
+        "country": "中国"
     }, {
         "id": "630100",
         "name": "西宁",
-        "pinyin": "xining"
+        "pinyin": "xining",
+        "country": "中国"
     }, {
         "id": "710800",
         "name": "新竹",
-        "pinyin": "xinzhu"
+        "pinyin": "xinzhu",
+        "country": "中国"
     }, {
         "id": "810100",
         "name": "香港岛",
-        "pinyin": "xianggangdao"
+        "pinyin": "xianggangdao",
+        "country": "中国"
     }, {
         "id": "810300",
         "name": "新界",
-        "pinyin": "xinjie"
+        "pinyin": "xinjie",
+        "country": "中国"
     }, {
         "id": "429004",
         "name": "仙桃市",
-        "pinyin": "xiantaoshi"
+        "pinyin": "xiantaoshi",
+        "country": "中国"
     }, {
         "id": "711300",
         "name": "新竹县",
-        "pinyin": "xinzhuxian"
+        "pinyin": "xinzhuxian",
+        "country": "中国"
     }],
     "Y": [{
         "id": "140300",
         "name": "阳泉",
-        "pinyin": "yangquan"
+        "pinyin": "yangquan",
+        "country": "中国"
     }, {
         "id": "140800",
         "name": "运城",
-        "pinyin": "yuncheng"
+        "pinyin": "yuncheng",
+        "country": "中国"
     }, {
         "id": "210800",
         "name": "营口",
-        "pinyin": "yingkou"
+        "pinyin": "yingkou",
+        "country": "中国"
     }, {
         "id": "222400",
         "name": "延边朝鲜族自治州",
-        "pinyin": "yanbianchaoxianzuzizhizhou"
+        "pinyin": "yanbianchaoxianzuzizhizhou",
+        "country": "中国"
     }, {
         "id": "230700",
         "name": "伊春",
-        "pinyin": "yichun"
+        "pinyin": "yichun",
+        "country": "中国"
     }, {
         "id": "320900",
         "name": "盐城",
-        "pinyin": "yancheng"
+        "pinyin": "yancheng",
+        "country": "中国"
     }, {
         "id": "321000",
         "name": "扬州",
-        "pinyin": "yangzhou"
+        "pinyin": "yangzhou",
+        "country": "中国"
     }, {
         "id": "360600",
         "name": "鹰潭",
-        "pinyin": "yingtan"
+        "pinyin": "yingtan",
+        "country": "中国"
     }, {
         "id": "360900",
         "name": "宜春",
-        "pinyin": "yichun"
+        "pinyin": "yichun",
+        "country": "中国"
     }, {
         "id": "370600",
         "name": "烟台",
-        "pinyin": "yantai"
+        "pinyin": "yantai",
+        "country": "中国"
     }, {
         "id": "420500",
         "name": "宜昌",
-        "pinyin": "yichang"
+        "pinyin": "yichang",
+        "country": "中国"
     }, {
         "id": "430600",
         "name": "岳阳",
-        "pinyin": "yueyang"
+        "pinyin": "yueyang",
+        "country": "中国"
     }, {
         "id": "430900",
         "name": "益阳",
-        "pinyin": "yiyang"
+        "pinyin": "yiyang",
+        "country": "中国"
     }, {
         "id": "431100",
         "name": "永州",
-        "pinyin": "yongzhou"
+        "pinyin": "yongzhou",
+        "country": "中国"
     }, {
         "id": "441700",
         "name": "阳江",
-        "pinyin": "yangjiang"
+        "pinyin": "yangjiang",
+        "country": "中国"
     }, {
         "id": "445300",
         "name": "云浮",
-        "pinyin": "yunfu"
+        "pinyin": "yunfu",
+        "country": "中国"
     }, {
         "id": "450900",
         "name": "玉林",
-        "pinyin": "yulin"
+        "pinyin": "yulin",
+        "country": "中国"
     }, {
         "id": "511500",
         "name": "宜宾",
-        "pinyin": "yibin"
+        "pinyin": "yibin",
+        "country": "中国"
     }, {
         "id": "511800",
         "name": "雅安",
-        "pinyin": "yaan"
+        "pinyin": "yaan",
+        "country": "中国"
     }, {
         "id": "530400",
         "name": "玉溪",
-        "pinyin": "yuxi"
+        "pinyin": "yuxi",
+        "country": "中国"
     }, {
         "id": "610600",
         "name": "延安",
-        "pinyin": "yanan"
+        "pinyin": "yanan",
+        "country": "中国"
     }, {
         "id": "610800",
         "name": "榆林",
-        "pinyin": "yulin"
+        "pinyin": "yulin",
+        "country": "中国"
     }, {
         "id": "632700",
         "name": "玉树藏族自治州",
-        "pinyin": "yushuzangzuzizhizhou"
+        "pinyin": "yushuzangzuzizhizhou",
+        "country": "中国"
     }, {
         "id": "640100",
         "name": "银川",
-        "pinyin": "yinchuan"
+        "pinyin": "yinchuan",
+        "country": "中国"
     }, {
         "id": "654000",
         "name": "伊犁哈萨克自治州",
-        "pinyin": "yilihasakezuzizhizhou"
+        "pinyin": "yilihasakezuzizhizhou",
+        "country": "中国"
     }, {
         "id": "711200",
         "name": "宜兰县",
-        "pinyin": "yilanxian"
+        "pinyin": "yilanxian",
+        "country": "中国"
     }, {
         "id": "712100",
         "name": "云林县",
-        "pinyin": "yunlinxian"
+        "pinyin": "yunlinxian",
+        "country": "中国"
     }],
     "Z": [{
         "id": "130700",
         "name": "张家口",
-        "pinyin": "zhangjiakou"
+        "pinyin": "zhangjiakou",
+        "country": "中国"
     }, {
         "id": "211300",
         "name": "朝阳",
-        "pinyin": "chaoyang"
+        "pinyin": "chaoyang",
+        "country": "中国"
     }, {
         "id": "321100",
         "name": "镇江",
-        "pinyin": "zhenjiang"
+        "pinyin": "zhenjiang",
+        "country": "中国"
     }, {
         "id": "330900",
         "name": "舟山",
-        "pinyin": "zhoushan"
+        "pinyin": "zhoushan",
+        "country": "中国"
     }, {
         "id": "350600",
         "name": "漳州",
-        "pinyin": "zhangzhou"
+        "pinyin": "zhangzhou",
+        "country": "中国"
     }, {
         "id": "370300",
         "name": "淄博",
-        "pinyin": "zibo"
+        "pinyin": "zibo",
+        "country": "中国"
     }, {
         "id": "370400",
         "name": "枣庄",
-        "pinyin": "zaozhuang"
+        "pinyin": "zaozhuang",
+        "country": "中国"
     }, {
         "id": "410100",
         "name": "郑州",
-        "pinyin": "zhengzhou"
+        "pinyin": "zhengzhou",
+        "country": "中国"
     }, {
         "id": "411600",
         "name": "周口",
-        "pinyin": "zhoukou"
+        "pinyin": "zhoukou",
+        "country": "中国"
     }, {
         "id": "411700",
         "name": "驻马店",
-        "pinyin": "zhumadian"
+        "pinyin": "zhumadian",
+        "country": "中国"
     }, {
         "id": "430200",
         "name": "株洲",
-        "pinyin": "zhuzhou"
+        "pinyin": "zhuzhou",
+        "country": "中国"
     }, {
         "id": "430800",
         "name": "张家界",
-        "pinyin": "zhangjiajie"
+        "pinyin": "zhangjiajie",
+        "country": "中国"
     }, {
         "id": "440400",
         "name": "珠海",
-        "pinyin": "zhuhai"
+        "pinyin": "zhuhai",
+        "country": "中国"
     }, {
         "id": "440800",
         "name": "湛江",
-        "pinyin": "zhanjiang"
+        "pinyin": "zhanjiang",
+        "country": "中国"
     }, {
         "id": "441200",
         "name": "肇庆",
-        "pinyin": "zhaoqing"
+        "pinyin": "zhaoqing",
+        "country": "中国"
     }, {
         "id": "442000",
         "name": "中山",
-        "pinyin": "zhongshan"
+        "pinyin": "zhongshan",
+        "country": "中国"
     }, {
         "id": "510300",
         "name": "自贡",
-        "pinyin": "zigong"
+        "pinyin": "zigong",
+        "country": "中国"
     }, {
         "id": "512000",
         "name": "资阳",
-        "pinyin": "ziyang"
+        "pinyin": "ziyang",
+        "country": "中国"
     }, {
         "id": "520300",
         "name": "遵义",
-        "pinyin": "zunyi"
+        "pinyin": "zunyi",
+        "country": "中国"
     }, {
         "id": "530600",
         "name": "昭通",
-        "pinyin": "zhaotong"
+        "pinyin": "zhaotong",
+        "country": "中国"
     }, {
         "id": "620700",
         "name": "张掖",
-        "pinyin": "zhangye"
+        "pinyin": "zhangye",
+        "country": "中国"
     }, {
         "id": "640500",
         "name": "中卫",
-        "pinyin": "zhongwei"
+        "pinyin": "zhongwei",
+        "country": "中国"
     }, {
         "id": "711700",
         "name": "彰化县",
-        "pinyin": "zhanghuaxian"
+        "pinyin": "zhanghuaxian",
+        "country": "中国"
     }],
     "hot": [{
         "id": "110100",
-        "name": "北京"
+        "name": "北京",
+        "country": "中国"
     }, {
         "id": "310100",
-        "name": "上海"
+        "name": "上海",
+        "country": "中国"
     }, {
         "id": "330100",
-        "name": "杭州"
+        "name": "杭州",
+        "country": "中国"
     }, {
         "id": "330200",
-        "name": "宁波"
+        "name": "宁波",
+        "country": "中国"
     }, {
         "id": "420100",
-        "name": "武汉"
+        "name": "武汉",
+        "country": "中国"
     }, {
         "id": "440100",
-        "name": "广州"
+        "name": "广州",
+        "country": "中国"
     }, {
         "id": "440300",
-        "name": "深圳"
+        "name": "深圳",
+        "country": "中国"
     }, {
         "id": "500100",
-        "name": "重庆"
+        "name": "重庆",
+        "country": "中国"
     }, {
         "id": "510100",
-        "name": "成都"
+        "name": "成都",
+        "country": "中国"
     }, {
         "id": "610100",
-        "name": "西安"
+        "name": "西安",
+        "country": "中国"
     }]
 }

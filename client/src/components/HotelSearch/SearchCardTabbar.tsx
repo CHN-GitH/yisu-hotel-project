@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { setCity, setSelectedCityData } from '../../store/slices/searchCitySlice';
 import SearchCardCityChinese from './SearchCardCityChinese';
+import SearchCardCityInterNational from './SearchCardCityInterNational';
 import SearchCardTimeRange from './SearchCardTimeRange';
 import SearchCardPriceAndStar from './SearchCardPriceAndStar';
 import SearchCardSearchButton from './SearchCardSearchButton';
@@ -16,14 +19,70 @@ const originTabList = [
 ];
 // 合并后Tab
 const mergedTabList = [
-  { key: 'tab1-tab2', label: '国内 · 海外' }, // 合并后的 Tab
+  { key: 'tab1-tab2', label: '国内 · 海外' },
   { key: 'tab3', label: '钟点房' },
   { key: 'tab4', label: '民宿' },
 ];
 
 export default function SearchCardTabbar() {
+  const dispatch = useAppDispatch();
   const [activeTab, setActiveTab] = useState('tab1');
   const [renderTabList, setRenderTabList] = useState(originTabList);
+  // 用于标记是否是手动切换
+  const isManualSwitchRef = useRef(false);
+  const prevCountryRef = useRef<string | undefined>(undefined);
+  // 从 Redux 获取 country
+  const { selectedCityData } = useAppSelector((state) => state.searchCity);
+  const country = selectedCityData?.country;
+
+  // 手动切换 tab 时，重置为对应默认值
+  const handleTabClick = (tabKey: string) => {
+    const targetKey = tabKey === 'tab1-tab2' ? 'tab1' : tabKey;
+    isManualSwitchRef.current = true;
+    setActiveTab(targetKey);
+    // 手动切换时，重置 city 为对应默认值
+    if (targetKey === 'tab1') {
+      dispatch(setCity("上海"));
+      dispatch(setSelectedCityData({
+        cityName: "上海",
+        cityId: 0,
+        region: "国内",
+        country: "中国"
+      }));
+    } else if (targetKey === 'tab2') {
+      dispatch(setCity("首尔"));
+      dispatch(setSelectedCityData({
+        cityName: "首尔",
+        cityId: 0,
+        region: "日韩",
+        country: "韩国"
+      }));
+    }
+    // 重置标志位
+    setTimeout(() => {
+      isManualSwitchRef.current = false;
+    }, 100);
+  };
+
+  // 监听 country 变化，自动切换 tab（仅在非手动切换时执行）
+  useEffect(() => {
+    if (isManualSwitchRef.current) return;
+    if (!country || country === prevCountryRef.current) return;
+    prevCountryRef.current = country;
+    const isChina = country === "中国";
+    const isInDomesticTab = activeTab === 'tab1';
+    const isInInternationalTab = activeTab === 'tab2';
+    // 如果在中国 tab 但选择了非中国城市，切换到海外 tab
+    if (isInDomesticTab && !isChina) {
+      console.log('检测到非中国城市，切换到海外 tab');
+      setActiveTab('tab2');
+    }
+    // 如果在海外 tab 但选择了中国城市，切换到国内 tab
+    if (isInInternationalTab && isChina) {
+      console.log('检测到中国城市，切换到国内 tab');
+      setActiveTab('tab1');
+    }
+  }, [country, activeTab, dispatch]);
 
   // 监听切换Tab列表
   useEffect(() => {
@@ -33,12 +92,6 @@ export default function SearchCardTabbar() {
       setRenderTabList(mergedTabList);
     }
   }, [activeTab]);
-
-  // 此处如果点击的是合并后的tab1-tab2，默认选中tab1
-  const handleTabClick = (tabKey: string) => {
-    const targetKey = tabKey === 'tab1-tab2' ? 'tab1' : tabKey;
-    setActiveTab(targetKey);
-  };
 
   return (
     <View className="search-card">
@@ -63,6 +116,12 @@ export default function SearchCardTabbar() {
         <SearchCardPriceAndStar />
         <SearchCardSearchButton />
       </>}
+      {activeTab === 'tab2' && <>
+        <SearchCardCityInterNational />
+        <SearchCardTimeRange />
+        <SearchCardPriceAndStar />
+        <SearchCardSearchButton />
+      </>}
     </View>
   );
-};
+}

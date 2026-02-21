@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text, ScrollView, Icon } from '@tarojs/components'
 import { Tabs, Elevator } from '@nutui/nutui-react-taro'
@@ -176,7 +176,9 @@ export default function CitySearch() {
         title: '热门',
         list: hotCities.map(city => ({
           id: city.id,
-          name: city.name
+          name: city.name,
+          country: '中国',
+          region: '国内'
         }))
       })
     }
@@ -258,6 +260,16 @@ export default function CitySearch() {
   const hotelGridData = useMemo(() => {
     return allHotels
   }, [allHotels])
+
+  useEffect(() => {
+    const handleSetTab = (tab: 'domestic' | 'international' | 'hotel') => {
+      setActiveTab(tab);
+    };
+    Taro.eventCenter.on('setCitySearchTab', handleSetTab);
+    return () => {
+      Taro.eventCenter.off('setCitySearchTab', handleSetTab);
+    };
+  }, []);
 
   const handleCityClick = (item: CityItem) => {
     handleCitySelect(item)

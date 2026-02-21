@@ -1,4 +1,3 @@
-// src\components\HotelSearch\SearchCardCityChinese.tsx
 import React, { useState, useEffect } from "react";
 import Taro from "@tarojs/taro";
 import { View, Text, Input } from "@tarojs/components";
@@ -13,36 +12,28 @@ declare global {
   }
 }
 
-export default function SearchCardCityChinese() {
+export default function SearchCardCityInterNational() {
   const dispatch = useAppDispatch();
-  // 从 searchCity reducer 读取城市和酒店数据
   const { city, selectedCityData, selectedHotel } = useAppSelector((state) => state.searchCity);
   const [isLocating, setIsLocating] = useState(false);
-
   const isWeapp = process.env.TARO_ENV === "weapp";
   const isH5 = process.env.TARO_ENV === "h5";
-
-  // 初始化：如果没有城市，默认设为上海
-  useEffect(() => {
-    if (!city) {
-      dispatch(setCity("上海"));
-      dispatch(setSelectedCityData({
-        cityName: "上海",
-        cityId: 0,
-        region: "国内"
-      }));
-    }
-  }, [dispatch, city]);
+  // 获取 country
+  const country = selectedCityData?.country || "韩国";
 
   // 监听变化
   useEffect(() => {
-    console.log('Redux updated:', { city, selectedHotel });
-  }, [city, selectedHotel]);
+    console.log('Redux updated:', { city, country, selectedHotel });
+  }, [city, country, selectedHotel]);
 
   // 跳转到城市选择页
   const handleCityClick = () => {
+    const targetTab = country !== "中国" ? "international" : "domestic";
     Taro.navigateTo({
       url: "/pages/CitySearch/index",
+      success: () => {
+        Taro.eventCenter.trigger('setCitySearchTab', targetTab);
+      }
     });
   };
 
@@ -176,7 +167,6 @@ export default function SearchCardCityChinese() {
       if (isWeapp) {
         cityName = await getCityFromWeapp(latitude, longitude);
       } else if (isH5) {
-        // H5 端：使用百度地图 WebGL API
         const fromType = res.type === "gcj02" ? 3 : 1;
         const bdCoord = await convertCoord(latitude, longitude, fromType);
         console.log("百度坐标:", bdCoord);
@@ -190,6 +180,7 @@ export default function SearchCardCityChinese() {
         dispatch(setSelectedCityData({
           cityName: cityName,
           cityId: 0,
+          country: "韩国",
         }));
         dispatch(clearHotel());
         Taro.showToast({ title: `已定位到${cityName}`, icon: "success" });
@@ -209,19 +200,22 @@ export default function SearchCardCityChinese() {
       } else if (errorMsg.includes("API 错误")) {
         tipMsg = "地图服务异常，请稍后重试";
       }
-
       Taro.showToast({ title: tipMsg, icon: "none", duration: 3000 });
     } finally {
       setIsLocating(false);
     }
   };
-  // 判断是否选择了酒店
   const hasHotel = !!selectedHotel;
-  // 当前显示的城市
-  const displayCity = city || "上海";
+  const displayCity = city || "首尔";
 
   return (
     <View className="search-row">
+      {/* 上方灰色小字显示国家 */}
+      {country && (
+        <View className="country-label">
+          <Text className="country-text">{country}</Text>
+        </View>
+      )}
       <View className="search-city">
         <Text className="search-city-chinese" onClick={handleCityClick}>
           {displayCity}
@@ -237,7 +231,7 @@ export default function SearchCardCityChinese() {
           />
         ) : (
           <Input
-            className="search-city-input"
+            className="search-city-input search-city-down-input"
             placeholder="位置/品牌/酒店"
             value=""
             disabled
@@ -245,7 +239,7 @@ export default function SearchCardCityChinese() {
           />
         )}
         <Location
-          className="search-city-location"
+          className="search-city-location search-city-down-icon"
           onClick={(e) => {
             e.stopPropagation();
             handleLocate();
