@@ -144,7 +144,12 @@ function HotelManage() {
       render: (text: string, record: any) => (
         <div>
           <Space>
-            <span>{text}</span>
+            <span
+              style={{ cursor: 'pointer', color: '#1890ff' }}
+              onClick={() => navigate(`/hotel/detail/${record.id}`)}
+            >
+              {text}
+            </span>
             {record.nameEn && (
               <span style={{ color: '#999', fontSize: 12 }}>({record.nameEn})</span>
             )}

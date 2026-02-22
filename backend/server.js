@@ -14,6 +14,7 @@ const PORT = 3000;  // 服务器运行在3000端口
 const DATA_DIR = path.join(__dirname, 'data');
 const USERS_FILE = path.join(DATA_DIR, 'users.json');
 const HOTELS_FILE = path.join(DATA_DIR, 'hotels.json');
+const ROOM_TYPES_FILE = path.join(DATA_DIR, 'roomTypes.json');
 
 // 确保数据目录存在
 if (!fs.existsSync(DATA_DIR)) {
@@ -109,9 +110,46 @@ const defaultHotels = [
   }
 ];
 
+// 默认房型数据
+const defaultRoomTypes = [
+  {
+    id: 1,
+    hotelId: 1,
+    name: "豪华大床房",
+    price: 936,
+    area: 45,
+    bedCount: 1,
+    floor: 5,
+    facilities: ["免费WiFi", "空调", "电视", "冰箱", "热水器", "吹风机", "浴缸"],
+    description: "宽敞舒适的豪华大床房，配备高品质床品和现代化设施，让您享受舒适的入住体验",
+    images: [
+      "https://via.placeholder.com/400x300/1890ff/ffffff?text=豪华大床房1",
+      "https://via.placeholder.com/400x300/52c41a/ffffff?text=豪华大床房2"
+    ],
+    createdAt: "2024-01-15T10:00:00.000Z"
+  },
+  {
+    id: 2,
+    hotelId: 1,
+    name: "行政双床房",
+    price: 1288,
+    area: 55,
+    bedCount: 2,
+    floor: 8,
+    facilities: ["免费WiFi", "空调", "电视", "冰箱", "热水器", "吹风机", "浴缸", "洗衣机"],
+    description: "行政双床房适合商务出行，两张单人床，配备办公桌和行政楼层专属服务",
+    images: [
+      "https://via.placeholder.com/400x300/fa8c16/ffffff?text=行政双床房1",
+      "https://via.placeholder.com/400x300/722ed1/ffffff?text=行政双床房2"
+    ],
+    createdAt: "2024-01-10T14:30:00.000Z"
+  }
+];
+
 // 从文件加载数据，如果没有则使用默认数据
 let mockUsers = loadDataFromFile(USERS_FILE, defaultUsers);
 let mockHotels = loadDataFromFile(HOTELS_FILE, defaultHotels);
+let mockRoomTypes = loadDataFromFile(ROOM_TYPES_FILE, defaultRoomTypes);
 
 // ========== 中间件 ==========
 
@@ -296,6 +334,10 @@ app.listen(PORT, () => {
   console.log('  POST http://localhost:3000/api/hotel/publish/:id/publish');
   console.log('  POST http://localhost:3000/api/hotel/publish/:id/offline');
   console.log('  DELETE http://localhost:3000/api/hotel/delete/:id');
+  console.log('  GET  http://localhost:3000/api/room-types/:hotelId');
+  console.log('  POST http://localhost:3000/api/room-types');
+  console.log('  PUT  http://localhost:3000/api/room-types/:id');
+  console.log('  DELETE http://localhost:3000/api/room-types/:id');
 });
 
 // 商户创建酒店 POST /api/hotel/create
@@ -527,6 +569,113 @@ app.patch('/api/hotels/:id/status', (req, res) => {
     res.status(404).json({
       code: 404,
       msg: "酒店不存在"
+    });
+  }
+});
+
+// ========== 房型管理接口 ==========
+
+// 获取房型列表 GET /api/room-types/:hotelId
+app.get('/api/room-types/:hotelId', (req, res) => {
+  console.log('[获取房型列表]', req.params.hotelId);
+
+  const hotelId = parseInt(req.params.hotelId);
+  const roomTypes = mockRoomTypes.filter(rt => rt.hotelId === hotelId);
+
+  res.json({
+    code: 0,
+    msg: "获取成功",
+    data: roomTypes
+  });
+});
+
+// 创建房型 POST /api/room-types
+app.post('/api/room-types', (req, res) => {
+  console.log('[创建房型]', req.body);
+
+  const { hotelId, name, price, area, bedCount, floor, facilities, description, images } = req.body;
+
+  const newRoomType = {
+    id: mockRoomTypes.length + 1,
+    hotelId,
+    name,
+    price,
+    area,
+    bedCount,
+    floor: floor || 1,
+    facilities: facilities || [],
+    description: description || '',
+    images: images || [],
+    createdAt: new Date().toISOString()
+  };
+
+  mockRoomTypes.push(newRoomType);
+  saveDataToFile(ROOM_TYPES_FILE, mockRoomTypes);
+
+  res.json({
+    code: 0,
+    msg: "创建成功",
+    data: newRoomType
+  });
+});
+
+// 更新房型 PUT /api/room-types/:id
+app.put('/api/room-types/:id', (req, res) => {
+  console.log('[更新房型]', req.params.id, req.body);
+
+  const id = parseInt(req.params.id);
+  const roomTypeIndex = mockRoomTypes.findIndex(rt => rt.id === id);
+
+  if (roomTypeIndex !== -1) {
+    const { name, price, area, bedCount, floor, facilities, description, images } = req.body;
+
+    mockRoomTypes[roomTypeIndex] = {
+      ...mockRoomTypes[roomTypeIndex],
+      name: name || mockRoomTypes[roomTypeIndex].name,
+      price: price || mockRoomTypes[roomTypeIndex].price,
+      area: area || mockRoomTypes[roomTypeIndex].area,
+      bedCount: bedCount || mockRoomTypes[roomTypeIndex].bedCount,
+      floor: floor || mockRoomTypes[roomTypeIndex].floor,
+      facilities: facilities !== undefined ? facilities : mockRoomTypes[roomTypeIndex].facilities,
+      description: description !== undefined ? description : mockRoomTypes[roomTypeIndex].description,
+      images: images !== undefined ? images : mockRoomTypes[roomTypeIndex].images
+    };
+
+    saveDataToFile(ROOM_TYPES_FILE, mockRoomTypes);
+
+    res.json({
+      code: 0,
+      msg: "更新成功",
+      data: mockRoomTypes[roomTypeIndex]
+    });
+  } else {
+    res.status(404).json({
+      code: 404,
+      msg: "房型不存在"
+    });
+  }
+});
+
+// 删除房型 DELETE /api/room-types/:id
+app.delete('/api/room-types/:id', (req, res) => {
+  console.log('[删除房型]', req.params.id);
+
+  const id = parseInt(req.params.id);
+  const roomTypeIndex = mockRoomTypes.findIndex(rt => rt.id === id);
+
+  if (roomTypeIndex !== -1) {
+    mockRoomTypes.splice(roomTypeIndex, 1);
+    saveDataToFile(ROOM_TYPES_FILE, mockRoomTypes);
+
+    res.json({
+      code: 0,
+      msg: "删除成功",
+      data: null
+    });
+  } else {
+    res.status(404).json({
+      code: 404,
+      msg: "房型不存在"
     });
   }
 });

@@ -9,6 +9,8 @@ const Login = lazy(() => import('@/pages/Login/index.tsx'))
 const Register = lazy(() => import('@/pages/Register/index.tsx'))
 const HotelEdit = lazy(() => import('@/pages/HotelEdit/index.tsx'))
 const HotelManage = lazy(() => import('@/pages/HotelManage/index.tsx'))
+const HotelDetail = lazy(() => import('@/pages/HotelDetail/index.tsx'))
+const RoomTypeDetail = lazy(() => import('@/pages/RoomTypeDetail/index.tsx'))
 
 // 加载中组件
 function Loading() {
@@ -75,6 +77,22 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<Loading />}>
             <HotelEdit />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'hotel/detail/:id',
+        element: (
+          <Suspense fallback={<Loading />}>
+            <HotelDetail />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'hotel/:hotelId/room-type/:roomTypeId',
+        element: (
+          <Suspense fallback={<Loading />}>
+            <RoomTypeDetail />
           </Suspense>
         ),
       },

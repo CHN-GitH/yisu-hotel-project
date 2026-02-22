@@ -19,6 +19,7 @@ build/
 
 # Data files
 backend/data/
+backend/data/*.json
 
 # IDE
 .vscode/
