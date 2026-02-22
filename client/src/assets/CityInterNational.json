@@ -441,6 +441,12 @@
     "pinyin": "ruilijiang"
   }],
   "S": [{
+    "id": 1601,
+    "name": "首尔",
+    "country": "韩国",
+    "region": "日韩",
+    "pinyin": "shouer"
+  }, {
     "id": 1602,
     "name": "圣地亚哥",
     "country": "智利",

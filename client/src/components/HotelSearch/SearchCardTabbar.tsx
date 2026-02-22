@@ -30,7 +30,6 @@ export default function SearchCardTabbar() {
   const [renderTabList, setRenderTabList] = useState(originTabList);
   // 用于标记是否是手动切换
   const isManualSwitchRef = useRef(false);
-  const prevCountryRef = useRef<string | undefined>(undefined);
   // 从 Redux 获取 country
   const { selectedCityData } = useAppSelector((state) => state.searchCity);
   const country = selectedCityData?.country;
@@ -45,7 +44,7 @@ export default function SearchCardTabbar() {
       dispatch(setCity("上海"));
       dispatch(setSelectedCityData({
         cityName: "上海",
-        cityId: 0,
+        cityId: 310100,
         region: "国内",
         country: "中国"
       }));
@@ -53,7 +52,7 @@ export default function SearchCardTabbar() {
       dispatch(setCity("首尔"));
       dispatch(setSelectedCityData({
         cityName: "首尔",
-        cityId: 0,
+        cityId: 1601,
         region: "日韩",
         country: "韩国"
       }));
@@ -62,7 +61,7 @@ export default function SearchCardTabbar() {
       dispatch(setCity("上海"));
       dispatch(setSelectedCityData({
         cityName: "上海",
-        cityId: 0,
+        cityId: 310100,
         region: "国内",
         country: "中国"
       }));
@@ -76,28 +75,25 @@ export default function SearchCardTabbar() {
   // 监听 country 变化，自动切换 tab（仅在非手动切换时执行）
   useEffect(() => {
     if (isManualSwitchRef.current) return;
-    if (!country || country === prevCountryRef.current) return;
-    prevCountryRef.current = country;
+    if (!country) return;
     const isChina = country === "中国";
-    const isInDomesticTab = activeTab === 'tab1';
-    const isInInternationalTab = activeTab === 'tab2';
     // 如果在中国 tab 但选择了非中国城市，切换到海外 tab
-    if (isInDomesticTab && !isChina) {
+    if (activeTab === 'tab1' && !isChina) {
       console.log('检测到非中国城市，切换到海外 tab');
       setActiveTab('tab2');
     }
     // 如果在海外 tab 但选择了中国城市，切换到国内 tab
-    if (isInInternationalTab && isChina) {
+    else if (activeTab === 'tab2' && isChina) {
       console.log('检测到中国城市，切换到国内 tab');
       setActiveTab('tab1');
     }
-    // tab3 和 tab4 不自动切换，但如果是海外城市，重置为上海
-    if ((activeTab === 'tab3' || activeTab === 'tab4') && !isChina) {
+    // tab3 和 tab4 不自动切换 tab，但如果是海外城市，重置为上海
+    else if ((activeTab === 'tab3' || activeTab === 'tab4') && !isChina) {
       console.log('tab3/tab4 检测到海外城市，重置为上海');
       dispatch(setCity("上海"));
       dispatch(setSelectedCityData({
         cityName: "上海",
-        cityId: 0,
+        cityId: 310100,
         region: "国内",
         country: "中国"
       }));
