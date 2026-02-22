@@ -97,7 +97,7 @@ export default function HotelDetail() {
     <View className='detail-container'>
       <SafeArea position='top' />
       <NavBar
-        left='返回'
+        back={<Text style={{'fontSize':'2.25rem','transform':'scaleX(50%)'}}>&lt;</Text>}
         onBackClick={onClickLeft}
         fixed
         safeAreaInsetTop
