@@ -805,6 +805,124 @@ app.put('/api/admin/permissions/:roleId', (req, res) => {
   });
 });
 
+// ========== 商户端相关接口 ==========
+
+// 获取酒店仪表盘数据 GET /api/hotel/:hotelId/dashboard
+app.get('/api/hotel/:hotelId/dashboard', (req, res) => {
+  console.log('[获取酒店仪表盘数据]', req.params.hotelId, req.query);
+
+  const hotelId = parseInt(req.params.hotelId);
+  const { startDate, endDate } = req.query;
+
+  // 根据酒店ID生成不同的基础数据
+  const hotelDataMap = {
+    1: {
+      baseOrders: 28,
+      baseRevenue: 8420,
+      totalOrders: 446,
+      totalRevenue: 156000,
+      occupancyRate: 72,
+      revenueRange: [5000, 15000],
+      ordersRange: [10, 60],
+      occupancyRange: [50, 90]
+    },
+    2: {
+      baseOrders: 35,
+      baseRevenue: 12500,
+      totalOrders: 580,
+      totalRevenue: 210000,
+      occupancyRate: 85,
+      revenueRange: [8000, 20000],
+      ordersRange: [20, 80],
+      occupancyRange: [70, 95]
+    },
+    3: {
+      baseOrders: 18,
+      baseRevenue: 5400,
+      totalOrders: 320,
+      totalRevenue: 98000,
+      occupancyRate: 58,
+      revenueRange: [3000, 10000],
+      ordersRange: [8, 40],
+      occupancyRange: [40, 75]
+    }
+  };
+
+  const hotelData = hotelDataMap[hotelId] || hotelDataMap[1];
+
+  // 生成过去30天的日期数据
+  const generateDateData = (days) => {
+    const data = [];
+    const today = new Date();
+    for (let i = days - 1; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toISOString().split('T')[0];
+      data.push(dateStr);
+    }
+    return data;
+  };
+
+  const dates = generateDateData(30);
+
+  // 根据酒店生成不同的销售数据
+  const salesData = dates.map(date => ({
+    date,
+    revenue: Math.floor(Math.random() * (hotelData.revenueRange[1] - hotelData.revenueRange[0])) + hotelData.revenueRange[0],
+    orders: Math.floor(Math.random() * (hotelData.ordersRange[1] - hotelData.ordersRange[0])) + hotelData.ordersRange[0]
+  }));
+
+  // 根据酒店生成不同的入住率数据
+  const occupancyData = dates.map(date => ({
+    date,
+    rate: Math.floor(Math.random() * (hotelData.occupancyRange[1] - hotelData.occupancyRange[0])) + hotelData.occupancyRange[0]
+  }));
+
+  // 根据酒店生成不同的热门房型数据
+  const popularRoomTypesMap = {
+    1: [
+      { name: '豪华大床房', orders: 156, revenue: 46800, rate: 35 },
+      { name: '商务双床房', orders: 134, revenue: 40200, rate: 30 },
+      { name: '行政套房', orders: 89, revenue: 53400, rate: 20 },
+      { name: '标准间', orders: 45, revenue: 9000, rate: 10 },
+      { name: '家庭房', orders: 22, revenue: 6600, rate: 5 }
+    ],
+    2: [
+      { name: '商务套房', orders: 198, revenue: 79200, rate: 32 },
+      { name: '豪华双床房', orders: 175, revenue: 70000, rate: 28 },
+      { name: '行政大床房', orders: 120, revenue: 72000, rate: 20 },
+      { name: '标准间', orders: 65, revenue: 13000, rate: 12 },
+      { name: '经济房', orders: 22, revenue: 4400, rate: 8 }
+    ],
+    3: [
+      { name: '标准大床房', orders: 125, revenue: 25000, rate: 38 },
+      { name: '标准双床房', orders: 98, revenue: 19600, rate: 30 },
+      { name: '豪华套房', orders: 65, revenue: 32500, rate: 20 },
+      { name: '经济间', orders: 28, revenue: 5600, rate: 8 },
+      { name: '单人房', orders: 4, revenue: 800, rate: 4 }
+    ]
+  };
+
+  const dashboardData = {
+    overview: {
+      todayOrders: hotelData.baseOrders,
+      todayRevenue: hotelData.baseRevenue,
+      totalOrders: hotelData.totalOrders,
+      totalRevenue: hotelData.totalRevenue,
+      occupancyRate: hotelData.occupancyRate
+    },
+    salesData,
+    occupancyData,
+    popularRoomTypes: popularRoomTypesMap[hotelId] || popularRoomTypesMap[1]
+  };
+
+  res.json({
+    code: 0,
+    msg: "获取成功",
+    data: dashboardData
+  });
+});
+
 // 启动服务器
 app.listen(PORT, () => {
   console.log('✅ Mock服务器启动成功！');

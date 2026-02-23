@@ -12,6 +12,11 @@ const HotelManage = lazy(() => import('@/pages/HotelManage/index.tsx'))
 const HotelDetail = lazy(() => import('@/pages/HotelDetail/index.tsx'))
 const RoomTypeDetail = lazy(() => import('@/pages/RoomTypeDetail/index.tsx'))
 const Profile = lazy(() => import('@/pages/Profile/index.tsx'))
+const Dashboard = lazy(() => import('@/pages/Dashboard/index.tsx'))
+const Orders = lazy(() => import('@/pages/Orders/index.tsx'))
+const Finance = lazy(() => import('@/pages/Finance/index.tsx'))
+const Reviews = lazy(() => import('@/pages/Reviews/index.tsx'))
+const Settings = lazy(() => import('@/pages/Settings/index.tsx'))
 const UserManage = lazy(() => import('@/pages/UserManage/index.tsx'))
 const MerchantManage = lazy(() => import('@/pages/MerchantManage/index.tsx'))
 const OperationLog = lazy(() => import('@/pages/OperationLog/index.tsx'))
@@ -59,13 +64,29 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to="/hotel/manage" replace />,
+        element: <Navigate to="/dashboard" replace />,
+      },
+      {
+        path: 'dashboard',
+        element: (
+          <Suspense fallback={<Loading />}>
+            <Dashboard />
+          </Suspense>
+        ),
       },
       {
         path: 'hotel/manage',
         element: (
           <Suspense fallback={<Loading />}>
             <HotelManage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'hotel/create',
+        element: (
+          <Suspense fallback={<Loading />}>
+            <HotelEdit />
           </Suspense>
         ),
       },
@@ -98,6 +119,38 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<Loading />}>
             <RoomTypeDetail />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'orders',
+        element: (
+          <Suspense fallback={<Loading />}>
+            <Orders />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'finance',
+        element: (
+          <Suspense fallback={<Loading />}>
+            <Finance />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'reviews',
+        element: (
+          <Suspense fallback={<Loading />}>
+            <Reviews />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'settings',
+        element: (
+          <Suspense fallback={<Loading />}>
+            <Settings />
           </Suspense>
         ),
       },
