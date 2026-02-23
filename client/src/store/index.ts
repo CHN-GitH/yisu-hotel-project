@@ -11,6 +11,7 @@ import hotSuggestsReducer from './slices/hotSuggestsSlice';
 import loadingReducer from './slices/loadingSlice';
 import searchHotelReducer from './slices/searchHotelSlice';
 import searchCityReducer from './slices/searchCitySlice';
+import keywordsReducer from './slices/keywordsSlice'
 
 export const store = configureStore({
   reducer: {
@@ -24,7 +25,8 @@ export const store = configureStore({
     hotSuggests: hotSuggestsReducer,
     loading: loadingReducer,
     searchHotel: searchHotelReducer,
-    searchCity: searchCityReducer
+    searchCity: searchCityReducer,
+    keywords: keywordsReducer
   }
 })
 

@@ -1,13 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setCity, setSelectedCityData } from '../../store/slices/searchCitySlice';
+import { setDates } from '../../store/slices/searchSlice';
 import SearchCardCityChinese from './SearchCardCityChinese';
 import SearchCardCityInterNational from './SearchCardCityInterNational';
 import SearchCardTimeRange from './SearchCardTimeRange';
 import SearchCardPriceAndStar from './SearchCardPriceAndStar';
 import SearchCardSearchButton from './SearchCardSearchButton';
+import SearchKeywords from './SearchKeywords';
+import SearchCardTime from './SearchCardTime';
+import dayjs from 'dayjs'
 import '../../styles/HotelSearch.scss';
 
 // 原始Tab
@@ -32,6 +36,7 @@ export default function SearchCardTabbar() {
   const isManualSwitchRef = useRef(false);
   // 从 Redux 获取 country
   const { selectedCityData } = useAppSelector((state) => state.searchCity);
+  const { checkIn, checkOut } = useAppSelector(state => state.search);
   const country = selectedCityData?.country;
 
   // 手动切换 tab 时，重置为对应默认值
@@ -109,6 +114,17 @@ export default function SearchCardTabbar() {
     }
   }, [activeTab]);
 
+  // 监听切换时间
+  useEffect(() => {
+    if (checkIn === checkOut && ['tab1', 'tab2', 'tab4'].includes(activeTab)) {
+      dispatch(setDates({ 
+            checkIn: dayjs().format('YYYY-MM-DD'), 
+            checkOut: dayjs().add(1, 'day').format('YYYY-MM-DD'),
+            nights: 1
+          }))
+    }
+  }, [activeTab]);
+
   return (
     <View className="search-card">
       {/* Tabber */}
@@ -130,17 +146,19 @@ export default function SearchCardTabbar() {
         <SearchCardCityChinese />
         <SearchCardTimeRange />
         <SearchCardPriceAndStar />
+        <SearchKeywords />
         <SearchCardSearchButton />
       </>}
       {activeTab === 'tab2' && <>
         <SearchCardCityInterNational />
         <SearchCardTimeRange />
         <SearchCardPriceAndStar />
+        <SearchKeywords />
         <SearchCardSearchButton />
       </>}
       {activeTab === 'tab3' && <>
         <SearchCardCityChinese />
-        <SearchCardTimeRange />
+        <SearchCardTime />
         <SearchCardSearchButton />
       </>}
       {activeTab === 'tab4' && <>
