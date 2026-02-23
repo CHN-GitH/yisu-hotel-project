@@ -201,6 +201,159 @@ app.post('/api/auth/login', (req, res) => {
   }
 });
 
+// 注册接口 POST /api/auth/register
+app.post('/api/auth/register', (req, res) => {
+  console.log('[注册请求]', req.body);
+
+  const { username, password, role } = req.body;
+
+  // 检查用户名是否已存在
+  const existingUser = mockUsers.find(u => u.username === username);
+  if (existingUser) {
+    res.json({
+      code: 1,
+      msg: "用户名已存在"
+    });
+    return;
+  }
+
+  // 创建新用户
+  const newUser = {
+    id: mockUsers.length + 1,
+    username,
+    password,
+    role,
+    name: username
+  };
+
+  mockUsers.push(newUser);
+
+  // 保存到文件
+  saveDataToFile(USERS_FILE, mockUsers);
+
+  res.json({
+    code: 0,
+    msg: "注册成功",
+    data: null
+  });
+});
+
+// ========== 用户管理接口 ==========
+
+// 获取当前用户信息 GET /api/user/info
+app.get('/api/user/info', (req, res) => {
+  console.log('[获取用户信息]');
+
+  const user = getUserFromToken(req);
+  if (!user) {
+    return res.status(401).json({
+      code: 401,
+      msg: "未登录"
+    });
+  }
+
+  const userInfo = {
+    id: user.id,
+    username: user.username,
+    name: user.name,
+    role: user.role
+  };
+
+  res.json({
+    code: 0,
+    msg: "获取成功",
+    data: userInfo
+  });
+});
+
+// 更新用户信息 PUT /api/user/info
+app.put('/api/user/info', (req, res) => {
+  console.log('[更新用户信息]', req.body);
+
+  const user = getUserFromToken(req);
+  if (!user) {
+    return res.status(401).json({
+      code: 401,
+      msg: "未登录"
+    });
+  }
+
+  const { name } = req.body;
+  const userIndex = mockUsers.findIndex(u => u.id === user.id);
+
+  if (userIndex !== -1) {
+    if (name !== undefined) {
+      mockUsers[userIndex].name = name;
+    }
+
+    saveDataToFile(USERS_FILE, mockUsers);
+
+    const userInfo = {
+      id: mockUsers[userIndex].id,
+      username: mockUsers[userIndex].username,
+      name: mockUsers[userIndex].name,
+      role: mockUsers[userIndex].role
+    };
+
+    res.json({
+      code: 0,
+      msg: "更新成功",
+      data: userInfo
+    });
+  } else {
+    res.status(404).json({
+      code: 404,
+      msg: "用户不存在"
+    });
+  }
+});
+
+// 修改密码 PUT /api/user/password
+app.put('/api/user/password', (req, res) => {
+  console.log('[修改密码]');
+
+  const user = getUserFromToken(req);
+  if (!user) {
+    return res.status(401).json({
+      code: 401,
+      msg: "未登录"
+    });
+  }
+
+  const { oldPassword, newPassword } = req.body;
+
+  if (!oldPassword || !newPassword) {
+    return res.status(400).json({
+      code: 400,
+      msg: "请填写完整信息"
+    });
+  }
+
+  const userIndex = mockUsers.findIndex(u => u.id === user.id);
+  if (userIndex === -1) {
+    return res.status(404).json({
+      code: 404,
+      msg: "用户不存在"
+    });
+  }
+
+  if (mockUsers[userIndex].password !== oldPassword) {
+    return res.status(400).json({
+      code: 400,
+      msg: "原密码错误"
+    });
+  }
+
+  mockUsers[userIndex].password = newPassword;
+  saveDataToFile(USERS_FILE, mockUsers);
+
+  res.json({
+    code: 0,
+    msg: "密码修改成功",
+    data: null
+  });
+});
+
 // 获取酒店列表 GET /api/hotel/list
 app.get('/api/hotel/list', (req, res) => {
   console.log('[获取酒店列表]', req.query);  // 打印查询参数
@@ -282,43 +435,6 @@ app.get('/api/hotel/detail/:id', (req, res) => {
   }
 });
 
-// 注册接口 POST /api/auth/register
-app.post('/api/auth/register', (req, res) => {
-  console.log('[注册请求]', req.body);
-
-  const { username, password, role } = req.body;
-
-  // 检查用户名是否已存在
-  const existingUser = mockUsers.find(u => u.username === username);
-  if (existingUser) {
-    res.json({
-      code: 1,
-      msg: "用户名已存在"
-    });
-    return;
-  }
-
-  // 创建新用户
-  const newUser = {
-    id: mockUsers.length + 1,
-    username,
-    password,
-    role,
-    name: username
-  };
-
-  mockUsers.push(newUser);
-
-  // 保存到文件
-  saveDataToFile(USERS_FILE, mockUsers);
-
-  res.json({
-    code: 0,
-    msg: "注册成功",
-    data: null
-  });
-});
-
 // 启动服务器
 app.listen(PORT, () => {
   console.log('✅ Mock服务器启动成功！');
@@ -327,6 +443,9 @@ app.listen(PORT, () => {
   console.log('可用接口：');
   console.log('  POST http://localhost:3000/api/auth/login');
   console.log('  POST http://localhost:3000/api/auth/register');
+  console.log('  GET  http://localhost:3000/api/user/info');
+  console.log('  PUT  http://localhost:3000/api/user/info');
+  console.log('  PUT  http://localhost:3000/api/user/password');
   console.log('  GET  http://localhost:3000/api/hotel/list');
   console.log('  GET  http://localhost:3000/api/hotel/detail/:id');
   console.log('  POST http://localhost:3000/api/hotel/create');

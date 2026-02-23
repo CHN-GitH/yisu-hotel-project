@@ -1,10 +1,12 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
-import { Layout as AntLayout, Menu, Button, Avatar, message } from 'antd'
+import { Layout as AntLayout, Menu, Button, Avatar, message, Dropdown } from 'antd'
+import type { MenuProps } from 'antd'
 import {
   HomeOutlined,
   PlusOutlined,
   UserOutlined,
-  LogoutOutlined
+  LogoutOutlined,
+  SettingOutlined
 } from '@ant-design/icons'
 import { useSelector, useDispatch } from 'react-redux'
 import type { RootState } from '@/store'
@@ -68,6 +70,25 @@ function Layout() {
     navigate('/login')
   }
 
+  // 用户下拉菜单项
+  const userMenuItems: MenuProps['items'] = [
+    {
+      key: 'profile',
+      icon: <SettingOutlined />,
+      label: '个人资料',
+      onClick: () => navigate('/profile')
+    },
+    {
+      type: 'divider'
+    },
+    {
+      key: 'logout',
+      icon: <LogoutOutlined />,
+      label: '退出登录',
+      onClick: handleLogout
+    }
+  ]
+
   return (
     <AntLayout style={{ minHeight: '100vh' }}>
       {/* 侧边栏 */}
@@ -104,18 +125,18 @@ function Layout() {
           <span>酒店管理系统</span>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <Avatar icon={<UserOutlined />} />
-            <span>{userInfo?.username}</span>
-            <span style={{ color: '#999' }}>
-              ({userInfo?.role === 'admin' ? '管理员' : '商户'})
-            </span>
-            <Button
-              icon={<LogoutOutlined />}
-              onClick={handleLogout}
-              size="small"
+            <Dropdown
+              menu={{ items: userMenuItems }}
+              placement="bottomRight"
             >
-              退出
-            </Button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                <Avatar icon={<UserOutlined />} />
+                <span>{userInfo?.username}</span>
+                <span style={{ color: '#999' }}>
+                  ({userInfo?.role === 'admin' ? '管理员' : '商户'})
+                </span>
+              </div>
+            </Dropdown>
           </div>
         </Header>
 
