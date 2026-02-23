@@ -435,6 +435,376 @@ app.get('/api/hotel/detail/:id', (req, res) => {
   }
 });
 
+// ========== 管理员相关接口 ==========
+
+// 获取所有用户 GET /api/admin/users
+app.get('/api/admin/users', (req, res) => {
+  console.log('[获取用户列表]');
+
+  const users = mockUsers.map(user => ({
+    id: user.id,
+    username: user.username,
+    name: user.name,
+    role: user.role
+  }));
+
+  res.json({
+    code: 0,
+    msg: "获取成功",
+    data: users
+  });
+});
+
+// 创建用户 POST /api/admin/users
+app.post('/api/admin/users', (req, res) => {
+  console.log('[创建用户]', req.body);
+
+  const { username, password, name, role } = req.body;
+
+  if (!username || !password || !name || !role) {
+    return res.status(400).json({
+      code: 400,
+      msg: "请填写完整信息"
+    });
+  }
+
+  const existingUser = mockUsers.find(u => u.username === username);
+  if (existingUser) {
+    return res.status(400).json({
+      code: 400,
+      msg: "用户名已存在"
+    });
+  }
+
+  const newUser = {
+    id: mockUsers.length + 1,
+    username,
+    password,
+    name,
+    role
+  };
+
+  mockUsers.push(newUser);
+  saveDataToFile(USERS_FILE, mockUsers);
+
+  res.json({
+    code: 0,
+    msg: "创建成功",
+    data: newUser
+  });
+});
+
+// 更新用户 PUT /api/admin/users/:id
+app.put('/api/admin/users/:id', (req, res) => {
+  console.log('[更新用户]', req.params.id, req.body);
+
+  const id = parseInt(req.params.id);
+  const { username, name, role, password } = req.body;
+
+  const userIndex = mockUsers.findIndex(u => u.id === id);
+  if (userIndex === -1) {
+    return res.status(404).json({
+      code: 404,
+      msg: "用户不存在"
+    });
+  }
+
+  const user = mockUsers[userIndex];
+
+  if (username && username !== user.username) {
+    const existingUser = mockUsers.find(u => u.username === username && u.id !== id);
+    if (existingUser) {
+      return res.status(400).json({
+        code: 400,
+        msg: "用户名已存在"
+      });
+    }
+    user.username = username;
+  }
+
+  if (name) user.name = name;
+  if (role) user.role = role;
+  if (password) user.password = password;
+
+  saveDataToFile(USERS_FILE, mockUsers);
+
+  res.json({
+    code: 0,
+    msg: "更新成功",
+    data: user
+  });
+});
+
+// 删除用户 DELETE /api/admin/users/:id
+app.delete('/api/admin/users/:id', (req, res) => {
+  console.log('[删除用户]', req.params.id);
+
+  const id = parseInt(req.params.id);
+
+  const userIndex = mockUsers.findIndex(u => u.id === id);
+  if (userIndex === -1) {
+    return res.status(404).json({
+      code: 404,
+      msg: "用户不存在"
+    });
+  }
+
+  mockUsers.splice(userIndex, 1);
+  saveDataToFile(USERS_FILE, mockUsers);
+
+  res.json({
+    code: 0,
+    msg: "删除成功",
+    data: null
+  });
+});
+
+// 获取所有商户 GET /api/admin/merchants
+app.get('/api/admin/merchants', (req, res) => {
+  console.log('[获取商户列表]');
+
+  const merchants = mockUsers
+    .filter(user => user.role === 'merchant')
+    .map(user => ({
+      id: user.id,
+      username: user.username,
+      name: user.name,
+      hotelCount: mockHotels.filter(h => h.merchantId === user.id).length,
+      status: 'active'
+    }));
+
+  res.json({
+    code: 0,
+    msg: "获取成功",
+    data: merchants
+  });
+});
+
+// 创建商户 POST /api/admin/merchants
+app.post('/api/admin/merchants', (req, res) => {
+  console.log('[创建商户]', req.body);
+
+  const { username, password, name, status } = req.body;
+
+  if (!username || !password || !name) {
+    return res.status(400).json({
+      code: 400,
+      msg: "请填写完整信息"
+    });
+  }
+
+  const existingUser = mockUsers.find(u => u.username === username);
+  if (existingUser) {
+    return res.status(400).json({
+      code: 400,
+      msg: "用户名已存在"
+    });
+  }
+
+  const newMerchant = {
+    id: mockUsers.length + 1,
+    username,
+    password,
+    name,
+    role: 'merchant'
+  };
+
+  mockUsers.push(newMerchant);
+  saveDataToFile(USERS_FILE, mockUsers);
+
+  res.json({
+    code: 0,
+    msg: "创建成功",
+    data: newMerchant
+  });
+});
+
+// 更新商户 PUT /api/admin/merchants/:id
+app.put('/api/admin/merchants/:id', (req, res) => {
+  console.log('[更新商户]', req.params.id, req.body);
+
+  const id = parseInt(req.params.id);
+  const { username, name, status } = req.body;
+
+  const userIndex = mockUsers.findIndex(u => u.id === id && u.role === 'merchant');
+  if (userIndex === -1) {
+    return res.status(404).json({
+      code: 404,
+      msg: "商户不存在"
+    });
+  }
+
+  const user = mockUsers[userIndex];
+
+  if (username && username !== user.username) {
+    const existingUser = mockUsers.find(u => u.username === username && u.id !== id);
+    if (existingUser) {
+      return res.status(400).json({
+        code: 400,
+        msg: "用户名已存在"
+      });
+    }
+    user.username = username;
+  }
+
+  if (name) user.name = name;
+
+  saveDataToFile(USERS_FILE, mockUsers);
+
+  res.json({
+    code: 0,
+    msg: "更新成功",
+    data: user
+  });
+});
+
+// 删除商户 DELETE /api/admin/merchants/:id
+app.delete('/api/admin/merchants/:id', (req, res) => {
+  console.log('[删除商户]', req.params.id);
+
+  const id = parseInt(req.params.id);
+
+  const userIndex = mockUsers.findIndex(u => u.id === id && u.role === 'merchant');
+  if (userIndex === -1) {
+    return res.status(404).json({
+      code: 404,
+      msg: "商户不存在"
+    });
+  }
+
+  mockUsers.splice(userIndex, 1);
+  saveDataToFile(USERS_FILE, mockUsers);
+
+  res.json({
+    code: 0,
+    msg: "删除成功",
+    data: null
+  });
+});
+
+// 获取操作日志 GET /api/admin/logs
+app.get('/api/admin/logs', (req, res) => {
+  console.log('[获取操作日志]', req.query);
+
+  const { username, module, startDate, endDate } = req.query;
+
+  const mockLogs = [
+    {
+      id: 1,
+      username: 'admin1',
+      name: '陈审核员',
+      action: 'create',
+      module: 'user',
+      details: '创建用户 merchant2',
+      ip: '192.168.1.100',
+      createTime: new Date().toISOString()
+    },
+    {
+      id: 2,
+      username: 'merchant1',
+      name: '孙老板',
+      action: 'update',
+      module: 'hotel',
+      details: '更新酒店信息',
+      ip: '192.168.1.101',
+      createTime: new Date(Date.now() - 3600000).toISOString()
+    },
+    {
+      id: 3,
+      username: 'admin1',
+      name: '陈审核员',
+      action: 'delete',
+      module: 'merchant',
+      details: '删除商户 merchant3',
+      ip: '192.168.1.100',
+      createTime: new Date(Date.now() - 7200000).toISOString()
+    }
+  ];
+
+  let filteredLogs = [...mockLogs];
+
+  if (username) {
+    filteredLogs = filteredLogs.filter(log => log.username === username);
+  }
+
+  if (module) {
+    filteredLogs = filteredLogs.filter(log => log.module === module);
+  }
+
+  if (startDate && endDate) {
+    filteredLogs = filteredLogs.filter(log => {
+      const logDate = new Date(log.createTime);
+      return logDate >= new Date(startDate) && logDate <= new Date(endDate);
+    });
+  }
+
+  res.json({
+    code: 0,
+    msg: "获取成功",
+    data: filteredLogs
+  });
+});
+
+// 获取权限列表 GET /api/admin/permissions
+app.get('/api/admin/permissions', (req, res) => {
+  console.log('[获取权限列表]');
+
+  const permissions = [
+    {
+      id: 1,
+      roleName: '超级管理员',
+      userCount: 1,
+      permissions: {
+        userManage: true,
+        merchantManage: true,
+        hotelManage: true,
+        roomTypeManage: true,
+        operationLog: true,
+        permissionManage: true
+      }
+    },
+    {
+      id: 2,
+      roleName: '商户',
+      userCount: 1,
+      permissions: {
+        userManage: false,
+        merchantManage: false,
+        hotelManage: true,
+        roomTypeManage: true,
+        operationLog: false,
+        permissionManage: false
+      }
+    }
+  ];
+
+  res.json({
+    code: 0,
+    msg: "获取成功",
+    data: permissions
+  });
+});
+
+// 更新权限 PUT /api/admin/permissions/:roleId
+app.put('/api/admin/permissions/:roleId', (req, res) => {
+  console.log('[更新权限]', req.params.roleId, req.body);
+
+  const roleId = parseInt(req.params.roleId);
+
+  if (roleId === 1) {
+    return res.status(400).json({
+      code: 400,
+      msg: "超级管理员权限不可修改"
+    });
+  }
+
+  res.json({
+    code: 0,
+    msg: "更新成功",
+    data: null
+  });
+});
+
 // 启动服务器
 app.listen(PORT, () => {
   console.log('✅ Mock服务器启动成功！');

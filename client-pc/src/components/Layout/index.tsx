@@ -6,12 +6,16 @@ import {
   PlusOutlined,
   UserOutlined,
   LogoutOutlined,
-  SettingOutlined
+  SettingOutlined,
+  TeamOutlined,
+  ShopOutlined,
+  FileTextOutlined,
+  SafetyOutlined
 } from '@ant-design/icons'
 import { useSelector, useDispatch } from 'react-redux'
 import type { RootState } from '@/store'
 import { logout } from '@/store/userSlice'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 
 const { Header, Sider, Content } = AntLayout
 
@@ -46,18 +50,45 @@ function Layout() {
   }, [isLogin, lastActivityTime, dispatch, navigate])
 
   // 菜单项
-  const menuItems = [
-    {
-      key: '/hotel/manage',
-      icon: <HomeOutlined />,
-      label: '酒店管理',
-    },
-    {
-      key: '/hotel/edit',
-      icon: <PlusOutlined />,
-      label: '录入酒店',
-    },
-  ]
+  const menuItems = useMemo(() => {
+    const merchantMenu = [
+      {
+        key: '/hotel/manage',
+        icon: <HomeOutlined />,
+        label: '酒店管理',
+      },
+      {
+        key: '/hotel/edit',
+        icon: <PlusOutlined />,
+        label: '录入酒店',
+      },
+    ]
+
+    const adminMenu = [
+      {
+        key: '/admin/users',
+        icon: <TeamOutlined />,
+        label: '用户管理',
+      },
+      {
+        key: '/admin/merchants',
+        icon: <ShopOutlined />,
+        label: '商户管理',
+      },
+      {
+        key: '/admin/logs',
+        icon: <FileTextOutlined />,
+        label: '操作日志',
+      },
+      {
+        key: '/admin/permissions',
+        icon: <SafetyOutlined />,
+        label: '权限管理',
+      },
+    ]
+
+    return userInfo?.role === 'admin' ? adminMenu : merchantMenu
+  }, [userInfo?.role])
 
   // 处理菜单点击
   const handleMenuClick = (e: { key: string }) => {
@@ -102,7 +133,7 @@ function Layout() {
           fontWeight: 'bold',
           borderBottom: '1px solid #f0f0f0'
         }}>
-          易宿商户端
+          {userInfo?.role === 'admin' ? '易宿管理端' : '易宿商户端'}
         </div>
 
         <Menu

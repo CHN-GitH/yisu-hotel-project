@@ -12,6 +12,10 @@ const HotelManage = lazy(() => import('@/pages/HotelManage/index.tsx'))
 const HotelDetail = lazy(() => import('@/pages/HotelDetail/index.tsx'))
 const RoomTypeDetail = lazy(() => import('@/pages/RoomTypeDetail/index.tsx'))
 const Profile = lazy(() => import('@/pages/Profile/index.tsx'))
+const UserManage = lazy(() => import('@/pages/UserManage/index.tsx'))
+const MerchantManage = lazy(() => import('@/pages/MerchantManage/index.tsx'))
+const OperationLog = lazy(() => import('@/pages/OperationLog/index.tsx'))
+const PermissionManage = lazy(() => import('@/pages/PermissionManage/index.tsx'))
 
 // 加载中组件
 function Loading() {
@@ -102,6 +106,38 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<Loading />}>
             <Profile />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'admin/users',
+        element: (
+          <Suspense fallback={<Loading />}>
+            <UserManage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'admin/merchants',
+        element: (
+          <Suspense fallback={<Loading />}>
+            <MerchantManage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'admin/logs',
+        element: (
+          <Suspense fallback={<Loading />}>
+            <OperationLog />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'admin/permissions',
+        element: (
+          <Suspense fallback={<Loading />}>
+            <PermissionManage />
           </Suspense>
         ),
       },
