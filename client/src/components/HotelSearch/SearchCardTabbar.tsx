@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';

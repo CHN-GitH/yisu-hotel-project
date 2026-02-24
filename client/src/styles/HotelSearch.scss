@@ -70,6 +70,11 @@
         font-size: 1.35rem;
         font-weight: 600;
         color: #000;
+        width: 100px;
+        text-align: start;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       &-input {
         height: 65%;
