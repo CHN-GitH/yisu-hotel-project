@@ -8,7 +8,7 @@ import { RootState, AppDispatch } from '../../store';
 import { HouseListItem, HouseDetailData } from '../../services/modules/homelist';
 import styles from '../../styles/HotelList.scss';
 
-const SearchList: React.FC = () => {
+export default function SearchList() {
   const dispatch = useDispatch<AppDispatch>();
   const { homelistdata } = useSelector((state: RootState) => state.homelist);
 
@@ -36,5 +36,3 @@ const SearchList: React.FC = () => {
     </View>
   );
 };
-
-export default SearchList;

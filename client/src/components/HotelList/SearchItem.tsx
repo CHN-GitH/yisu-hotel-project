@@ -7,7 +7,7 @@ interface SearchItemProps {
   itemdata?: HouseListItem;
 }
 
-const SearchItem: React.FC<SearchItemProps> = ({ itemdata }) => {
+export default function SearchItem({itemdata}:SearchItemProps) {
   if (!itemdata) return null;
 
   const { data } = itemdata;
@@ -52,5 +52,3 @@ const SearchItem: React.FC<SearchItemProps> = ({ itemdata }) => {
     </View>
   );
 };
-
-export default SearchItem;

@@ -5,11 +5,11 @@ import Taro from '@tarojs/taro';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchSearch } from '../../store/slices/searchHotelSlice';
 import SearchTabbar from '../../components/HotelList/SearchTabbar';
-import SearchResult from '../../components/HotelList/SearchResult';
+import SearchOrder from '../../components/HotelList/SearchOrder';
 import SearchList from '../../components/HotelList/SearchList';
 import '../../styles/HotelList.scss';
 
-const HotelList: React.FC = () => {
+export default function HotelList() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -29,11 +29,9 @@ const HotelList: React.FC = () => {
         refresherEnabled
         onRefresherRefresh={() => dispatch(fetchSearch())}
       >
-        <SearchResult />
+        <SearchOrder />
         <SearchList />
       </ScrollView>
     </View>
   );
 };
-
-export default HotelList;
