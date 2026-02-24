@@ -1,7 +1,7 @@
 // src/components/SearchResult/index.tsx
 import React, { useState } from 'react';
 import { View, Text, ScrollView } from '@tarojs/components';
-import './index.scss';
+import '../../styles/HotelList.scss';
 
 interface HotFilter {
   label: string;

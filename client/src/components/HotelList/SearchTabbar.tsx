@@ -8,7 +8,7 @@ import { Calendar } from '@nutui/nutui-react-taro';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setDates } from '../../store/slices/searchSlice';
 import dayjs from 'dayjs';
-import './index.scss';
+import '../../styles/HotelList.scss';
 
 const SearchTabbar: React.FC = () => {
   const dispatch = useAppDispatch();

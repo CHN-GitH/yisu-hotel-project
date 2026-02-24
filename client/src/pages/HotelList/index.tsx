@@ -7,7 +7,7 @@ import { fetchSearch } from '../../store/slices/searchHotelSlice';
 import SearchTabbar from '../../components/HotelList/SearchTabbar';
 import SearchResult from '../../components/HotelList/SearchResult';
 import SearchItem from '../../components/HotelList/SearchItem';
-import './index.scss';
+import '../../styles/HotelList.scss';
 
 const HotelList: React.FC = () => {
   const dispatch = useAppDispatch();

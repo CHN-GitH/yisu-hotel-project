@@ -1,7 +1,7 @@
 // src/components/SearchItem/index.tsx
 import React from 'react';
 import { View, Text, Image } from '@tarojs/components';
-import './index.scss';
+import '../../styles/HotelList.scss';
 
 interface HouseTag {
   text: string;
