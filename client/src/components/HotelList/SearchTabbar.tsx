@@ -10,7 +10,7 @@ import { setDates } from '../../store/slices/searchSlice';
 import dayjs from 'dayjs';
 import '../../styles/HotelList.scss';
 
-const SearchTabbar: React.FC = () => {
+export default function SearchTabbar() {
   const dispatch = useAppDispatch();
   
   const { checkIn, checkOut, nights } = useAppSelector((state) => state.search);
@@ -50,26 +50,18 @@ const SearchTabbar: React.FC = () => {
   return (
     <>
       <NavBar
-        back={
-          <Text className='back-arrow'>&lt;</Text>
-        }
+        back={<Text className='back-arrow'>&lt;</Text>}
         onBackClick={onClickLeft}
         fixed
         safeAreaInsetTop
         className='hotel-navbar'
       >
         <View className='navbar-content'>
-          {/* 灰色高亮块 - 内部全部横向排列 */}
           <View className='search-highlight-block' onClick={handleSearchClick}>
-            {/* 城市选择 */}
             <View className='block-item city-item' onClick={handleCityClick}>
               <Text className='city-text'>{displayCity}</Text>
             </View>
-
-            {/* 分隔线 */}
             <View className='divider' />
-
-            {/* 住离时间 - 上下排列 */}
             <View className='block-item date-item' onClick={handleDateClick}>
               <View className='date-row'>
                 <Text className='date-label'>住</Text>
@@ -80,32 +72,22 @@ const SearchTabbar: React.FC = () => {
                 <Text className='date-value'>{formatDisplayDate(checkOut)}</Text>
               </View>
             </View>
-
-            {/* 晚数 */}
             <View className='block-item nights-item'>
               <Text className='nights-text'>{nights || 1}晚</Text>
             </View>
-
-            {/* 分隔线 */}
             <View className='divider' />
-
-            {/* 搜索栏 */}
-            <View className='block-item search-item'>
-              <Search size={14} className='search-icon' />
-              <Text className='search-text'>
+            <View className='block-item keywords-item'>
+              <Search size={14} className='keywords-icon' />
+              <Text className='keywords-text'>
                 {selectedHotel ? selectedHotel.hotelName : '关键字/位置/民宿'}
               </Text>
             </View>
           </View>
-
-          {/* 地图按钮 */}
           <View className='map-btn' onClick={handleMapClick}>
             <Location size={16} className='map-icon' />
           </View>
         </View>
       </NavBar>
-
-      {/* Calendar 组件 */}
       {showCalendar && (
         <Calendar
           title='选择日期'
@@ -147,5 +129,3 @@ const SearchTabbar: React.FC = () => {
     </>
   );
 };
-
-export default SearchTabbar;

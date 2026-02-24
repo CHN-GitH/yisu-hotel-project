@@ -1,93 +1,54 @@
-// src/components/SearchItem/index.tsx
 import React from 'react';
 import { View, Text, Image } from '@tarojs/components';
-import '../../styles/HotelList.scss';
-
-interface HouseTag {
-  text: string;
-  color?: string;
-  backgroundColor?: string;
-}
-
-interface PriceInfo {
-  memberName?: string;
-}
-
-interface HotelItem {
-  defaultPicture: string;
-  unitName: string;
-  houseTags: HouseTag[];
-  address: string;
-  allActiveAndRedPacket?: PriceInfo;
-  productPrice: number;
-  finalPrice: number;
-}
+import { HouseListItem } from '../../services/modules/homelist';
+import styles from '../../styles/HotelList.scss';
 
 interface SearchItemProps {
-  itemData?: HotelItem[];
+  itemdata?: HouseListItem;
 }
 
-const SearchItem: React.FC<SearchItemProps> = ({ itemData = [] }) => {
+const SearchItem: React.FC<SearchItemProps> = ({ itemdata }) => {
+  if (!itemdata) return null;
+
+  const { data } = itemdata;
+  const starNumber = Number(data.commentScore) || 0;
+
   return (
-    <View className='item-list'>
-      {itemData.map((item, index) => (
-        <View key={index} className='hotel-item'>
-          <View className='item-body'>
-            <View className='left-section'>
-              <Image 
-                className='hotel-img' 
-                src={item.defaultPicture} 
-                mode='aspectFill'
-                lazyLoad
-              />
-              {item.houseTags?.[0] && (
-                <View className='tag-badge'>
-                  <Text>{item.houseTags[0].text}</Text>
-                </View>
-              )}
-            </View>
-            
-            <View className='right-section'>
-              <View className='hotel-name'>
-                <Text className='name-text'>{item.unitName}</Text>
-              </View>
-              
-              <View className='tag-list'>
-                {item.houseTags?.slice(0, 3).map((tag, tagIndex) => (
-                  <View 
-                    key={tagIndex} 
-                    className='tag-item'
-                    style={{ 
-                      backgroundColor: tag.backgroundColor || '#ff4444',
-                      color: tag.color || '#fff'
-                    }}
-                  >
-                    <Text className='tag-text'>{tag.text}</Text>
-                  </View>
-                ))}
-              </View>
-              
-              <View className='info-section'>
-                <Text className='info-item address'>{item.address}</Text>
-                {item.allActiveAndRedPacket?.memberName && (
-                  <Text className='info-item member'>
-                    {item.allActiveAndRedPacket.memberName}
-                  </Text>
-                )}
-              </View>
-              
-              <View className='price-section'>
-                <Text className='price original-price'>
-                  原价: ¥{item.productPrice}
-                </Text>
-                <Text className='price discount-price'>
-                  优惠价: ¥{item.finalPrice}
-                </Text>
-              </View>
-            </View>
-          </View>
+    <View className='search-item'>
+      <View className='search-item-image'>
+        <Image 
+          className='search-item-image-cover'
+          src={data.image?.url}
+          mode="aspectFill"
+          lazyLoad
+        />
+      </View>
+      <View className='search-item-info'>
+        <View className='search-item-info-name'>
+          <Text className='search-item-info-name-text'>{data.houseName}</Text>
         </View>
-      ))}
+        <View className='search-item-info-star'>
+          <Text className='search-item-info-star-number'>{starNumber}分</Text>
+          <Text className='search-item-info-star-comment'>
+            {starNumber >= 4.8 ? '超赞' : starNumber >= 4.8 ? '推荐' : '还可以'}
+          </Text>
+        </View>
+        <View className='search-item-info-summary'>
+          <Text className='search-item-info-summary-text'>{data.summaryText.slice(0,-5)}</Text>
+        </View>
+        <View className='search-item-info-location'>
+          {data.location}
+        </View>
+        <View className='search-item-info-price'>
+          <View className='search-item-price'>
+            {data.priceTipBadge && (
+              <Text className='search-item-price-tip'>{data.priceTipBadge.text}</Text>
+            )}
+            <Text className='search-item-price-final'>￥{data.finalPrice}</Text>
+          </View>
+          <Text className='search-item-price-original'>￥{data.productPrice}</Text>
+        </View>
+      </View>
     </View>
   );
 };

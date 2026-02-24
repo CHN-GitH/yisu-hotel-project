@@ -25,7 +25,7 @@ const request = <T = any>(config: RequestConfig): Promise<T> => {
       success: (res) => {
         const response = res.data as BaseResponse<T>;
         // 根据实际接口返回结构判断成功
-        if (response.ret && response.errcode === 0) {
+        if (response.errcode === 0) {
           resolve(response.data);
         } else {
           reject(new Error(response.errmsg || '请求失败'));
