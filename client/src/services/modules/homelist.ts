@@ -59,9 +59,20 @@ export type HouseListResponse = HouseListItem[];
 // 获取首页房源列表
 export default function getHomeList(currentPage: number) {
   return myaxios.get<HouseListResponse>({
-    url: '/home/houselist',
+    url: "/home/houselist",
     params: {
-      page: currentPage
-    }
+      page: currentPage,
+    },
+  });
+}
+
+// 新的获取首页房源列表接口 - 调用本地后端
+export function newHouselist(currentPage: number) {
+  return myaxios.get<HouseListResponse>({
+    url: "/home/houselist",
+    params: {
+      page: currentPage,
+    },
+    baseURL: "http://localhost:3000",
   });
 }
