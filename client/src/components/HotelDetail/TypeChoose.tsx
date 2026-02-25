@@ -4,6 +4,7 @@ import Taro from '@tarojs/taro';
 import { View, Image, Text } from '@tarojs/components';
 import { InputNumber } from '@nutui/nutui-react-taro';
 import { HouseDetailData, HousePicItem } from '../../services/modules/detail';
+import DetailSlot from './DetailSlot';
 import '../../styles/HotelDetail.scss';
 
 // 房型数据接口
@@ -298,61 +299,62 @@ export default function TypeChoose ({ detaildata, onSelectionChange, onStatsChan
 
   return (
     <View className='detail-type-choose'>
-      <View className='section-title'>
-        <Text className='title-text'>选择房型</Text>
-        <Text className='title-sub'>价格已含优惠，选择数量预订</Text>
-      </View>
-      <View className='room-list'>
-        {roomTypes.map((room, index) => (
-          <View key={room.id} className='room-card'>
-            {/* 左侧图片 */}
-            <View className='room-image-wrapper'>
-              <Image 
-                className='room-image' 
-                src={room.imageUrl} 
-                mode='aspectFill'
-                lazyLoad
-              />
-              {index === 0 && (
-                <View className='room-image-tag price-tag'>最低价</View>
-              )}
-              {room.id === 'classic' && (
-                <View className='room-image-tag recommend-tag'>推荐</View>
-              )}
-            </View>
-            {/* 右侧信息区 */}
-            <View className='room-info'>
-              {/* 房型名称 */}
-              <View className='room-header'>
-                <Text className='room-name'>{room.name}</Text>
+      <DetailSlot 
+        title='选择房型' 
+        moreText='全部房型'
+      >
+        <View className='room-list'>
+          {roomTypes.map((room, index) => (
+            <View key={room.id} className='room-card'>
+              {/* 左侧图片 */}
+              <View className='room-image-wrapper'>
+                <Image 
+                  className='room-image' 
+                  src={room.imageUrl} 
+                  mode='aspectFill'
+                  lazyLoad
+                />
+                {index === 0 && (
+                  <View className='room-image-tag price-tag'>最低价</View>
+                )}
+                {room.id === 'classic' && (
+                  <View className='room-image-tag recommend-tag'>推荐</View>
+                )}
               </View>
-              {/* 房间配置信息 */}
-              <View className='room-tags'>
-                <Text className='tag'>{room.bedInfo}</Text>
-                <Text className='tag'>{room.areaInfo}</Text>
-              </View>
-              {/* 价格和数量选择 */}
-              <View className='room-action'>
-                <View className='price-section'>
-                  <Text className='price-value'>{formatPrice(room.price)}</Text>
-                  <Text className='price-unit'>/{(detaildata as HouseDetailData)?.currentHouse?.priceMark?.replace('/', '') || '晚'}</Text>
+              {/* 右侧信息区 */}
+              <View className='room-info'>
+                {/* 房型名称 */}
+                <View className='room-header'>
+                  <Text className='room-name'>{room.name}</Text>
                 </View>
-                <View className='count-section'>
-                  <InputNumber
-                    value={room.count}
-                    min={0}
-                    max={maxSelectLimit}
-                    step={1}
-                    onChange={(value) => handleCountChange(room.id, value)}
-                    inputWidth={60}
-                    buttonSize={28}
-                  />
+                {/* 房间配置信息 */}
+                <View className='room-tags'>
+                  <Text className='tag'>{room.bedInfo}</Text>
+                  <Text className='tag'>{room.areaInfo}</Text>
+                </View>
+                {/* 价格和数量选择 */}
+                <View className='room-action'>
+                  <View className='price-section'>
+                    <Text className='price-value'>{formatPrice(room.price)}</Text>
+                    <Text className='price-unit'>/{(detaildata as HouseDetailData)?.currentHouse?.priceMark?.replace('/', '') || '晚'}</Text>
+                  </View>
+                  <View className='count-section'>
+                    <InputNumber
+                      value={room.count}
+                      min={0}
+                      max={maxSelectLimit}
+                      step={1}
+                      onChange={(value) => handleCountChange(room.id, value)}
+                      inputWidth={60}
+                      buttonSize={28}
+                    />
+                  </View>
                 </View>
               </View>
             </View>
-          </View>
-        ))}
-      </View>
+          ))}
+        </View>
+      </DetailSlot>
     </View>
   );
 };
