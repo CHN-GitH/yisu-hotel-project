@@ -43,7 +43,7 @@ function useDebounce(value: any, delay: number) {
 }
 
 // 房型管理组件
-function RoomTypeManage({ hotelId }: { hotelId: string }) {
+function RoomTypeManage({ hotelId }: { hotelId: string | undefined }) {
   const navigate = useNavigate()
   const [roomTypes, setRoomTypes] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
@@ -60,6 +60,8 @@ function RoomTypeManage({ hotelId }: { hotelId: string }) {
 
   // 获取房型列表
   const fetchRoomTypes = async () => {
+    if (!hotelId) return
+
     setLoading(true)
     try {
       const res: any = await getRoomTypes(hotelId)
@@ -126,6 +128,8 @@ function RoomTypeManage({ hotelId }: { hotelId: string }) {
 
   // 提交表单
   const handleSubmit = async () => {
+    if (!hotelId) return
+
     try {
       const values = await form.validateFields()
       const data = {
@@ -167,14 +171,19 @@ function RoomTypeManage({ hotelId }: { hotelId: string }) {
       title: '房型名称',
       dataIndex: 'name',
       key: 'name',
-      render: (text: string, record: any) => (
-        <span
-          style={{ cursor: 'pointer', color: '#1890ff' }}
-          onClick={() => navigate(`/hotel/${hotelId}/room-type/${record.id}`)}
-        >
-          {text}
-        </span>
-      ),
+      render: (text: string, record: any) => {
+        if (!hotelId) {
+          return text
+        }
+        return (
+          <span
+            style={{ cursor: 'pointer', color: '#1890ff' }}
+            onClick={() => navigate(`/hotel/${hotelId}/room-type/${record.id}`)}
+          >
+            {text}
+          </span>
+        )
+      },
     },
     {
       title: '价格（元/晚）',
@@ -201,7 +210,7 @@ function RoomTypeManage({ hotelId }: { hotelId: string }) {
       key: 'facilities',
       render: (facilities: string[]) => (
         <Space wrap>
-          {facilities.map(fac => (
+          {(facilities || []).map(fac => (
             <Tag key={fac}>{fac}</Tag>
           ))}
         </Space>

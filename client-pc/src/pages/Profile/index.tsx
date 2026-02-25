@@ -20,20 +20,20 @@ import { getUserInfo, updateUserInfo, changePassword } from '@/api/user'
 function Profile() {
   const dispatch = useDispatch()
   const userInfo = useSelector((state: RootState) => state.user.userInfo)
-  
+
   const [profileForm] = Form.useForm()
   const [passwordForm] = Form.useForm()
-  
+
   const [loading, setLoading] = useState(false)
   const [savingProfile, setSavingProfile] = useState(false)
   const [changingPassword, setChangingPassword] = useState(false)
   const [passwordModalVisible, setPasswordModalVisible] = useState(false)
-  
+
   // 页面加载时获取用户信息
   useEffect(() => {
     fetchUserInfo()
   }, [])
-  
+
   // 获取用户信息
   const fetchUserInfo = async () => {
     setLoading(true)
@@ -50,7 +50,7 @@ function Profile() {
       setLoading(false)
     }
   }
-  
+
   // 保存个人资料
   const handleSaveProfile = async () => {
     try {
@@ -68,13 +68,13 @@ function Profile() {
       setSavingProfile(false)
     }
   }
-  
+
   // 打开修改密码弹窗
   const handleOpenPasswordModal = () => {
     passwordForm.resetFields()
     setPasswordModalVisible(true)
   }
-  
+
   // 修改密码
   const handleChangePassword = async () => {
     try {
@@ -96,9 +96,9 @@ function Profile() {
       setChangingPassword(false)
     }
   }
-  
+
   return (
-    <div style={{ maxWidth: 800 }}>
+    <div>
       <Card
         title="个人资料"
         extra={
@@ -106,8 +106,9 @@ function Profile() {
             保存
           </Button>
         }
+        loading={loading}
       >
-        <Descriptions column={2} bordered loading={loading}>
+        <Descriptions column={2} bordered>
           <Descriptions.Item label="用户名" span={2}>
             {userInfo?.username}
           </Descriptions.Item>
@@ -115,9 +116,9 @@ function Profile() {
             {userInfo?.role === 'admin' ? '管理员' : '商户'}
           </Descriptions.Item>
         </Descriptions>
-        
+
         <Divider />
-        
+
         <Form form={profileForm} layout="vertical">
           <Form.Item
             label="姓名"
@@ -128,7 +129,7 @@ function Profile() {
           </Form.Item>
         </Form>
       </Card>
-      
+
       <Card title="修改密码" style={{ marginTop: 24 }}>
         <Space>
           <Button type="primary" icon={<LockOutlined />} onClick={handleOpenPasswordModal}>
@@ -136,7 +137,7 @@ function Profile() {
           </Button>
         </Space>
       </Card>
-      
+
       {/* 修改密码弹窗 */}
       <Modal
         title="修改密码"
@@ -155,7 +156,7 @@ function Profile() {
           >
             <Input.Password placeholder="请输入原密码" />
           </Form.Item>
-          
+
           <Form.Item
             label="新密码"
             name="newPassword"
@@ -166,7 +167,7 @@ function Profile() {
           >
             <Input.Password placeholder="请输入新密码" />
           </Form.Item>
-          
+
           <Form.Item
             label="确认新密码"
             name="confirmPassword"

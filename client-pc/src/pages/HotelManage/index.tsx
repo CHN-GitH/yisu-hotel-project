@@ -301,15 +301,6 @@ function HotelManage() {
               style={{ width: 240 }}
               allowClear
             />
-            {!isAdmin && (
-              <Button
-                type="primary"
-                icon={<PlusOutlined />}
-                onClick={() => navigate('/hotel/edit')}
-              >
-                录入酒店
-              </Button>
-            )}
           </Space>
         </Col>
       </Row>

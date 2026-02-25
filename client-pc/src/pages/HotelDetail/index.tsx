@@ -65,6 +65,12 @@ function HotelDetail() {
   const fetchDashboardData = async () => {
     if (!id) return
 
+    // 如果已经显示数据，则隐藏
+    if (showDashboard) {
+      setShowDashboard(false)
+      return
+    }
+
     setDashboardLoading(true)
     try {
       const res: any = await fetch(`http://localhost:3000/api/hotel/${id}/dashboard`).then(r => r.json())
@@ -203,7 +209,7 @@ function HotelDetail() {
                 <Statistic
                   title="今日订单数"
                   value={dashboardData.overview.todayOrders}
-                  valueStyle={{ color: '#1890ff' }}
+                  styles={{ content: { color: '#1890ff' } }}
                 />
               </Col>
               <Col xs={24} sm={12} md={6}>
@@ -211,7 +217,7 @@ function HotelDetail() {
                   title="今日收入"
                   value={dashboardData.overview.todayRevenue}
                   precision={2}
-                  valueStyle={{ color: '#52c41a' }}
+                  styles={{ content: { color: '#52c41a' } }}
                   prefix="¥"
                 />
               </Col>
@@ -219,7 +225,7 @@ function HotelDetail() {
                 <Statistic
                   title="累计订单数"
                   value={dashboardData.overview.totalOrders}
-                  valueStyle={{ color: '#722ed1' }}
+                  styles={{ content: { color: '#722ed1' } }}
                 />
               </Col>
               <Col xs={24} sm={12} md={6}>
@@ -227,7 +233,7 @@ function HotelDetail() {
                   title="累计收入"
                   value={dashboardData.overview.totalRevenue}
                   precision={2}
-                  valueStyle={{ color: '#fa8c16' }}
+                  styles={{ content: { color: '#fa8c16' } }}
                   prefix="¥"
                 />
               </Col>

@@ -140,6 +140,11 @@ function Layout() {
 
     const adminMenu = [
       {
+        key: '/hotel/manage',
+        icon: <ApartmentOutlined />,
+        label: '酒店管理',
+      },
+      {
         key: '/admin/users',
         icon: <TeamOutlined />,
         label: '用户管理',
