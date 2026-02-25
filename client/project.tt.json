@@ -1,0 +1,13 @@
+{
+  "miniprogramRoot": "./",
+  "projectname": "client",
+  "description": "yisu-mobile-taro",
+  "appid": "wxd70e05cf3fb076e1",
+  "setting": {
+    "urlCheck": true,
+    "es6": false,
+    "postcss": false,
+    "minified": false
+  },
+  "compileType": "miniprogram"
+}
