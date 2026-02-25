@@ -1,3 +1,4 @@
+// 酒店查询页 - 查询tab切换
 import React, { useState, useEffect, useRef } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components';
@@ -168,4 +169,4 @@ export default function SearchCardTabbar() {
       </>}
     </View>
   );
-}
+};

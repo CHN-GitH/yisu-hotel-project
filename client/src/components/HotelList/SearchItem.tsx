@@ -1,7 +1,9 @@
+// 酒店列表页 - 列表每一项
 import React from 'react';
+import Taro from '@tarojs/taro';
 import { View, Text, Image } from '@tarojs/components';
 import { HouseListItem } from '../../services/modules/homelist';
-import styles from '../../styles/HotelList.scss';
+import '../../styles/HotelList.scss';
 
 interface SearchItemProps {
   itemdata?: HouseListItem;
@@ -9,7 +11,6 @@ interface SearchItemProps {
 
 export default function SearchItem({itemdata}:SearchItemProps) {
   if (!itemdata) return null;
-
   const { data } = itemdata;
   const starNumber = Number(data.commentScore) || 0;
 

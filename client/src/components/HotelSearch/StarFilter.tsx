@@ -1,4 +1,6 @@
+// 酒店查询页 - 弹出框星级
 import React, { useState, useEffect, useCallback } from "react";
+import Taro from '@tarojs/taro';
 import { View } from "@tarojs/components";
 import { StarOption, FilterResult } from "../../store/slices/priceStarSlice";
 import '../../styles/HotelSearch.scss';

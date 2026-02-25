@@ -1,3 +1,4 @@
+// 酒店详情页 - 日历+人数
 import React, { useState, useEffect } from 'react';
 import Taro from '@tarojs/taro';
 import { View, Text } from '@tarojs/components';
@@ -250,4 +251,4 @@ export default function BookingStickyBar({ externalRoomCount, onNightsChange }: 
       </View>
     </View>
   );
-}
+};

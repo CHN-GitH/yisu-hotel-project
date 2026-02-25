@@ -1,4 +1,6 @@
+// 酒店详情页 - 设施
 import React from 'react';
+import Taro from '@tarojs/taro';
 import { View, Text, Image } from '@tarojs/components';
 import DetailSlot from './DetailSlot';
 import '../../styles/HotelDetail.scss';
@@ -38,7 +40,6 @@ interface DetailFacilityProps {
 
 export default function DetailFacility({ facilitydata }: DetailFacilityProps) {
   if (!facilitydata) return null;
-
   const { specialFacilitys = [], houseFacilitys = [], facilitySort = [] } = facilitydata;
 
   // 过滤有效的特殊设施（显示前6个）
@@ -102,4 +103,4 @@ export default function DetailFacility({ facilitydata }: DetailFacilityProps) {
       </DetailSlot>
     </View>
   );
-}
+};

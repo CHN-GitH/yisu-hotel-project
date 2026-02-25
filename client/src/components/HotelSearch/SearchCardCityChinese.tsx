@@ -1,3 +1,4 @@
+// 酒店查询页 - 国内城市栏
 import React, { useState, useEffect } from "react";
 import Taro from "@tarojs/taro";
 import { View, Text, Input } from "@tarojs/components";
@@ -240,4 +241,4 @@ export default function SearchCardCityChinese() {
       </View>
     </View>
   );
-}
+};

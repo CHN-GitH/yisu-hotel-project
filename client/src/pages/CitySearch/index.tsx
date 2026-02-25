@@ -1,3 +1,4 @@
+// 搜索栏页
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text, ScrollView, Icon } from '@tarojs/components'
@@ -385,5 +386,5 @@ export default function CitySearch() {
         </Tabs>
       )}
     </View>
-  )
-}
+  );
+};

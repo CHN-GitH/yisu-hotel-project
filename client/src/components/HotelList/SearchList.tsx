@@ -1,20 +1,24 @@
-import React, { useEffect } from 'react';
+// 酒店列表页 - 列表
+import React, { useEffect, useCallback } from 'react';
+import Taro from '@tarojs/taro';
 import { useSelector, useDispatch } from 'react-redux';
 import { View, Text } from '@tarojs/components';
-import Taro from '@tarojs/taro';
 import SearchItem from './SearchItem';
 import { fetchHomeList } from '../../store/slices/homelistSlice';
 import { RootState, AppDispatch } from '../../store';
 import { HouseListItem, HouseDetailData } from '../../services/modules/homelist';
-import styles from '../../styles/HotelList.scss';
+import '../../styles/HotelList.scss';
 
 export default function SearchList() {
   const dispatch = useDispatch<AppDispatch>();
-  const { homelistdata } = useSelector((state: RootState) => state.homelist);
+  const { homelistdata, loading, currentpage } = useSelector((state: RootState) => state.homelist);
 
+  // 初始加载
   useEffect(() => {
-    dispatch(fetchHomeList());
-  }, [dispatch]);
+    if (homelistdata.length === 0) {
+      dispatch(fetchHomeList());
+    }
+  }, [dispatch, homelistdata.length]);
 
   const handleItemClick = (itemData: HouseDetailData) => {
     Taro.navigateTo({
@@ -33,6 +37,12 @@ export default function SearchList() {
           <SearchItem itemdata={item} />
         </View>
       ))}
+      {loading && (
+        <View className='loading-more'>
+          <Text className='loading-text'>加载中...</Text>
+        </View>
+      )}
+      <View className='load-more-trigger' id='load-more-trigger' />
     </View>
   );
 };

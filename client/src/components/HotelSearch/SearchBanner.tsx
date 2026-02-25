@@ -1,10 +1,9 @@
-// src\components\HotelSearch\SearchBanner.tsx
 // 酒店查询页 - Banner
-import React from 'react'
-import Taro from '@tarojs/taro'
-import { View, Text, Image, Swiper, SwiperItem } from '@tarojs/components'
-import bannerData from '../../assets/HotelSearchBanner.json'
-import '../../styles/HotelSearch.scss'
+import React from 'react';
+import Taro from '@tarojs/taro';
+import { View, Text, Image, Swiper, SwiperItem } from '@tarojs/components';
+import bannerData from '../../assets/HotelSearchBanner.json';
+import '../../styles/HotelSearch.scss';
 
 interface BannerItem {
   houseid: number
@@ -17,7 +16,7 @@ export default function SearchBanner() {
     Taro.navigateTo({
       url: `/pages/HotelDetail/index?id=${houseid}`
     })
-  }
+  };
 
   return (
     <Swiper
@@ -43,5 +42,5 @@ export default function SearchBanner() {
         </SwiperItem>
       ))}
     </Swiper>
-  )
-}
+  );
+};

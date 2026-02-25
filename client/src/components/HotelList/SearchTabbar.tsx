@@ -1,7 +1,7 @@
-// src/components/SearchTabbar/index.tsx
+// 酒店列表页 - 导航
 import React, { useState } from 'react';
-import { View, Text } from '@tarojs/components';
 import Taro from '@tarojs/taro';
+import { View, Text } from '@tarojs/components';
 import { NavBar } from '@nutui/nutui-react-taro';
 import { TriangleDown, Location, Search } from '@nutui/icons-react-taro';
 import { Calendar } from '@nutui/nutui-react-taro';
@@ -12,14 +12,11 @@ import '../../styles/HotelList.scss';
 
 export default function SearchTabbar() {
   const dispatch = useAppDispatch();
-  
   const { checkIn, checkOut, nights } = useAppSelector((state) => state.search);
   const { city, selectedHotel } = useAppSelector((state) => state.searchCity);
-  
   const [showCalendar, setShowCalendar] = useState(false);
-  
   const displayCity = city || "上海";
-  
+
   const formatDisplayDate = (date: string) => {
     if (!date || !dayjs(date).isValid()) return '--';
     return dayjs(date).format('MM-DD');

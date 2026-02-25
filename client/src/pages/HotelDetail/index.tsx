@@ -1,3 +1,4 @@
+// 酒店详情页
 import React, { useEffect, useState, useMemo } from 'react';
 import Taro, { useRouter } from '@tarojs/taro';
 import { View, Text, ScrollView, Image } from '@tarojs/components';
@@ -151,4 +152,4 @@ export default function HotelDetail() {
       </ScrollView>
     </View>
   );
-}
+};

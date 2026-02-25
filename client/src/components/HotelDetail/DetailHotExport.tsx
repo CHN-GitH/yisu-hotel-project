@@ -1,6 +1,7 @@
+// 酒店详情页 - 评论
 import React, { useState } from 'react';
+import Taro from '@tarojs/taro';
 import { View, Text, Image } from '@tarojs/components';
-import { Rate } from '@nutui/nutui-react-taro';
 import DetailSlot from './DetailSlot';
 import '../../styles/HotelDetail.scss';
 

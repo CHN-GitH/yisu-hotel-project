@@ -1,4 +1,6 @@
+// 酒店查询页 - 弹出框价格星级
 import React, { useState, useEffect } from "react";
+import Taro from '@tarojs/taro';
 import { View, Text } from "@tarojs/components";
 import { useAppDispatch } from "../../store/hooks";
 import PriceFilter from "./PriceFilter";
@@ -134,4 +136,4 @@ export default function PriceStarFilter({ visible, initialValues, onCancel, onCo
       </View>
     </View>
   );
-}
+};

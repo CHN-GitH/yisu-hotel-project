@@ -1,4 +1,6 @@
+// 酒店详情页 - 基本信息
 import React from 'react';
+import Taro from '@tarojs/taro';
 import { View, Text } from '@tarojs/components';
 import { ArrowRight } from '@nutui/icons-react-taro';
 import '../../styles/HotelDetail.scss';

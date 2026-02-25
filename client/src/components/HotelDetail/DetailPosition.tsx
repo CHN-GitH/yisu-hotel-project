@@ -1,6 +1,7 @@
+// 酒店详情页 - 地图
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { View, Text, Map, CoverView, Button } from '@tarojs/components';
 import Taro from '@tarojs/taro';
+import { View, Text, Map, CoverView, Button } from '@tarojs/components';
 import { Location, Minus, Plus, Home } from '@nutui/icons-react-taro';
 import DetailSlot from './DetailSlot';
 import '../../styles/HotelDetail.scss';

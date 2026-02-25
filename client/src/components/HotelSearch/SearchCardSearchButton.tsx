@@ -1,7 +1,8 @@
-import { useState } from 'react'
-import Taro from '@tarojs/taro'
-import { View, Text } from '@tarojs/components'
-import '../../styles/HotelSearch.scss'
+// 酒店查询页 - 查询按钮
+import { useState } from 'react';
+import Taro from '@tarojs/taro';
+import { View, Text } from '@tarojs/components';
+import '../../styles/HotelSearch.scss';
 
 export default function SearchCardSearchButton() {
   // 搜索
@@ -17,5 +18,5 @@ export default function SearchCardSearchButton() {
         <Text>查询</Text>
       </View>
     </View>
-  )
+  );
 };

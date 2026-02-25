@@ -1,4 +1,6 @@
+// 酒店查询页 - 价格星级栏
 import React, { useState, useEffect } from "react";
+import Taro from '@tarojs/taro';
 import { View, Text } from "@tarojs/components";
 import { useSearchState } from "../../store/hooks";
 import PriceStarFilter from "./PriceStarFilter";
@@ -115,4 +117,4 @@ export default function SearchCardPriceAndStar() {
       />
     </View>
   );
-}
+};

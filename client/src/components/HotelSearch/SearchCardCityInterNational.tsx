@@ -1,3 +1,4 @@
+// 酒店查询页 - 国外城市栏
 import React, { useState, useEffect } from "react";
 import Taro from "@tarojs/taro";
 import { View, Text, Input } from "@tarojs/components";
@@ -110,8 +111,7 @@ export default function SearchCardCityInterNational() {
           if (res.data?.status === 0) {
             const addressComponent = res.data.result?.addressComponent;
             if (addressComponent) {
-              const cityName =
-                addressComponent.city || addressComponent.province;
+              const cityName = addressComponent.city || addressComponent.province;
               resolve(cityName);
             } else {
               reject(new Error("返回数据格式异常"));
@@ -249,4 +249,4 @@ export default function SearchCardCityInterNational() {
       </View>
     </View>
   );
-}
+};

@@ -11,5 +11,5 @@ export default function HotelSearch() {
       <SearchBanner />
       <SearchCardTabbar />
     </View>
-  )
-}
+  );
+};

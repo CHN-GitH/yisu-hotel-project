@@ -1,9 +1,10 @@
+// 酒店详情页 - 下方预定栏
 import React from 'react';
 import Taro from '@tarojs/taro';
 import { View, Text } from '@tarojs/components';
 import type { RoomStats } from './TypeChoose';
 import type { HouseDetailData } from '../../services/modules/detail';
-import '../../styles/HotelDetail.scss'
+import '../../styles/HotelDetail.scss';
 
 // 定义组件接收的 props 类型
 interface BookingBarProps {

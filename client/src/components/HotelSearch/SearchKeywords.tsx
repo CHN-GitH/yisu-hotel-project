@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react'
-import { View, Text, Image, ScrollView } from '@tarojs/components'
-import { useAppDispatch, useAppSelector } from '../../store/hooks'
-import { toggleKeyword, setAllKeywords, clearSelectedKeywords } from '../../store/slices/keywordsSlice'
-import '../../styles/HotelSearch.scss'
+// 酒店查询页 - 
+import React, { useEffect } from 'react';
+import Taro from '@tarojs/taro';
+import { View, Text, Image, ScrollView } from '@tarojs/components';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { toggleKeyword, setAllKeywords, clearSelectedKeywords } from '../../store/slices/keywordsSlice';
+import '../../styles/HotelSearch.scss';
 
 // 关键词数据类型
 export interface KeywordItem {
@@ -19,31 +21,31 @@ const KEYWORDS_DATA: KeywordItem[] = [
   { id: 10004, name: '行李寄存', icon: 'https://pic.tujia.com/upload/festatic/crn/xinglijicun.png' },
   { id: 10005, name: '免费接站', icon: 'https://pic.tujia.com/upload/festatic/crn/ji.png' },
   { id: 10007, name: 'AED急救', icon: 'https://pic.tujia.com/upload/festatic/crn/jijiubao.png' },
-]
+];
 
 export default function SearchKeywords() {
-  const dispatch = useAppDispatch()
-  const { selectedKeywords, allKeywords } = useAppSelector((state) => state.keywords)
+  const dispatch = useAppDispatch();
+  const { selectedKeywords, allKeywords } = useAppSelector((state) => state.keywords);
 
   // 初始化时设置所有关键词
   useEffect(() => {
     dispatch(setAllKeywords(KEYWORDS_DATA))
-  }, [dispatch])
+  }, [dispatch]);
 
   // 判断是否选中
   const isSelected = (id: number) => {
-    return selectedKeywords.some(item => item.id === id)
-  }
+    return selectedKeywords.some(item => item.id === id);
+  };
   // 点击切换
   const handleClick = (item: KeywordItem) => {
-    dispatch(toggleKeyword(item))
-  }
+    dispatch(toggleKeyword(item));
+  };
   // 清空选择
   const handleClear = () => {
-    dispatch(clearSelectedKeywords())
-  }
+    dispatch(clearSelectedKeywords());
+  };
   // 使用 allKeywords 或本地数据渲染
-  const renderKeywords = allKeywords.length > 0 ? allKeywords : KEYWORDS_DATA
+  const renderKeywords = allKeywords.length > 0 ? allKeywords : KEYWORDS_DATA;
 
   return (
     <View className="search-keywords">      
@@ -55,7 +57,7 @@ export default function SearchKeywords() {
       >
         <View className="search-keywords-list">
           {renderKeywords.map((item) => {
-            const selected = isSelected(item.id)
+            const selected = isSelected(item.id);
             return (
               <View 
                 key={item.id}
@@ -76,7 +78,7 @@ export default function SearchKeywords() {
                   </View>
                 )}
               </View>
-            )
+            );
           })}
         </View>
       </ScrollView>
@@ -94,5 +96,5 @@ export default function SearchKeywords() {
         </View>
       )}
     </View>
-  )
-}
+  );
+};

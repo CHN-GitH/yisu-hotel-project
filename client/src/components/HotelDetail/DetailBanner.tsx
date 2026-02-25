@@ -1,4 +1,6 @@
+// 酒店详情页 - 轮播图
 import React, { useState, useMemo } from 'react';
+import Taro from '@tarojs/taro';
 import { View, Image } from '@tarojs/components';
 import { Swiper, SwiperItem } from '@tarojs/components';
 import '../../styles/HotelDetail.scss';
@@ -29,7 +31,7 @@ export default function DetailBanner({ bannerdata = [] }: DetailBannerProps) {
       const category = String(item.enumPictureCategory);
       if (!group[category]) {
         group[category] = [];
-      }
+      };
     }
     // 填充数据
     for (const item of bannerdata) {

@@ -1,4 +1,6 @@
+// 酒店查询页 - 弹出框价格
 import React, { useState, useEffect } from "react";
+import Taro from '@tarojs/taro';
 import { View, Text } from "@tarojs/components";
 import { Range } from "@nutui/nutui-react-taro";
 import { PriceRangeOption, FilterResult } from "../../store/slices/priceStarSlice";

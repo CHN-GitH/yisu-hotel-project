@@ -1,8 +1,10 @@
+// 酒店详情页 - 房型选择
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import Taro from '@tarojs/taro';
 import { View, Image, Text } from '@tarojs/components';
 import { InputNumber } from '@nutui/nutui-react-taro';
 import { HouseDetailData, HousePicItem } from '../../services/modules/detail';
-import '../../styles/HotelDetail.scss'
+import '../../styles/HotelDetail.scss';
 
 // 房型数据接口
 export interface RoomType {
