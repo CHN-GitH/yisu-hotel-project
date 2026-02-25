@@ -1156,7 +1156,7 @@ app.patch('/api/hotels/:id/status', (req, res) => {
       if (hotel.originalStatus) {
         hotel.status = hotel.originalStatus;
       } else {
-        hotel.status = 'offline';
+        hotel.status = 'published';
       }
       hotel.rejectReason = reason;
       delete hotel.pendingAction;
