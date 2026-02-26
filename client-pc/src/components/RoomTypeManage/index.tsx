@@ -142,16 +142,27 @@ function RoomTypeManage({ hotelId }: { hotelId: string | undefined }) {
       const values = await form.validateFields()
 
       // 提取图片URL
+      console.log('fileList:', fileList);
       const images = fileList
         .filter(file => file.status === 'done')
         .map(file => {
-          if (file.response && file.response.data && Array.isArray(file.response.data)) {
-            return file.response.data.map((item: any) => item.url).join(',');
+          console.log('file:', file);
+          let url = '';
+          if (file.response && file.response.data && typeof file.response.data === 'object') {
+            // 处理单文件上传的情况
+            console.log('file.response.data:', file.response.data);
+            url = file.response.data.url;
+          } else {
+            url = file.url || '';
           }
-          return file.url || '';
+          // 确保只保存相对路径
+          if (url && url.startsWith('http')) {
+            return url.replace('http://localhost:3000', '');
+          }
+          return url;
         })
         .filter(Boolean)
-        .flatMap(url => url.split(','))
+      console.log('images:', images);
 
       // 构建后端期望的数据结构
       const data = {
@@ -442,9 +453,66 @@ function RoomTypeManage({ hotelId }: { hotelId: string | undefined }) {
               name="files"
               listType="picture-card"
               fileList={fileList}
-              action="http://localhost:3000/api/upload/multiple"
-              onChange={({ fileList: newFileList }) => setFileList(newFileList)}
+              customRequest={async (options) => {
+                console.log('Upload customRequest options:', options);
+                if (!options) {
+                  console.error('Upload customRequest options is undefined');
+                  return;
+                }
+                const { file, onSuccess, onError } = options;
+                if (!file || typeof onSuccess !== 'function' || typeof onError !== 'function') {
+                  console.error('Upload customRequest missing required parameters');
+                  return;
+                }
+                const formData = new FormData();
+                formData.append('file', file);
+
+                try {
+                  const response = await fetch('http://localhost:3000/api/upload/single', {
+                    method: 'POST',
+                    body: formData,
+                  });
+
+                  const result = await response.json();
+                  console.log('Upload customRequest result:', result);
+
+                  if (result.code === 0 && result.data) {
+                    // 正确的用法：第一个参数是响应数据，第二个参数是文件对象
+                    onSuccess(result, file);
+                  } else {
+                    onError(new Error('上传失败'));
+                  }
+                } catch (error) {
+                  console.error('Upload customRequest error:', error);
+                  onError(new Error(typeof error === 'string' ? error : error instanceof Error ? error.message : '上传失败'));
+                }
+              }}
+              onChange={(info) => {
+                console.log('Upload onChange info:', info);
+                const { fileList: newFileList } = info;
+                const processedFileList = newFileList.map(file => {
+                  if (file.status === 'done' && file.response) {
+                    console.log('Upload file response:', file.response);
+                    // 检查响应是否成功
+                    if (file.response.code === 0 && file.response.data) {
+                      // 处理单文件上传的响应
+                      return {
+                        ...file,
+                        url: file.response.data.url
+                      };
+                    }
+                  }
+                  // 处理上传错误
+                  if (file.status === 'error') {
+                    console.error('上传错误:', file.error);
+                    message.error('上传失败，请重试');
+                  }
+                  return file;
+                });
+                setFileList(processedFileList);
+              }}
               onPreview={(file) => {
+                console.log('Upload onPreview file:', file);
                 setPreviewImage(file.url || file.preview || '')
                 setPreviewOpen(true)
               }}

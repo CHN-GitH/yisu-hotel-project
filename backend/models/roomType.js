@@ -63,8 +63,24 @@ class RoomType {
         } else {
           // 解析JSON字段
           rows.forEach(row => {
-            if (row.facilities) row.facilities = JSON.parse(row.facilities);
-            if (row.images) row.images = JSON.parse(row.images);
+            if (row.facilities) {
+              try {
+                row.facilities = JSON.parse(row.facilities);
+              } catch (e) {
+                row.facilities = [];
+              }
+            }
+            if (row.images) {
+              try {
+                row.images = JSON.parse(row.images);
+                console.log('解析后的 images 字段:', row.images);
+              } catch (e) {
+                console.error('解析 images 字段失败:', e);
+                row.images = [];
+              }
+            } else {
+              row.images = [];
+            }
           });
           resolve(rows);
         }

@@ -65,6 +65,37 @@ function HotelManage() {
     try {
       const res: any = await getHotelList()
       setData(res || [])
+
+      // 检查是否有新的审核结果
+      if (res && res.length > 0) {
+        // 检查是否有新的审核通过
+        const newlyApproved = res.filter((hotel: any) => {
+          // 检查酒店是否刚通过审核（状态为 online 或 offline，且没有待审核操作）
+          return (hotel.status === 'online' || hotel.status === 'offline') &&
+            (hotel.pendingAction === null || hotel.pendingAction === undefined) &&
+            hotel.status !== 'draft' &&
+            !localStorage.getItem(`hotel_approved_${hotel.id}`)
+        })
+
+        // 显示审核通过通知
+        newlyApproved.forEach((hotel: any) => {
+          message.success(`您的酒店 "${hotel.nameCn || hotel.name}" 审核已通过！`)
+          // 标记为已通知，避免重复通知
+          localStorage.setItem(`hotel_approved_${hotel.id}`, 'true')
+        })
+
+        // 检查是否有新的审核拒绝
+        const newlyRejected = res.filter((hotel: any) => {
+          return hotel.status === 'rejected' && !localStorage.getItem(`hotel_rejected_${hotel.id}`)
+        })
+
+        // 显示审核拒绝通知
+        newlyRejected.forEach((hotel: any) => {
+          message.error(`您的酒店 "${hotel.nameCn || hotel.name}" 审核未通过：${hotel.rejectReason || '请联系管理员了解详情'}`)
+          // 标记为已通知，避免重复通知
+          localStorage.setItem(`hotel_rejected_${hotel.id}`, 'true')
+        })
+      }
     } catch (error) {
       console.error('获取酒店列表失败', error)
       message.error('获取酒店列表失败')
@@ -156,6 +187,17 @@ function HotelManage() {
     } catch (error) {
       console.error('审核失败', error)
     }
+  }
+
+  // 清除测试数据（用于开发测试）
+  const handleClearTestData = () => {
+    // 清除所有酒店的审核通知标记
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('hotel_approved_') || key.startsWith('hotel_rejected_')) {
+        localStorage.removeItem(key)
+      }
+    })
+    message.success('测试数据已清除，可重新测试审核通知功能')
   }
 
   // 表格列定义
@@ -344,6 +386,12 @@ function HotelManage() {
               style={{ width: 240 }}
               allowClear
             />
+            <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('/hotel/create')}>
+              录入酒店
+            </Button>
+            <Button type="dashed" onClick={handleClearTestData}>
+              清除测试数据
+            </Button>
           </Space>
         </Col>
       </Row>

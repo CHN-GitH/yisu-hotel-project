@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Button, Card, Descriptions, Space, message, Statistic, Row, Col, Table, Progress } from 'antd'
+import { Button, Card, Descriptions, Space, message, Statistic, Row, Col, Table, Progress, Image } from 'antd'
 import {
   ArrowLeftOutlined,
   BarChartOutlined
@@ -161,6 +161,31 @@ function HotelDetail() {
           数据统计
         </Button>
       </Space>
+
+      {/* 酒店图片展示 */}
+      <Card title="酒店图片" style={{ marginBottom: 24 }}>
+        <Image.PreviewGroup>
+          <Row gutter={[16, 16]}>
+            {hotel.images && hotel.images.length > 0 ? (
+              hotel.images.map((img: string, index: number) => (
+                <Col key={index} xs={24} sm={12} md={8} lg={6}>
+                  <Image
+                    src={`http://localhost:3000${img}`}
+                    alt={`酒店图片${index + 1}`}
+                    style={{ width: '100%', height: 200, objectFit: 'cover' }}
+                  />
+                </Col>
+              ))
+            ) : (
+              <Col span={24}>
+                <div style={{ textAlign: 'center', padding: 40, color: '#999' }}>
+                  暂无图片
+                </div>
+              </Col>
+            )}
+          </Row>
+        </Image.PreviewGroup>
+      </Card>
 
       <Card title="酒店信息" style={{ marginBottom: 24 }}>
         <Descriptions column={2} bordered>

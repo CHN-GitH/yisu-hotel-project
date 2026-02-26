@@ -110,10 +110,23 @@ function RoomTypeDetail() {
       // 提取图片URL
       console.log("fileList:", fileList);
       const images = fileList
+<<<<<<< HEAD
+        .filter(file => file.status === 'done')
+        .map(file => {
+          // 确保只保存相对路径
+          if (file.url && file.url.startsWith('http')) {
+            return file.url.replace('http://localhost:3000', '');
+          }
+          return file.url || '';
+        })
+        .filter(Boolean)
+      console.log('images:', images);
+=======
         .filter((file) => file.status === "done")
         .map((file) => file.url || "")
         .filter(Boolean);
       console.log("images:", images);
+>>>>>>> f69d4d66eab31e4524848427e2dd8d625e9dae14
 
       // 构建后端期望的数据结构
       const data = {

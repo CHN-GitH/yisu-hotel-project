@@ -82,6 +82,7 @@ router.post('/', authMiddleware, merchantMiddleware, async (req, res) => {
       breakfast: false,
       cancel_policy: '',
       image: images && images.length > 0 ? images[0] : '',
+      images: images || [],
       floor: floor || null,
       facilities: facilities || [],
       description: description || ''
