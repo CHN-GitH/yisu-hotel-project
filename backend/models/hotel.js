@@ -8,8 +8,8 @@ class Hotel {
       db.run(
         `INSERT INTO hotels (
           name, name_en, address, star_level, min_price, cover_image, 
-          images, facilities, description, status, merchant_id
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          images, facilities, description, open_date, status, merchant_id
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           hotelData.name,
           hotelData.name_en || '',
@@ -20,6 +20,7 @@ class Hotel {
           JSON.stringify(hotelData.images || []),
           JSON.stringify(hotelData.facilities || []),
           hotelData.description || '',
+          hotelData.open_date || '',
           hotelData.status || 'draft',
           hotelData.merchant_id
         ],
@@ -144,6 +145,11 @@ class Hotel {
       if (hotelData.description) {
         fields.push('description = ?');
         values.push(hotelData.description);
+      }
+
+      if (hotelData.open_date !== undefined) {
+        fields.push('open_date = ?');
+        values.push(hotelData.open_date);
       }
 
       if (hotelData.status) {

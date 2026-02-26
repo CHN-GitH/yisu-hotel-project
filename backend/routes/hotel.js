@@ -10,7 +10,7 @@ const upload = require('../middlewares/upload');
 router.post('/create', authMiddleware, merchantMiddleware, async (req, res) => {
   try {
     const merchantId = req.user.id;
-    const { name, nameEn, address, star, minPrice, openDate, facilities, discountInfo } = req.body;
+    const { name, nameEn, address, star, minPrice, openDate, facilities, discountInfo, images } = req.body;
 
     if (!name || !address || !star || !minPrice) {
       return res.status(400).json({
@@ -26,9 +26,10 @@ router.post('/create', authMiddleware, merchantMiddleware, async (req, res) => {
       star_level: star,
       min_price: minPrice,
       cover_image: '',
-      images: [],
+      images: images || [],
       facilities: facilities || [],
       description: discountInfo || '',
+      open_date: openDate || '',
       status: 'draft',
       merchant_id: merchantId
     });
@@ -143,13 +144,16 @@ router.get('/detail/:id', authMiddleware, async (req, res) => {
         star: hotel.star_level,
         minPrice: hotel.min_price,
         coverImage: hotel.cover_image,
-        images: hotel.images,
-        facilities: hotel.facilities,
-        description: hotel.description,
+        images: hotel.pending_data?.images || hotel.images,
+        facilities: hotel.pending_data?.facilities || hotel.facilities,
+        description: hotel.pending_data?.description || hotel.description,
+        openDate: hotel.pending_data?.openDate || hotel.open_date,
         status: hotel.status === 'published' ? 'online' :
           hotel.status === 'under_review' ? 'pending' :
             hotel.status === 'paused' ? 'paused' : hotel.status,
         rejectReason: hotel.reject_reason,
+        pendingAction: hotel.pending_action,
+        originalStatus: hotel.original_status,
         roomTypes: roomTypes
       }
     });
@@ -167,7 +171,7 @@ router.put('/update/:id', authMiddleware, merchantMiddleware, async (req, res) =
   try {
     const hotelId = parseInt(req.params.id);
     const user = req.user;
-    const { nameCn, nameEn, address, star, minPrice, openDate, facilities, discountInfo } = req.body;
+    const { nameCn, nameEn, address, star, minPrice, openDate, facilities, discountInfo, images } = req.body;
 
     const hotel = await Hotel.findById(hotelId);
     if (!hotel) {
@@ -193,7 +197,9 @@ router.put('/update/:id', authMiddleware, merchantMiddleware, async (req, res) =
       star_level: star || hotel.star_level,
       min_price: minPrice || hotel.min_price,
       facilities: facilities !== undefined ? facilities : hotel.facilities,
-      description: discountInfo !== undefined ? discountInfo : hotel.description
+      description: discountInfo !== undefined ? discountInfo : hotel.description,
+      open_date: openDate !== undefined ? openDate : hotel.open_date,
+      images: images !== undefined ? images : hotel.images
     };
 
     await Hotel.update(hotelId, {
@@ -450,6 +456,7 @@ router.patch('/:id/status', authMiddleware, adminMiddleware, async (req, res) =>
       // 审核通过
       if (hotel.pending_action === 'publish') {
         await Hotel.update(hotelId, {
+          ...(hotel.pending_data || {}),
           status: 'published',
           pending_action: null,
           pending_data: null,
@@ -458,6 +465,7 @@ router.patch('/:id/status', authMiddleware, adminMiddleware, async (req, res) =>
         });
       } else if (hotel.pending_action === 'offline') {
         await Hotel.update(hotelId, {
+          ...(hotel.pending_data || {}),
           status: 'offline',
           pending_action: null,
           pending_data: null,

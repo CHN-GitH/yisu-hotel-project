@@ -4,7 +4,7 @@ const path = require('path');
 const dbPath = path.join(__dirname, 'database.db');
 const db = new sqlite3.Database(dbPath);
 
-db.all('SELECT id, name, image FROM room_types LIMIT 5', (err, rows) => {
+db.all('SELECT id, name, image, images FROM room_types LIMIT 5', (err, rows) => {
   if (err) {
     console.error('查询失败:', err);
   } else {
