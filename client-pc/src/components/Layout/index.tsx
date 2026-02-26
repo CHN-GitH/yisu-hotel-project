@@ -61,6 +61,34 @@ function Layout() {
         if (hotels.length > 0 && !hotels.find(h => h.id === selectedHotel)) {
           setSelectedHotel(hotels[0].id)
         }
+        
+        // 检查是否有新的审核结果
+        const newlyApproved = res.filter((hotel: any) => {
+          // 检查酒店是否刚通过审核（状态为 online 或 offline，且没有待审核操作）
+          return (hotel.status === 'online' || hotel.status === 'offline') && 
+                 (hotel.pendingAction === null || hotel.pendingAction === undefined) && 
+                 hotel.status !== 'draft' && 
+                 !localStorage.getItem(`hotel_approved_${hotel.id}`)
+        })
+        
+        // 显示审核通过通知
+        newlyApproved.forEach((hotel: any) => {
+          message.success(`您的酒店 "${hotel.nameCn || hotel.name}" 审核已通过！`)
+          // 标记为已通知，避免重复通知
+          localStorage.setItem(`hotel_approved_${hotel.id}`, 'true')
+        })
+        
+        // 检查是否有新的审核拒绝
+        const newlyRejected = res.filter((hotel: any) => {
+          return hotel.status === 'rejected' && !localStorage.getItem(`hotel_rejected_${hotel.id}`)
+        })
+        
+        // 显示审核拒绝通知
+        newlyRejected.forEach((hotel: any) => {
+          message.error(`您的酒店 "${hotel.nameCn || hotel.name}" 审核未通过：${hotel.rejectReason || '请联系管理员了解详情'}`)
+          // 标记为已通知，避免重复通知
+          localStorage.setItem(`hotel_rejected_${hotel.id}`, 'true')
+        })
       }
     } catch (error) {
       console.error('获取酒店列表失败', error)

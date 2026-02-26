@@ -43,4 +43,14 @@ export function deleteHotel(id: string) {
 export function auditHotel(id: string, data: { status: string; reason?: string }) {
   return request.patch(`/hotel/${id}/status`, data)
 }
+//上传酒店图片
+export function uploadHotelImage(file: File) {
+  const formData = new FormData()
+  formData.append('file', file)
+  return request.post('/hotel/upload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
 

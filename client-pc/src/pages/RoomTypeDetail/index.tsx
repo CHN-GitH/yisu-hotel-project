@@ -105,7 +105,13 @@ function RoomTypeDetail() {
       console.log('fileList:', fileList);
       const images = fileList
         .filter(file => file.status === 'done')
-        .map(file => file.url || '')
+        .map(file => {
+          // 确保只保存相对路径
+          if (file.url && file.url.startsWith('http')) {
+            return file.url.replace('http://localhost:3000', '');
+          }
+          return file.url || '';
+        })
         .filter(Boolean)
       console.log('images:', images);
 
