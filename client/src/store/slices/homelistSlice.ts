@@ -6,24 +6,30 @@ import getHomeList, {
   newHouselist,
 } from "../../services/modules/homelist";
 
-export type SortType = "default" | "rating" | "originalPrice" | "currentPrice";
+export type SortType = | "default" | "rating" | "originalPrice" | "currentPrice" | "priceStar";
 
 // 定义 State 类型
 interface HomeListState {
   homelistdata: HouseListItem[];
+  filteredData: HouseListItem[];
   currentpage: number;
   loading: boolean;
   error: string | null;
   sortType: SortType;
+  priceRange: [number, number] | null;
+  starLevels: number[];
 }
 
 // 初始状态
 const initialState: HomeListState = {
   homelistdata: [],
+  filteredData: [],
   currentpage: 1,
   loading: false,
   error: null,
   sortType: "default",
+  priceRange: null,
+  starLevels: [],
 };
 
 const homeListSlice = createSlice({
@@ -31,7 +37,20 @@ const homeListSlice = createSlice({
   initialState,
   reducers: {
     appendHomeListData: (state, action: PayloadAction<HouseListItem[]>) => {
-      state.homelistdata.push(...action.payload);
+      // 检查是否有重复数据，避免本地接口的东西反复写进列表中
+      const newData = action.payload.filter((item) => {
+        return !state.homelistdata.some(
+          (existingItem) => existingItem.data.houseId === item.data.houseId,
+        );
+      });
+      state.homelistdata.push(...newData);
+      // 应用筛选和排序
+      state.filteredData = applyFiltersAndSort(
+        state.homelistdata,
+        state.priceRange,
+        state.starLevels,
+        state.sortType,
+      );
     },
     incrementPage: (state) => {
       state.currentpage++;
@@ -44,36 +63,91 @@ const homeListSlice = createSlice({
     },
     setSortType: (state, action: PayloadAction<SortType>) => {
       state.sortType = action.payload;
-      if (action.payload !== "default") {
-        state.homelistdata = sortHouseList(state.homelistdata, action.payload);
-      }
+      // 应用筛选和排序
+      state.filteredData = applyFiltersAndSort(
+        state.homelistdata,
+        state.priceRange,
+        state.starLevels,
+        state.sortType,
+      );
+    },
+    setFilters: (
+      state,
+      action: PayloadAction<{
+        priceRange: [number, number] | null;
+        starLevels: number[];
+      }>,
+    ) => {
+      state.priceRange = action.payload.priceRange;
+      state.starLevels = action.payload.starLevels;
+      // 应用筛选和排序
+      state.filteredData = applyFiltersAndSort(
+        state.homelistdata,
+        state.priceRange,
+        state.starLevels,
+        state.sortType,
+      );
     },
     resetHomeList: (state) => {
       state.homelistdata = [];
+      state.filteredData = [];
       state.currentpage = 1;
       state.error = null;
+      state.sortType = "default";
+      state.priceRange = null;
+      state.starLevels = [];
     },
   },
 });
 
-// 排序逻辑
-const sortHouseList = (
+// 筛选和排序逻辑
+const applyFiltersAndSort = (
   list: HouseListItem[],
+  priceRange: [number, number] | null,
+  starLevels: number[],
   sortType: SortType,
 ): HouseListItem[] => {
-  const sorted = [...list];
+  // 首先应用筛选
+  let filtered = [...list];
 
+  // 价格筛选
+  if (priceRange) {
+    const [min, max] = priceRange;
+    filtered = filtered.filter((item) => {
+      const price = item.data.finalPrice;
+      return price >= min && (max === 2200 ? price >= min : price <= max);
+    });
+  }
+
+  // 星级筛选
+  if (starLevels.length > 0) {
+    filtered = filtered.filter((item) => {
+      const starLevel = Number(item.data.star);
+      return starLevels.includes(starLevel);
+    });
+  }
+
+  // 然后应用排序
   switch (sortType) {
     case "rating":
-      return sorted.sort(
+      return filtered.sort(
         (a, b) => Number(b.data.commentScore) - Number(a.data.commentScore),
       );
     case "originalPrice":
-      return sorted.sort((a, b) => a.data.productPrice - b.data.productPrice);
+      return filtered.sort((a, b) => a.data.productPrice - b.data.productPrice);
     case "currentPrice":
-      return sorted.sort((a, b) => a.data.finalPrice - b.data.finalPrice);
+      return filtered.sort((a, b) => a.data.finalPrice - b.data.finalPrice);
+    case "priceStar":
+      // 价格/星级排序：先按价格排序，再按星级排序
+      return filtered.sort((a, b) => {
+        const priceDiff = a.data.finalPrice - b.data.finalPrice;
+        if (priceDiff !== 0) {
+          return priceDiff;
+        }
+        return Number(b.data.star) - Number(a.data.star);
+      });
     default:
-      return sorted;
+      return filtered;
   }
 };
 
@@ -102,10 +176,8 @@ export const fetchHomeList =
       }
 
       if (combinedData.length > 0) {
-        // 获取当前排序类型并应用排序
-        const currentSort = getState().homelist.sortType;
-        const sortedData = sortHouseList(combinedData, currentSort);
-        dispatch(appendHomeListData(sortedData));
+        // 直接添加数据，appendHomeListData 会自动处理重复数据、筛选和排序
+        dispatch(appendHomeListData(combinedData));
         dispatch(incrementPage());
       } else {
         console.error("响应格式错误: 没有获取到有效的数据");
@@ -123,6 +195,11 @@ export const fetchHomeList =
     }
   };
 
-export const { appendHomeListData, incrementPage, setSortType, resetHomeList } =
-  homeListSlice.actions;
+export const {
+  appendHomeListData,
+  incrementPage,
+  setSortType,
+  setFilters,
+  resetHomeList,
+} = homeListSlice.actions;
 export default homeListSlice.reducer;
