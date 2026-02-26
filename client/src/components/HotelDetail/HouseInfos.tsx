@@ -82,7 +82,7 @@ export default function HouseInfos({ infosdata = {} }: HouseInfosProps) {
   return (
     <View className='house-infos-container'>
       {/* 房屋名称 */}
-      <Text className='house-name'>{infosdata.houseName}</Text>
+      <Text className='house-name'>{infosdata?.houseName || "房屋详情"}</Text>
       {/* 标签 */}
       <View className='tags-wrapper'>
         {infosdata.houseTags?.map((item, index) => (

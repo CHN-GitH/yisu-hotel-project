@@ -98,6 +98,7 @@ export interface TopModule {
   housePicture: HousePicture;
   promotionPic: string | null;
   houseName: string;
+  roomName: string;
   houseTags: HouseTag[];
   commentBrief: CommentBrief;
   nearByPosition: NearByPosition;
@@ -312,6 +313,23 @@ export interface CurrentHouse {
   [key: string]: any;
 }
 
+// 后端传来的房型数据
+export interface BackendRoomType {
+  id: number;
+  name: string;
+  bedType: string;
+  area: number;
+  capacity: number;
+  price: number;
+  breakfast: boolean;
+  cancelPolicy: string;
+  image: string;
+  images: string[];
+  facilities: string[];
+  floor: number;
+  description: string;
+}
+
 // 完整的房屋详情数据
 export interface HouseDetailData {
   houseId: number;
@@ -323,6 +341,8 @@ export interface HouseDetailData {
   currentHouse: CurrentHouse;
   floatingBall: any;
   debugInfo: string;
+  // 后端传来的房型数据
+  roomTypes?: BackendRoomType[];
 }
 
 // API 返回的完整数据结构

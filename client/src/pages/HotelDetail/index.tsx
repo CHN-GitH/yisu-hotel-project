@@ -150,7 +150,7 @@ export default function HotelDetail() {
         {hasData(detaildata) ? (
           <View className="detail-wrapper">
             {topModule?.housePicture?.housePics && (
-              <DetailBanner bannerdata={topModule.housePicture.housePics} />
+              <DetailBanner bannerdata={topModule.housePicture.housePics} source={source} />
             )}
             <HouseInfos infosdata={detaildata?.mainPart?.topModule} />
             {/* 传递roomCount和onNightsChange给BookingStickyBar */}

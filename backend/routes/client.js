@@ -108,6 +108,10 @@ router.get('/infos', async (req, res) => {
 
     // 获取房型列表
     const roomTypes = await RoomType.getByHotelId(hotel.id);
+    
+    // ========== 核心修改：获取第一个房型名称（也可根据业务逻辑选择特定房型） ==========
+    // 取第一个房型的名称，若没有房型则默认用酒店名称
+    const firstRoomTypeName = roomTypes.length > 0 ? roomTypes[0].name : hotel.name;
 
     // 构建详情数据
     const detailData = {
@@ -137,7 +141,9 @@ router.get('/infos', async (req, res) => {
             houseVideos: null
           },
           promotionPic: null,
+          // ========== 核心修改：将hotel.name改为firstRoomTypeName ==========
           houseName: hotel.name,
+          roomName: firstRoomTypeName,
           houseTags: [],
           commentBrief: {
             overall: 4.5,
@@ -313,7 +319,7 @@ router.get('/infos', async (req, res) => {
       },
       currentHouse: {
         houseId: hotel.id,
-        houseName: hotel.name,
+        houseName: firstRoomTypeName,
         houseSummary: '',
         defaultPictureURL: hotel.cover_image || '',
         productPrice: hotel.min_price,

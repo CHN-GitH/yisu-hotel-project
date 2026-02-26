@@ -64,17 +64,6 @@ function initDatabase() {
       console.error('创建酒店表失败:', err.message);
     } else {
       console.log('酒店表创建成功');
-
-      // 尝试添加 open_date 字段
-      db.run(`
-        ALTER TABLE hotels ADD COLUMN open_date TEXT
-      `, (err) => {
-        if (err) {
-          console.error('添加 open_date 字段失败:', err.message);
-        } else {
-          console.log('open_date 字段添加成功');
-        }
-      });
     }
   });
 
