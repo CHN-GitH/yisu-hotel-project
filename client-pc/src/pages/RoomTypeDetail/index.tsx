@@ -51,6 +51,7 @@ function RoomTypeDetail() {
       const roomTypes: any = await getRoomTypes(hotelId!)
       const roomTypeDetail = roomTypes.find((rt: any) => rt.id === parseInt(roomTypeId!))
       if (roomTypeDetail) {
+<<<<<<< HEAD
         // 转换后端返回的数据结构为前端期望的格式
         const formattedRoomType = {
           ...roomTypeDetail,
@@ -74,6 +75,20 @@ function RoomTypeDetail() {
           setFileList(fileList)
         } else {
           setFileList([])
+=======
+        setRoomType(roomTypeDetail)
+        form.setFieldsValue(roomTypeDetail)
+
+        // 设置图片列表
+        if (roomTypeDetail.images && roomTypeDetail.images.length > 0) {
+          const fileList = roomTypeDetail.images.map((url: string, index: number) => ({
+            uid: `-${index}`,
+            name: `image-${index}.jpg`,
+            status: 'done',
+            url: url,
+          }))
+          setFileList(fileList)
+>>>>>>> main
         }
       }
     } catch (error) {
@@ -102,6 +117,7 @@ function RoomTypeDetail() {
       const values = await form.validateFields()
 
       // 提取图片URL
+<<<<<<< HEAD
       console.log('fileList:', fileList);
       const images = fileList
         .filter(file => file.status === 'done')
@@ -122,6 +138,16 @@ function RoomTypeDetail() {
         description: values.description
       }
       console.log('data:', data);
+=======
+      const images = fileList
+        .filter(file => file.status === 'done')
+        .map(file => file.url || (file.response?.url))
+
+      const data = {
+        ...values,
+        images
+      }
+>>>>>>> main
 
       await updateRoomType(roomTypeId!, data)
       message.success('保存成功')
@@ -135,6 +161,7 @@ function RoomTypeDetail() {
     }
   }
 
+<<<<<<< HEAD
   // 删除图片
   const handleRemoveImage = (file: UploadFile) => {
     const newFileList = fileList.filter(item => item.uid !== file.uid)
@@ -166,12 +193,15 @@ function RoomTypeDetail() {
     }
   };
 
+=======
+>>>>>>> main
   // 图片上传配置
   const uploadProps: UploadProps = {
     name: 'file',
     multiple: true,
     fileList,
     listType: 'picture-card',
+<<<<<<< HEAD
     customRequest,
     onChange: (info) => {
       // 处理上传成功后的响应数据，确保文件对象的 url 字段被正确设置
@@ -194,12 +224,32 @@ function RoomTypeDetail() {
         return file;
       });
       setFileList(processedFileList);
+=======
+    onChange: ({ fileList: newFileList }) => {
+      setFileList(newFileList)
+>>>>>>> main
     },
     onPreview: (file) => {
       setPreviewImage(file.url || file.preview || '')
       setPreviewOpen(true)
     },
+<<<<<<< HEAD
     onRemove: handleRemoveImage
+=======
+    customRequest: ({ onSuccess }) => {
+      // 模拟上传，实际项目中应该上传到服务器
+      setTimeout(() => {
+        const mockUrl = `https://via.placeholder.com/400x300/1890ff/ffffff?text=Room${Date.now()}`
+        onSuccess?.({ url: mockUrl })
+      }, 1000)
+    },
+  }
+
+  // 删除图片
+  const handleRemoveImage = (file: UploadFile) => {
+    const newFileList = fileList.filter(item => item.uid !== file.uid)
+    setFileList(newFileList)
+>>>>>>> main
   }
 
   if (loading) {
@@ -356,6 +406,7 @@ function RoomTypeDetail() {
       </Card>
 
       <Card title="房型图片">
+<<<<<<< HEAD
         {!editing ? (
           <div>
             {roomType.images && roomType.images.length > 0 ? (
@@ -388,6 +439,20 @@ function RoomTypeDetail() {
             )}
           </Upload>
         )}
+=======
+        <Upload
+          {...uploadProps}
+          disabled={!editing}
+          onRemove={editing ? handleRemoveImage : undefined}
+        >
+          {editing && fileList.length < 5 && (
+            <div>
+              <PlusOutlined />
+              <div style={{ marginTop: 8 }}>上传图片</div>
+            </div>
+          )}
+        </Upload>
+>>>>>>> main
         <div style={{ marginTop: 8, color: '#999' }}>
           最多上传5张图片，支持 JPG、PNG 格式
         </div>

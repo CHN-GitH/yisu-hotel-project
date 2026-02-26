@@ -4,7 +4,7 @@ import Taro from '@tarojs/taro';
 import { View, Text } from '@tarojs/components';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setDates } from '../../store/slices/searchSlice';
-import { Calendar } from '@nutui/nutui-react-taro';
+import Calendar from './Calendar';
 import dayjs from 'dayjs';
 import '../../styles/HotelSearch.scss';
 
@@ -12,9 +12,6 @@ export default function SearchCardTimeRange() {
   const dispatch = useAppDispatch();
   const { checkIn, checkOut, nights } = useAppSelector(state => state.search);
   const [showCalendar, setShowCalendar] = useState(false);
-  
-  // 格式化日期数组，需要Date对象或日期字符串数组
-  const dateRange = checkIn && checkOut ? [checkIn, checkOut] : [];
 
   // 判断是否需要显示凌晨入住提示（当前时间在0-6点，且入住日期是今天）
   const showEarlyMorningTip = useMemo(() => {
@@ -26,42 +23,14 @@ export default function SearchCardTimeRange() {
   }, [checkIn]);
 
   // 确认日历
-  const handleDateConfirm = (param: any) => {
-    console.log('Calendar confirm param:', param);
-    let startDate: string;
-    let endDate: string;
-    if (Array.isArray(param)) {
-      if (param.length === 2) {
-        if (Array.isArray(param[0])) {
-          // 格式: [[2024, 2, 16], [2024, 2, 17]]
-          const [startArr, endArr] = param;
-          startDate = dayjs(`${startArr[0]}-${startArr[1]}-${startArr[2]}`).format('YYYY-MM-DD');
-          endDate = dayjs(`${endArr[0]}-${endArr[1]}-${endArr[2]}`).format('YYYY-MM-DD');
-        } else if (typeof param[0] === 'string') {
-          startDate = param[0];
-          endDate = param[1];
-        } else if (param[0] instanceof Date) {
-          // 格式: [Date, Date]
-          startDate = dayjs(param[0]).format('YYYY-MM-DD');
-          endDate = dayjs(param[1]).format('YYYY-MM-DD');
-        } else {
-          startDate = param[0]?.value || param[0]?.date || dayjs(param[0]).format('YYYY-MM-DD');
-          endDate = param[1]?.value || param[1]?.date || dayjs(param[1]).format('YYYY-MM-DD');
-        }
-      } else {
-        console.error('Unexpected param format:', param);
-        return;
-      }
-    } else if (typeof param === 'object' && param !== null) {
-      startDate = param.startDate || param[0];
-      endDate = param.endDate || param[1];
-    } else {
+  const handleDateConfirm = (param: string[]) => {
+    if (!Array.isArray(param) || param.length !== 2) {
       return;
     }
 
-    // 验证日期有效性
-    if (!startDate || !endDate || !dayjs(startDate).isValid() || !dayjs(endDate).isValid()) {
-      console.error('Invalid dates:', startDate, endDate);
+    const [startDate, endDate] = param;
+
+    if (!dayjs(startDate).isValid() || !dayjs(endDate).isValid()) {
       Taro.showToast({ title: '日期选择失败', icon: 'none' });
       return;
     }
@@ -70,14 +39,12 @@ export default function SearchCardTimeRange() {
     const nights = dayjs(endDate).diff(dayjs(startDate), 'day');
 
     // 更新redux中的日期
-    dispatch(setDates({ 
-      checkIn: startDate, 
+    dispatch(setDates({
+      checkIn: startDate,
       checkOut: endDate,
       nights: nights > 0 ? nights : 1
     }));
-    
-    setShowCalendar(false);
-  }
+  };
 
   // 获取星期几
   const getWeekDay = (date: string) => {
@@ -121,16 +88,10 @@ export default function SearchCardTimeRange() {
       </View>
 
       <Calendar
-        title='选择日期'
         visible={showCalendar}
-        defaultValue={dateRange}
-        type="range"
+        defaultValue={checkIn && checkOut ? [checkIn, checkOut] : []}
         startDate={dayjs().format('YYYY-MM-DD')}
-        endDate={dayjs().add(3, 'month').format('YYYY-MM-DD')}
-        startText='入住'
-        endText='离店'
-        showToday={true}
-        autoBackfill={true}
+        monthCount={24}
         onClose={() => setShowCalendar(false)}
         onConfirm={handleDateConfirm}
       />

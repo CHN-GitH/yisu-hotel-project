@@ -117,7 +117,7 @@ export default function DetailPosition({ positiondata = {} }: DetailPositionProp
         <View className='position-content'>
           {/* 地址信息 */}
           <View className='address-row'>
-            <Location size={16} color='#ff9854' />
+            <Location size={16} color='#1989fa' />
             <View className='address-info'>
               <Text className='address-main'>{address}</Text>
               {(areaName || tradeArea) && (

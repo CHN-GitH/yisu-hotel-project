@@ -2,9 +2,10 @@ import Taro from '@tarojs/taro';
 import { baseURL, TIMEOUT, RequestConfig, BaseResponse } from './config';
 
 const request = <T = any>(config: RequestConfig): Promise<T> => {
-  const { url, method = 'GET', data, params, header = {}, timeout = TIMEOUT } = config;
+  const { url, method = 'GET', data, params, header = {}, timeout = TIMEOUT, baseURL: customBaseURL } = config;
   
-  let fullUrl = `${baseURL}${url}`;
+  const useBaseURL = customBaseURL || baseURL;
+  let fullUrl = `${useBaseURL}${url}`;
   if (method === 'GET' && params) {
     const queryString = Object.entries(params)
       .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
