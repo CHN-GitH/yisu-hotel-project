@@ -555,6 +555,7 @@
       min-width: 0;
       .room-header {
         margin-bottom: 0.5rem;
+        display: relative;
         .room-name {
           font-size: 1.25rem;
           font-weight: 600;
@@ -573,28 +574,54 @@
           display: inline-block;
           line-height: 1.4;
         }
+        .tag-down {
+          font-size: 0.75rem;
+          margin-right: 0.75rem;
+          color: $text-6;
+          display: inline-block;
+          line-height: 1.4;
+          .tag-down-item {
+            color: $primary-color;
+          }
+        }
       }
       .room-action {
-        margin-left: 9rem;
         padding-top: 0.5rem;
         border-top: 1px solid $border-light;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         .price-section {
           display: flex;
           align-items: baseline;
           gap: 0.25rem;
+          flex-shrink: 0;
+          .price-original {
+            font-size: 0.875rem;
+            color: $text-9;
+            text-decoration: line-through;
+            max-width: 4rem; 
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex-shrink: 0;
+          }
           .price-value {
             font-size: 1.5rem;
             font-weight: bold;
             color: $primary-color;
             line-height: 1;
+            flex-shrink: 0;
           }
           .price-unit {
             font-size: 1rem;
             color: $text-9;
+            flex-shrink: 0;
           }
         }
         .count-section {
-          margin: 0.25rem 0;
+          margin: 0.25rem 0 0 0.5rem;
+          flex-shrink: 0;
         }
       }
     }

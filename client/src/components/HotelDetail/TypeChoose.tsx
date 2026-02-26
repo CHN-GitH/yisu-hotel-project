@@ -1,13 +1,13 @@
 // 酒店详情页 - 房型选择
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import Taro from '@tarojs/taro';
-import { View, Image, Text } from '@tarojs/components';
-import { InputNumber } from '@nutui/nutui-react-taro';
-import { HouseDetailData, HousePicItem } from '../../services/modules/detail';
-import DetailSlot from './DetailSlot';
-import '../../styles/HotelDetail.scss';
+import React, { useState, useEffect, useMemo, useCallback } from "react";
+import Taro from "@tarojs/taro";
+import { View, Image, Text } from "@tarojs/components";
+import { InputNumber } from "@nutui/nutui-react-taro";
+import { HouseDetailData, HousePicItem } from "../../services/modules/detail";
+import DetailSlot from "./DetailSlot";
+import "../../styles/HotelDetail.scss";
 
-// 房型数据接口
+// 基础房型数据接口
 export interface RoomType {
   id: string;
   name: string;
@@ -16,6 +16,15 @@ export interface RoomType {
   bedInfo: string;
   areaInfo: string;
   count: number;
+  // 本地模式扩展字段
+  originalPrice?: number;
+  tags?: string[];
+  remaining?: number;
+  maxGuests?: number;
+  breakfast?: string;
+  cancelPolicy?: string;
+  windowType?: string;
+  floor?: string;
 }
 
 // 统计数据接口
@@ -29,8 +38,16 @@ export interface RoomStats {
 export interface TypeChooseProps {
   // 完整的房屋详情数据
   detaildata: HouseDetailData | Record<string, never>;
+  // 数据来源标识：local 使用传入数据构建房型，remote 随机生成
+  source?: "local" | "remote" | null;
+  // 本地模式自定义房型列表（可选，传入则优先使用）
+  customRoomTypes?: RoomType[];
   // 选择变化回调
-  onSelectionChange?: (selectedRooms: RoomType[], totalCount: number, totalPrice: number) => void;
+  onSelectionChange?: (
+    selectedRooms: RoomType[],
+    totalCount: number,
+    totalPrice: number,
+  ) => void;
   // 统计数据变化回调
   onStatsChange?: (stats: RoomStats) => void;
   // 最大可选房间数限制
@@ -46,224 +63,293 @@ const generateRandomPrice = (basePrice: number, minOffset: number, maxOffset: nu
 // 打乱数组并取指定数量的元素
 const getRandomImages = (pics: HousePicItem[], count: number): string[] => {
   if (!pics || pics.length === 0) return [];
-  // 过滤出有效的卧室图片（enumPictureCategory: 2 表示卧室）
-  const bedroomPics = pics.filter(pic => pic.enumPictureCategory === 2);
-  // 如果没有卧室图片，使用所有图片
+  const bedroomPics = pics.filter((pic) => pic.enumPictureCategory === 2);
   const availablePics = bedroomPics.length >= count ? bedroomPics : pics;
   const shuffled = [...availablePics].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, count).map(pic => pic.url);
+  return shuffled.slice(0, count).map((pic) => pic.url);
 };
 
-export default function TypeChoose ({ detaildata, onSelectionChange, onStatsChange, maxSelectLimit = 99 }: TypeChooseProps) {
-  // 从 detaildata 中提取所需数据
-  const { basePrice, housePics, houseSummary, isValid } = useMemo(() => {
-    // 检查数据是否有效
-    const hasData = (data: HouseDetailData | Record<string, never>): data is HouseDetailData => {
-      return 'mainPart' in data && data.mainPart !== undefined && 'currentHouse' in data;
+// 从本地数据构建房型信息
+const buildLocalRoomTypes = (detaildata: HouseDetailData): RoomType[] => {
+  const currentHouse = detaildata.currentHouse;
+  const priceModule = detaildata.pricePart?.priceModule;
+  const facilityModule = detaildata.mainPart?.dynamicModule?.facilityModule;
+  
+  // 获取价格信息
+  const currentPrice = priceModule?.price || currentHouse?.finalPrice || 199;
+  const originalPrice = priceModule?.originalPrice;
+  
+  // 获取设施信息
+  const bedSizeInfo = facilityModule?.houseFacility?.bedSizeDetailInfo;
+  const bedInfo = bedSizeInfo?.houseTips?.[0] || "大床2×1.8米 1张";
+  
+  // 获取面积信息（从 houseSummary 或默认）
+  const houseSummary = facilityModule?.houseSummary || [];
+  const areaItem = houseSummary.find(
+    (item: any) => item?.text?.includes("㎡") || item?.text?.includes("公寓")
+  );
+  const areaInfo = areaItem?.text || "酒店式公寓";
+  
+  // 获取图片
+  const defaultPic = currentHouse?.defaultPictureURL || 
+    detaildata.mainPart?.topModule?.housePicture?.defaultPictureURL ||
+    "https://pic.tujia.com/upload/landlordunit/day_200105/thumb/202001051429207308_700_467.jpg";
+
+  // 构建单个房型（本地数据通常只有一个基础房型，但可扩展）
+  const baseRoom: RoomType = {
+    id: `room-${currentHouse?.houseId || 'local'}`,
+    name: currentHouse?.houseName || "标准房型",
+    price: typeof currentPrice === 'string' ? parseInt(currentPrice, 10) : currentPrice,
+    originalPrice: originalPrice ? Math.floor(originalPrice) : undefined,
+    imageUrl: defaultPic,
+    bedInfo,
+    areaInfo,
+    count: 0,
+    maxGuests: 2,
+    tags: detaildata.currentHouse?.houseTags || [],
+    remaining: detaildata.unitInstanceCount || 1,
+  };
+
+  // 如果有优惠，添加标签
+  if (originalPrice && originalPrice > currentPrice) {
+    const discount = Math.round((currentPrice / originalPrice) * 10);
+    baseRoom.tags = [...(baseRoom.tags || []), `${discount}折优惠`];
+  }
+
+  return [baseRoom];
+};
+
+// 生成远程随机房型数据
+const generateRemoteRoomTypes = (
+  basePrice: number,
+  housePics: HousePicItem[],
+  bedInfo: string,
+  areaInfo: string,
+  defaultImage: string
+): RoomType[] => {
+  const selectedImages = getRandomImages(housePics, 5);
+  while (selectedImages.length < 5) {
+    selectedImages.push(defaultImage);
+  }
+
+  const simplePrice = generateRandomPrice(basePrice, -30, -20);
+  let luxuryPrice = generateRandomPrice(basePrice, 30, 55);
+  let viewPrice = generateRandomPrice(basePrice, 56, 78);
+  let familyPrice = generateRandomPrice(basePrice, 79, 100);
+  
+  while (
+    luxuryPrice === viewPrice ||
+    luxuryPrice === familyPrice ||
+    viewPrice === familyPrice
+  ) {
+    luxuryPrice = generateRandomPrice(basePrice, 30, 55);
+    viewPrice = generateRandomPrice(basePrice, 56, 78);
+    familyPrice = generateRandomPrice(basePrice, 79, 100);
+  }
+
+  const types: Omit<RoomType, "count">[] = [
+    {
+      id: "simple",
+      name: "简约大床房",
+      price: simplePrice,
+      imageUrl: selectedImages[0],
+      bedInfo,
+      areaInfo,
+    },
+    {
+      id: "classic",
+      name: "经典大床房",
+      price: basePrice,
+      imageUrl: selectedImages[1],
+      bedInfo,
+      areaInfo,
+    },
+    {
+      id: "view",
+      name: "外景大床房",
+      price: viewPrice,
+      imageUrl: selectedImages[2],
+      bedInfo,
+      areaInfo,
+    },
+    {
+      id: "luxury",
+      name: "奢华大床房",
+      price: luxuryPrice,
+      imageUrl: selectedImages[3],
+      bedInfo,
+      areaInfo,
+    },
+    {
+      id: "family",
+      name: "家庭套房",
+      price: familyPrice,
+      imageUrl: selectedImages[4],
+      bedInfo,
+      areaInfo,
+    },
+  ];
+  
+  return types.sort((a, b) => a.price - b.price).map((type) => ({
+    ...type,
+    count: 0,
+  }));
+};
+
+export default function TypeChoose({
+  detaildata,
+  source = "remote",
+  customRoomTypes,
+  onSelectionChange,
+  onStatsChange,
+  maxSelectLimit = 99,
+}: TypeChooseProps) {
+  // 数据提取（两种模式都需要）
+  const { 
+    basePrice, 
+    housePics, 
+    houseSummary, 
+    isValid, 
+    defaultImage,
+    currentHouse,
+    priceModule 
+  } = useMemo(() => {
+    const hasData = (
+      data: HouseDetailData | Record<string, never>,
+    ): data is HouseDetailData => {
+      return (
+        "mainPart" in data &&
+        data.mainPart !== undefined &&
+        "currentHouse" in data
+      );
     };
+    
     if (!hasData(detaildata)) {
       return {
         basePrice: 0,
         housePics: [],
         houseSummary: [],
-        isValid: false
+        isValid: false,
+        defaultImage: "",
+        currentHouse: null,
+        priceModule: null,
       };
     }
-    const currentHouse = detaildata.currentHouse;
+    
+    const house = detaildata.currentHouse;
     const facilityModule = detaildata.mainPart?.dynamicModule?.facilityModule;
-    // 获取基础价格（使用 finalPrice 或 productPrice）
-    const price = currentHouse?.finalPrice 
-      ? parseInt(currentHouse.finalPrice, 10) 
-      : currentHouse?.productPrice 
-        ? parseInt(currentHouse.productPrice.replace(/[^\d]/g, ''), 10)
-        : 338; // 默认价格
-    // 获取图片列表
+    const priceMod = detaildata.pricePart?.priceModule;
+    
+    // 价格计算逻辑
+    let price = 199; // 默认价格
+    if (priceMod?.price) {
+      price = typeof priceMod.price === 'number' ? priceMod.price : parseInt(priceMod.price, 10);
+    } else if (house?.finalPrice) {
+      price = typeof house.finalPrice === 'string' ? parseInt(house.finalPrice, 10) : house.finalPrice;
+    } else if (house?.productPrice) {
+      price = typeof house.productPrice === 'string' 
+        ? parseInt(house.productPrice.replace(/[^\d]/g, ""), 10) 
+        : house.productPrice;
+    }
+    
     const pics = detaildata.mainPart?.topModule?.housePicture?.housePics || [];
-    // 获取房屋摘要信息
     const summary = facilityModule?.houseSummary || [];
+    
+    const defaultPic = house?.defaultPictureURL ||
+      detaildata.mainPart?.topModule?.housePicture?.defaultPictureURL ||
+      "https://pic.tujia.com/upload/landlordunit/day_200105/thumb/202001051429207308_700_467.jpg";
 
     return {
       basePrice: price,
       housePics: pics,
       houseSummary: summary,
-      isValid: true
+      isValid: true,
+      defaultImage: defaultPic,
+      currentHouse: house,
+      priceModule: priceMod,
     };
   }, [detaildata]);
 
-  // 提取床型信息和面积信息
-  const bedInfo = useMemo(() => {
-    // 从 houseSummary 第三个对象获取 tips，或从 bedSizeDetailInfo 获取
-    const facilityModule = (detaildata as HouseDetailData)?.mainPart?.dynamicModule?.facilityModule;
+  // 提取床型和面积信息
+  const { bedInfo, areaInfo } = useMemo(() => {
+    const facilityModule = (detaildata as HouseDetailData)?.mainPart
+      ?.dynamicModule?.facilityModule;
     const bedSizeInfo = facilityModule?.houseFacility?.bedSizeDetailInfo;
-    if (bedSizeInfo?.houseTips && bedSizeInfo.houseTips.length > 0) {
-      return bedSizeInfo.houseTips[0];
-    }
-    // 从 houseSummary 中查找
-    const bedItem = houseSummary.find((item: any) => item?.tips && item.tips.length > 0);
-    return bedItem?.tips?.[0] || '大床2×1.8米 1张';
+    
+    const bed = bedSizeInfo?.houseTips?.[0] || 
+      houseSummary.find((item: any) => item?.tips?.length > 0)?.tips?.[0] || 
+      "大床2×1.8米 1张";
+    
+    const area = houseSummary.find(
+      (item: any) => item?.text?.includes("㎡") || item?.text?.includes("公寓")
+    )?.text || "酒店式公寓";
+
+    return { bedInfo: bed, areaInfo: area };
   }, [houseSummary, detaildata]);
 
-  const areaInfo = useMemo(() => {
-    // 从 houseSummary 第一个对象获取 text
-    const areaItem = houseSummary.find((item: any) => 
-      item?.text?.includes('㎡') || item?.text?.includes('公寓') || item?.text?.includes('整套')
-    );
-    return areaItem?.text || '酒店式公寓70㎡';
-  }, [houseSummary]);
+  // 房型列表状态
+  const [roomTypes, setRoomTypes] = useState<RoomType[]>([]);
+  const [isLocalMode, setIsLocalMode] = useState<boolean>(false);
 
-  // 初始化房型列表
-  const [roomTypes, setRoomTypes] = useState<RoomType[]>(() => {
-    if (!isValid || basePrice <= 0) return [];
-    // 随机选择5张不同的图片
-    const selectedImages = getRandomImages(housePics, 5);
-    // 如果图片不足，使用默认图片填充
-    const defaultImage = (detaildata as HouseDetailData)?.currentHouse?.defaultPictureURL || 
-      'https://pic.tujia.com/upload/landlordunit/day_200105/thumb/202001051429207308_700_467.jpg';
-    while (selectedImages.length < 5) {
-      selectedImages.push(defaultImage);
-    }
-
-    // 生成价格（确保互不相同）
-    const simplePrice = generateRandomPrice(basePrice, -30, -20);
-    let luxuryPrice = generateRandomPrice(basePrice, 30, 55);
-    let viewPrice = generateRandomPrice(basePrice, 56, 78);
-    let familyPrice = generateRandomPrice(basePrice, 79, 100);
-    // 确保价格互不相同
-    while (luxuryPrice === viewPrice || luxuryPrice === familyPrice || viewPrice === familyPrice) {
-      luxuryPrice = generateRandomPrice(basePrice, 30, 55);
-      viewPrice = generateRandomPrice(basePrice, 56, 78);
-      familyPrice = generateRandomPrice(basePrice, 79, 100);
-    }
-
-    const types: Omit<RoomType, 'count'>[] = [{
-      id: 'simple',
-      name: '简约大床房',
-      price: simplePrice,
-      imageUrl: selectedImages[0],
-      bedInfo,
-      areaInfo
-    }, {
-      id: 'classic',
-      name: '经典大床房',
-      price: basePrice,
-      imageUrl: selectedImages[1],
-      bedInfo,
-      areaInfo
-    }, {
-      id: 'view',
-      name: '外景大床房',
-      price: viewPrice,
-      imageUrl: selectedImages[2],
-      bedInfo,
-      areaInfo
-    }, {
-      id: 'luxury',
-      name: '奢华大床房',
-      price: luxuryPrice,
-      imageUrl: selectedImages[3],
-      bedInfo,
-      areaInfo
-    }, {
-      id: 'family',
-      name: '家庭套房',
-      price: familyPrice,
-      imageUrl: selectedImages[4],
-      bedInfo,
-      areaInfo
-    }];
-
-    // 按价格从低到高排序
-    const sortedTypes = types.sort((a, b) => a.price - b.price);
-
-    // 添加count字段
-    return sortedTypes.map(type => ({
-      ...type,
-      count: 0
-    }));
-  });
-
-  // 当 basePrice 或数据源变化时重新生成房型
+  // 根据 source 生成房型数据
   useEffect(() => {
-    if (!isValid || basePrice <= 0) {
-      setRoomTypes([]);
+    // 优先使用自定义房型（如果传入了）
+    if (customRoomTypes && customRoomTypes.length > 0) {
+      setRoomTypes(customRoomTypes.map(r => ({ ...r, count: r.count || 0 })));
+      setIsLocalMode(true);
       return;
     }
-    // 随机选择5张不同的图片
-    const selectedImages = getRandomImages(housePics, 5);
-    const defaultImage = (detaildata as HouseDetailData)?.currentHouse?.defaultPictureURL || 
-      'https://pic.tujia.com/upload/landlordunit/day_200105/thumb/202001051429207308_700_467.jpg';
-    while (selectedImages.length < 5) {
-      selectedImages.push(defaultImage);
+
+    // Local 模式：从 detaildata 构建房型
+    if (source === "local") {
+      if (!isValid) {
+        setRoomTypes([]);
+        return;
+      }
+      const localRooms = buildLocalRoomTypes(detaildata as HouseDetailData);
+      setRoomTypes(localRooms);
+      setIsLocalMode(true);
+      return;
     }
 
-    // 生成价格（确保互不相同）
-    const simplePrice = generateRandomPrice(basePrice, -30, -20);
-    let luxuryPrice = generateRandomPrice(basePrice, 30, 55);
-    let viewPrice = generateRandomPrice(basePrice, 56, 78);
-    let familyPrice = generateRandomPrice(basePrice, 79, 100);
-    // 确保价格互不相同
-    while (luxuryPrice === viewPrice || luxuryPrice === familyPrice || viewPrice === familyPrice) {
-      luxuryPrice = generateRandomPrice(basePrice, 30, 55);
-      viewPrice = generateRandomPrice(basePrice, 56, 78);
-      familyPrice = generateRandomPrice(basePrice, 79, 100);
+    // Remote 模式：随机生成
+    if (!isValid || basePrice <= 0) {
+      setRoomTypes([]);
+      setIsLocalMode(false);
+      return;
     }
 
-    const types: Omit<RoomType, 'count'>[] = [{
-      id: 'simple',
-      name: '简约大床房',
-      price: simplePrice,
-      imageUrl: selectedImages[0],
+    const remoteRooms = generateRemoteRoomTypes(
+      basePrice,
+      housePics,
       bedInfo,
-      areaInfo
-    }, {
-      id: 'classic',
-      name: '经典大床房',
-      price: basePrice,
-      imageUrl: selectedImages[1],
-      bedInfo,
-      areaInfo
-    }, {
-      id: 'view',
-      name: '外景大床房',
-      price: viewPrice,
-      imageUrl: selectedImages[2],
-      bedInfo,
-      areaInfo
-    }, {
-      id: 'luxury',
-      name: '奢华大床房',
-      price: luxuryPrice,
-      imageUrl: selectedImages[3],
-      bedInfo,
-      areaInfo
-    }, {
-      id: 'family',
-      name: '家庭套房',
-      price: familyPrice,
-      imageUrl: selectedImages[4],
-      bedInfo,
-      areaInfo
-    }];
-    // 按价格从低到高排序
-    const sortedTypes = types.sort((a, b) => a.price - b.price);
-    setRoomTypes(sortedTypes.map(type => ({
-      ...type,
-      count: 0
-    })));
-  }, [basePrice, housePics, bedInfo, areaInfo, isValid, detaildata]);
+      areaInfo,
+      defaultImage
+    );
+    
+    setRoomTypes(remoteRooms);
+    setIsLocalMode(false);
+  }, [source, customRoomTypes, detaildata, isValid, basePrice, housePics, bedInfo, areaInfo, defaultImage]);
 
   // 计算统计信息
   const statistics = useMemo(() => {
     const totalCount = roomTypes.reduce((sum, room) => sum + room.count, 0);
-    const totalPrice = roomTypes.reduce((sum, room) => sum + room.price * room.count, 0);
-    const selectedRooms = roomTypes.filter(room => room.count > 0);
+    const totalPrice = roomTypes.reduce(
+      (sum, room) => sum + room.price * room.count,
+      0,
+    );
+    const selectedRooms = roomTypes.filter((room) => room.count > 0);
     return { totalCount, totalPrice, selectedRooms };
   }, [roomTypes]);
 
-  // 当选择变化时触发回调
+  // 回调触发
   useEffect(() => {
     if (onSelectionChange) {
-      onSelectionChange(statistics.selectedRooms, statistics.totalCount, statistics.totalPrice);
+      onSelectionChange(
+        statistics.selectedRooms,
+        statistics.totalCount,
+        statistics.totalPrice,
+      );
     }
     if (onStatsChange) {
       onStatsChange(statistics);
@@ -271,90 +357,136 @@ export default function TypeChoose ({ detaildata, onSelectionChange, onStatsChan
   }, [statistics, onSelectionChange, onStatsChange]);
 
   // 处理数量变化
-  const handleCountChange = useCallback((id: string, value: number | string) => {
-    const numValue = typeof value === 'string' ? parseInt(value, 10) || 0 : value;
-    setRoomTypes(prev => prev.map(room => {
-      if (room.id === id) {
-        // 确保不小于0，不大于限制
-        const newCount = Math.max(0, Math.min(numValue, maxSelectLimit));
-        return { ...room, count: newCount };
-      }
-      return room;
-    }));
-  }, [maxSelectLimit]);
+  const handleCountChange = useCallback(
+    (id: string, value: number | string) => {
+      const numValue = typeof value === "string" ? parseInt(value, 10) || 0 : value;
+      setRoomTypes((prev) =>
+        prev.map((room) => {
+          if (room.id === id) {
+            const limit = isLocalMode && room.remaining 
+              ? Math.min(numValue, maxSelectLimit, room.remaining) 
+              : Math.min(numValue, maxSelectLimit);
+            return { ...room, count: Math.max(0, limit) };
+          }
+          return room;
+        }),
+      );
+    },
+    [maxSelectLimit, isLocalMode],
+  );
 
-  // 格式化价格显示
-  const formatPrice = (price: number): string => {
-    return `¥${price}`;
-  };
+  const formatPrice = (price: number): string => `¥${price}`;
 
-  // 如果没有有效数据，显示空状态
-  if (!isValid || roomTypes.length === 0) {
+  if (roomTypes.length === 0) {
     return (
-      <View className='detail-type-choose detail-type-choose--empty'>
-        <Text className='empty-text'>暂无房型数据</Text>
+      <View className="detail-type-choose detail-type-choose--empty">
+        <Text className="empty-text">
+          {source === "local" ? "暂无可用房型" : "暂无房型数据"}
+        </Text>
       </View>
     );
   }
 
   return (
-    <View className='detail-type-choose'>
-      <DetailSlot 
-        title='选择房型' 
-        moreText='全部房型'
-      >
-        <View className='room-list'>
-          {roomTypes.map((room, index) => (
-            <View key={room.id} className='room-card'>
-              {/* 左侧图片 */}
-              <View className='room-image-wrapper'>
-                <Image 
-                  className='room-image' 
-                  src={room.imageUrl} 
-                  mode='aspectFill'
-                  lazyLoad
-                />
-                {index === 0 && (
-                  <View className='room-image-tag price-tag'>最低价</View>
-                )}
-                {room.id === 'classic' && (
-                  <View className='room-image-tag recommend-tag'>推荐</View>
-                )}
-              </View>
-              {/* 右侧信息区 */}
-              <View className='room-info'>
-                {/* 房型名称 */}
-                <View className='room-header'>
-                  <Text className='room-name'>{room.name}</Text>
+    <View className="detail-type-choose">
+      <DetailSlot title={isLocalMode ? "选择房间" : "选择房型"} moreText="全部房型">
+        <View className="room-list">
+          {roomTypes.map((room, index) => {
+            const hasDiscount = room.originalPrice && room.originalPrice > room.price;
+            const discountPercent = hasDiscount 
+              ? Math.round((room.price / room.originalPrice!) * 10) 
+              : null;
+            
+            return (
+              <View 
+                key={room.id} 
+                className={`room-card ${isLocalMode ? 'room-card--local' : ''}`}
+              >
+                {/* 左侧图片 */}
+                <View className="room-image-wrapper">
+                  <Image
+                    className="room-image"
+                    src={room.imageUrl}
+                    mode="aspectFill"
+                    lazyLoad
+                  />
+                  
+                  {/* 标签逻辑 */}
+                  {!isLocalMode && index === 0 && (
+                    <View className="room-image-tag price-tag">最低价</View>
+                  )}
+                  {!isLocalMode && room.id === "classic" && (
+                    <View className="room-image-tag recommend-tag">推荐</View>
+                  )}
+                  {isLocalMode && room.remaining !== undefined && room.remaining < 5 && (
+                    <View className="room-image-tag price-tag">仅剩{room.remaining}间</View>
+                  )}
                 </View>
-                {/* 房间配置信息 */}
-                <View className='room-tags'>
-                  <Text className='tag'>{room.bedInfo}</Text>
-                  <Text className='tag'>{room.areaInfo}</Text>
-                </View>
-                {/* 价格和数量选择 */}
-                <View className='room-action'>
-                  <View className='price-section'>
-                    <Text className='price-value'>{formatPrice(room.price)}</Text>
-                    <Text className='price-unit'>/{(detaildata as HouseDetailData)?.currentHouse?.priceMark?.replace('/', '') || '晚'}</Text>
+                
+                {/* 右侧信息区 */}
+                <View className="room-info">
+                  {/* 标题区 */}
+                  <View className="room-header">
+                    <Text className="room-name">{room.name}</Text>
                   </View>
-                  <View className='count-section'>
-                    <InputNumber
-                      value={room.count}
-                      min={0}
-                      max={maxSelectLimit}
-                      step={1}
-                      onChange={(value) => handleCountChange(room.id, value)}
-                      inputWidth={60}
-                      buttonSize={28}
-                    />
+                  
+                  {/* 基础信息 */}
+                  <View className="room-tags">
+                    <Text className="tag">{room.bedInfo}</Text>
+                    <Text className="tag">{room.areaInfo}</Text>
+                  </View>
+                  <View className="room-tags">
+                    {room.maxGuests && (
+                      <Text className="tag-down">可住{room.maxGuests}人</Text>
+                    )}
+                    {room.windowType && (
+                      <Text className="tag-down">{room.windowType}</Text>
+                    )}
+                    {isLocalMode && room.tags && room.tags.length > 0 && (
+                      <View className="tag-down">
+                        {room.tags.slice(0, 2).map((tag, idx) => (
+                          <Text key={idx} className="tag-down-item">{tag}</Text>
+                        ))}
+                      </View>
+                    )}
+                  </View>
+                  
+                  {/* 价格和操作 */}
+                  <View className="room-action">
+                    <View className="price-section">
+                      {hasDiscount ? (
+                        <>
+                          <Text className="price-original">¥{room.originalPrice}</Text>
+                          <Text className="price-value">{formatPrice(room.price)}</Text>
+                        </>
+                      ) : (
+                        <Text className="price-value">{formatPrice(room.price)}</Text>
+                      )}
+                      <Text className="price-unit">
+                        /{isLocalMode ? "晚" : (currentHouse?.priceMark?.replace("/", "") || "晚")}
+                      </Text>
+                    </View>
+                    
+                    <View className="count-section">
+                      <InputNumber
+                        value={room.count}
+                        min={0}
+                        max={isLocalMode && room.remaining 
+                          ? Math.min(maxSelectLimit, room.remaining) 
+                          : maxSelectLimit}
+                        step={1}
+                        onChange={(value) => handleCountChange(room.id, value)}
+                        inputWidth={60}
+                        buttonSize={28}
+                      />
+                    </View>
                   </View>
                 </View>
               </View>
-            </View>
-          ))}
+            );
+          })}
         </View>
       </DetailSlot>
     </View>
   );
-};
+}
