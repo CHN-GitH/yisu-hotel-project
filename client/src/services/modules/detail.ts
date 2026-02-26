@@ -331,6 +331,15 @@ export type HouseDetail = HouseDetailData;
 export default function getDetail(houseId: string): Promise<HouseDetailData> {
   return myaxios.get<HouseDetailData>({
     url: "/detail/infos",
-    params: { houseId }
+    params: { houseId },
+  });
+}
+
+// 新的获取酒店详情接口 - 调用本地后端
+export function newInfos(houseId: string): Promise<HouseDetailData> {
+  return myaxios.get<HouseDetailData>({
+    url: "/detail/infos",
+    params: { houseId },
+    baseURL: "http://localhost:3000",
   });
 }

@@ -29,7 +29,7 @@ export default function DetailSlot({ title = '', moreText = '',  onMoreClick, ch
       {showFooter && (
         <View className='section-footer' onClick={onMoreClick}>
           <Text className='more-text'>查看{moreText}</Text>
-          <ArrowRight size={14} color='#ff9854' />
+          <ArrowRight size={14} color='#1989fa' />
         </View>
       )}
     </View>

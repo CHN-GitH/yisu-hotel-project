@@ -32,7 +32,16 @@ export interface SearchResponse {
 // 获取搜索结果
 export default function getSearchHotel(params?: SearchParams) {
   return myaxios.get<SearchResponse>({
-    url: '/search/result',
-    params: params || {}
+    url: "/search/result",
+    params: params || {},
+  });
+}
+
+// 新的搜索酒店接口 - 调用本地后端
+export function newResult(params?: SearchParams) {
+  return myaxios.get<SearchResponse>({
+    url: "/search/result",
+    params: params || {},
+    baseURL: "http://localhost:3000",
   });
 }

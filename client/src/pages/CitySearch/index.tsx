@@ -301,9 +301,11 @@ export default function CitySearch() {
             <Text className="city-name">{item.name}</Text>
             {item.type === 'hotel' ? (
               <Text className="hotel-tag">酒店</Text>
-            ) : (
+            ) : (item.country === '中国' ? 
               (item.country || item.region) && (
-                <Text className="city-extra">{item.country || item.region}</Text>
+                <Text className="city-chinese">{item.country || item.region}</Text>
+              ) : (item.country || item.region) && (
+                <Text className="city-foreign">{item.country || item.region}</Text>
               )
             )}
           </View>

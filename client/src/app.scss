@@ -2,8 +2,8 @@
 
 page {
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei', sans-serif;
-  color: #333;
-  background-color: #f5f5f5;
+  color: $text-3;
+  background-color: $bg-primary;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -14,7 +14,7 @@ view, text, image, input, scroll-view {
 
 /* 通用类 */
 .container {
-  padding: 0 30px;
+  padding: 0 1.875rem;
 }
 
 .flex {
@@ -58,24 +58,24 @@ view, text, image, input, scroll-view {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 40px 0;
-  color: #999;
-  font-size: 28px;
+  padding: 2.5rem 0;
+  color: $text-9;
+  font-size: 1.75rem;
 }
 
 .empty {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 100px 0;
+  padding: 6.25rem 0;
   image {
-    width: 200px;
-    height: 200px;
-    margin-bottom: 20px;
+    width: 12.5rem;
+    height: 12.5rem;
+    margin-bottom: 1.25rem;
   }
   text {
-    color: #999;
-    font-size: 28px;
+    color: $text-9;
+    font-size: 1.75rem;
   }
 }
 /* 高亮文本 */

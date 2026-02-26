@@ -106,7 +106,7 @@ export default function HouseInfos({ infosdata = {} }: HouseInfosProps) {
         </View>
         <View className='right'>
           <Text className='count'>{infosdata.commentBrief?.totalCount}条评论</Text>
-          <ArrowRight size={12} color='#ff9854' />
+          <ArrowRight size={12} color='#1989fa' />
         </View>
       </View>
       {/* 位置信息 */}
@@ -116,7 +116,7 @@ export default function HouseInfos({ infosdata = {} }: HouseInfosProps) {
         </View>
         <View className='right'>
           <Text className='map-text'>地图·周边</Text>
-          <ArrowRight size={12} color='#ff9854' />
+          <ArrowRight size={12} color='#1989fa' />
         </View>
       </View>
     </View>
